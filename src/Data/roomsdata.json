@@ -1,0 +1,129 @@
+{
+  "ResortRooms": [
+    {
+      "name": "Classic Sunroom",
+      "image": "/slider1.jpg",
+      "description": "Bathed in soft daylight and surrounded by the whisper of trees, the Classic Sunroom is where nature and quiet refinement meet. Large glass walls frame the forest like a living painting, flooding the space with golden morning light. Handcrafted wooden furniture, warm earthy tones, and southern yellow pine flooring create an atmosphere that feels timeless — serene yet full of quiet vitality.",
+      "details": {
+        "area": "30 square meters (322 square feet)",
+        "capacity": "Up to 2 guests",
+        "special": "Cozy reading corner and private sit-out"
+      },
+      "experience": "Invite slow mornings with coffee and birdsong, while evenings glow in amber hues as the sun slips beyond the mountain. Here, luxury is measured not in extravagance, but in stillness — a space that feels alive with light, scent, and silence.",
+      "all_stays_include": [
+        "Daily breakfast",
+        "A guided forest walk",
+        "Complimentary in-room coffee and tea-making facilities"
+      ],
+      "room_exclusive_features": [
+        "Outdoor sitting with private deck",
+        "Shared plunge pool",
+        "Guest WC",
+        "Complimentary Wi-Fi",
+        "Personal minibar"
+      ],
+      "bath_and_wellness": []
+    },
+    {
+      "name": "Forest Bathtub Room",
+      "image": "/slider2.jpg",
+      "description": "Hidden deep within the green expanse of The Arboreal Resort, the Forest Bathtub Room invites you to experience pure immersion in nature. Crafted entirely in warm pinewood and framed by sweeping glass windows, the room opens into dense foliage, blending the calm of natural light with the elegance of handcrafted interiors.",
+      "details": {
+        "area": "55 square meters (600 square feet)",
+        "capacity": "Ideal for 2 guests with additional 2"
+      },
+      "signature_feature": "Private outdoor bathtub tucked along the forest edge",
+      "experience": "Bathe under drifting clouds, surrounded by birdsong and the scent of rain on leaves. Inside, rustic textures meet refined comfort with a canopy bed, vintage furnishings, and a softly lit lounge that feels both intimate and expansive.",
+      "all_stays_include": [
+        "Daily breakfast",
+        "A guided forest walk",
+        "Complimentary in-room coffee and tea-making facilities"
+      ],
+      "room_exclusive_features": [
+        "Outdoor sitting with private deck",
+        "Outdoor private bathtub with forest view",
+        "Reading table",
+        "Guest WC and amenities",
+        "Complimentary Wi-Fi",
+        "Personal minibar"
+      ],
+      "bath_and_wellness": [
+        "Outdoor private bathtub with forest view",
+        "Premium bath amenities",
+        "Hot and cold running water"
+      ]
+    },
+    {
+      "name": "Luxury Sunroom",
+      "image": "/slider3.jpg",
+      "description": "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and lake views.",
+      "details": {
+        "area": "55 square meters (600 square feet)",
+        "capacity": "Ideal for 2 guests with additional 2"
+      },
+      "experience": "Step out onto your private balcony to breathe in earthy air as daylight dances upon the hillsides. Every detail is considered — from air conditioning and handcrafted furnishings to modern amenities — ensuring a deeply soothing stay.",
+      "all_stays_include": [
+        "Daily breakfast",
+        "Access to resort’s walking trails and forest viewpoints",
+        "Evening bonfire sessions (subject to weather)",
+        "Parking on premises"
+      ],
+      "room_exclusive_features": [
+        "Panoramic glass windows overlooking forest and hills",
+        "Private balcony or sit-out with outdoor seating",
+        "King-size bed with premium linen and canopy drapes",
+        "Elegant wooden interiors with warm ambient lighting",
+        "Air-conditioning and ceiling fans",
+        "Writing desk and indoor seating area with lounge chairs",
+        "Handcrafted wooden furniture and décor",
+        "Mini refrigerator",
+        "Tea and coffee maker set",
+        "Power backup",
+        "Room service"
+      ],
+      "bath_and_wellness": [
+        "Modern ensuite bathroom with walk-in shower",
+        "Premium bath amenities and plush towels",
+        "Hot and cold running water",
+        "Vanity counter with well-lit mirror"
+      ]
+    },
+    {
+      "name": "Forest Private Pool Room",
+      "image": "/slider4.jpg",
+      "description": "The Forest Room – Private Pool offers a sublime blend of privacy, nature, and luxury. Featuring a king-size bed, modern comforts, and a private pool on the balcony — perfect for two adults (plus one child).",
+      "details": {
+        "area": "60 square meters (650 square feet)",
+        "capacity": "2 adults + 1 child"
+      },
+      "experience": "Awaken to forest views through wide glass openings and step out into your own balcony-pool sanctuary. Lounge by the water, swim beneath open sky, and listen to wind in the branches — an experience of calm, undisturbed.",
+      "all_stays_include": [
+        "Daily breakfast",
+        "Room service available",
+        "Daily housekeeping",
+        "Laundry service (on request)",
+        "Complimentary bottled water"
+      ],
+      "room_exclusive_features": [
+        "Private plunge pool overlooking the forest",
+        "Spacious balcony deck with seating",
+        "Open-to-sky experience ideal for couples",
+        "Forest-facing large glass windows for natural light",
+        "Air conditioning and ceiling fan",
+        "Mini bar / refrigerator",
+        "Tea and coffee maker",
+        "Wardrobe and luggage space",
+        "Work desk / seating area",
+        "Power backup",
+        "Complimentary Wi-Fi"
+      ],
+      "bath_and_wellness": [
+        "En-suite bathroom with shower",
+        "Hot & cold-water supply",
+        "Complimentary bath amenities",
+        "Hair dryer",
+        "Plush towels and bathrobes"
+      ]
+    }
+  ]
+}
