@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 import Services from "./pages/Services";
 import AboutUs from "./pages/AboutUs";
-import ContactUs from "./pages/ContactUs";  
+import ContactUs from "./pages/ContactUs";
 import GalleryPage from "./pages/GalleryPage";
 import Availability from "./pages/Availability";
 import BlogPage from "./pages/BlogPage";
@@ -37,22 +37,27 @@ const App = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/services" element={<Home />} />
           <Route path="/availability" element={<Availability />} />
-          
+
           {/* New Booking Flow Routes */}
           <Route path="/booking/calendar" element={<BookingCalendar />} />
-          <Route path="/booking/personal-info" element={<BookingPersonalInfo />} />
+          <Route
+            path="/booking/personal-info"
+            element={<BookingPersonalInfo />}
+          />
           <Route path="/booking/extras" element={<BookingExtras />} />
           <Route path="/booking/payment" element={<BookingPayment />} />
-          
+
           {/* Old booking routes (kept for backward compatibility) */}
           <Route path="/booking" element={<BookingForm />} />
-          <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-          
+          <Route
+            path="/booking-confirmation"
+            element={<BookingConfirmation />}
+          />
+
           <Route path="/blog" element={<BlogPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
-       
     </>
   );
 };

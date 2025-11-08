@@ -53,16 +53,18 @@ const About = () => {
               History of The Arboreal Resort
             </h2>
             <p className="text-gray-700 leading-relaxed text-sm md:text-base">
-              Welcome to The Arboreal Resort in Gevhande, Apti, Lonavala — a serene
-              escape tucked at the foothills of the Western Ghats. Designed as a luxurious
-              yet eco-friendly retreat, our resort is surrounded by lush greenery, tranquil
-              hills, and an abundance of flora and fauna.
+              Welcome to The Arboreal Resort in Gevhande, Apti, Lonavala — a
+              serene escape tucked at the foothills of the Western Ghats.
+              Designed as a luxurious yet eco-friendly retreat, our resort is
+              surrounded by lush greenery, tranquil hills, and an abundance of
+              flora and fauna.
             </p>
             <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-              Here, you'll find more than just a stay. With an outdoor pool, a multi-cuisine
-              restaurant, and curated activities, we bring you closer to nature while ensuring
-              modern comforts. Whether it's trekking, bird watching, or a rejuvenating yoga
-              session, every moment is crafted to help you reconnect with yourself and the
+              Here, you'll find more than just a stay. With an outdoor pool, a
+              multi-cuisine restaurant, and curated activities, we bring you
+              closer to nature while ensuring modern comforts. Whether it's
+              trekking, bird watching, or a rejuvenating yoga session, every
+              moment is crafted to help you reconnect with yourself and the
               world around you.
             </p>
           </motion.div>
@@ -82,17 +84,19 @@ const About = () => {
               Why Choose Us?
             </h2>
             <p className="text-gray-700 leading-relaxed text-sm md:text-base">
-              At The Arboreal Resort, every detail is built to give you the perfect getaway.
-              Our spacious, modern rooms come with private balconies offering panoramic
-              views of the misty hills. Imagine mornings where you wake up to the melody of
-              chirping birds, rustling trees, and cool breezes drifting through your window.
+              At The Arboreal Resort, every detail is built to give you the
+              perfect getaway. Our spacious, modern rooms come with private
+              balconies offering panoramic views of the misty hills. Imagine
+              mornings where you wake up to the melody of chirping birds,
+              rustling trees, and cool breezes drifting through your window.
             </p>
             <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-              Whether you're here for adventure or relaxation, we've got something for
-              everyone. From nature walks and meditation to poolside leisure and fine
-              dining, we ensure your experience is both indulgent and unforgettable. For
-              those seeking the best rainforest resort in Lonavala, Arboreal is where nature
-              and luxury meet in harmony.
+              Whether you're here for adventure or relaxation, we've got
+              something for everyone. From nature walks and meditation to
+              poolside leisure and fine dining, we ensure your experience is
+              both indulgent and unforgettable. For those seeking the best
+              rainforest resort in Lonavala, Arboreal is where nature and luxury
+              meet in harmony.
             </p>
           </motion.div>
 

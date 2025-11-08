@@ -1,201 +1,403 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLocation, useNavigate } from "react-router-dom";
 import roomsData from "../Data/roomsdata.json";
-import Hero from "../components/Hero";
-import Testimonials from "../components/Testimonials";
-import { 
-  FiUsers, 
-  FiMaximize, 
-  FiWifi, 
-  FiCoffee, 
-  FiSun,
-  FiDroplet,
-  FiGrid,
-  FiAirplay
-} from "react-icons/fi";
+import { BsPerson, BsPersonFill } from "react-icons/bs";
+import { IoBedOutline } from "react-icons/io5";
+import { BiExpand } from "react-icons/bi";
 
 const Rooms = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [originalRoomTab, setOriginalRoomTab] = useState(null); // Track the room from Availability
+
+  // Get data passed from Availability page
+  const { room: backendRoom, searchData } = location.state || {};
+
   const rooms = roomsData.ResortRooms;
 
-  // Icon mapping for amenities
-  const getAmenityIcon = (amenity) => {
-    const icons = {
-      "Wi-Fi": <FiWifi />,
-      "Coffee": <FiCoffee />,
-      "AC": <FiSun />,
-      "Bath": <FiDroplet />,
-      "Balcony": <FiGrid />,
-      "TV": <FiAirplay />
-    };
-    return icons[amenity] || <FiGrid />;
+  // Parse image arrays properly (handle comma-separated strings)
+  const parseImages = (imageData) => {
+    if (Array.isArray(imageData)) {
+      return imageData.flatMap((img) =>
+        typeof img === "string" ? img.split(",").map((i) => i.trim()) : img
+      );
+    }
+    return [];
   };
 
-  // Enhanced room data with additional details from image
-  const enhancedRooms = rooms.map((room, index) => {
-    const enhancements = [
-      {
-        adults: 2,
-        children: 1,
-        size: "54 m²",
-        bedType: "Double Bed",
-        amenities: ["Wi-Fi", "Coffee", "AC", "Bath", "Balcony", "TV"]
-      },
-      {
-        adults: 2,
-        children: 1,
-        size: "55 m²",
-        bedType: "Double Bed",
-        amenities: ["Wi-Fi", "Coffee", "AC", "Bath", "Balcony", "TV"]
-      },
-      {
-        adults: 2,
-        children: 1,
-        size: "35 m²",
-        bedType: "Double Bed",
-        amenities: ["Wi-Fi", "Coffee", "AC", "Bath", "Balcony", "TV"]
-      },
-      {
-        adults: 2,
-        children: 1,
-        size: "35 m²",
-        bedType: "Double Bed",
-        amenities: ["Wi-Fi", "Coffee", "AC", "Bath", "Balcony", "TV"]
-      }
-    ];
+  const currentRoom = rooms[activeTab];
+  const images = parseImages(currentRoom.image);
 
-    return {
-      ...room,
-      ...enhancements[index]
-    };
-  });
+  // Map backend room name to static room tab
+  useEffect(() => {
+    if (backendRoom && backendRoom.Room_Name) {
+      const roomName = backendRoom.Room_Name.toLowerCase();
+      const tabIndex = rooms.findIndex(r => 
+        roomName.includes(r.name.toLowerCase().replace(" room", ""))
+      );
+      if (tabIndex !== -1) {
+        setActiveTab(tabIndex);
+        setOriginalRoomTab(tabIndex); // Save the original room tab index
+      }
+    }
+  }, [backendRoom]);
+
+  // Reset image index when tab changes
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [activeTab]);
+
+  const goToPrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goToNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  // Get price based on room type - use backend data if available
+  const getRoomPrice = () => {
+    if (backendRoom && backendRoom.room_rates_info) {
+      return `${backendRoom.currency_sign}${backendRoom.room_rates_info.avg_per_night_after_discount?.toLocaleString()}`;
+    }
+    // Fallback to static prices
+    const roomName = currentRoom.name;
+    if (roomName.includes("Luxury")) return "$35,4400";
+    if (roomName.includes("Classic")) return "$544,850/-";
+    if (roomName.includes("Forest Bathtub")) return "$35,4400";
+    if (roomName.includes("Forest Private Pool")) return "$35,4400";
+    return "$544,950/-";
+  };
+
+  // Handle booking - redirect to booking page with backend data
+  const handleBookNow = () => {
+    // Check if current tab is the original room from Availability
+    const isOriginalRoom = originalRoomTab !== null && activeTab === originalRoomTab;
+    
+    if (backendRoom && searchData && isOriginalRoom) {
+      // User is on the correct room tab - book it
+      navigate("/booking/calendar", {
+        state: {
+          room: backendRoom,
+          searchData: searchData,
+        },
+      });
+    } else if (backendRoom && searchData) {
+      // User is exploring other rooms but came from Availability - go back to Availability
+      navigate("/availability", {
+        state: {
+          searchData: searchData
+        }
+      });
+    } else {
+      // User came directly - redirect to home to search first
+      navigate("/", {
+        state: {
+          suggestedRoom: currentRoom.name // Suggest this room in search
+        }
+      });
+    }
+  };
+
+  // Check if current tab is the available room from backend
+  const isCurrentRoomAvailable = () => {
+    return originalRoomTab !== null && activeTab === originalRoomTab;
+  };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ed]">
-      {/* Hero Section */}
-      <Hero />
-
+    <div className="min-h-screen bg-[#f8f6f0] pt-20">
       {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center py-12 md:py-16 px-6"
-      >
-        <p className="font-serif italic text-gray-600 text-base md:text-lg mb-2">
-          Accommodations
-        </p>
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif text-gray-900 font-normal">
-          Raising Comfort To The Highest Level
-        </h1>
-      </motion.div>
-
-      {/* Rooms Grid */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {enhancedRooms.map((room, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
-              className="bg-white shadow-lg overflow-hidden group"
+      <div className="border-b">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          {/* Back button if came from Availability */}
+          {backendRoom && searchData && (
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
             >
-              {/* Room Image */}
-              <div className="relative h-48 md:h-64 overflow-hidden">
-                <img
-                  src={room.image}
-                  alt={room.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500" />
-              </div>
-
-              {/* Room Details */}
-              <div className="p-5 md:p-6">
-                {/* Room Category & Name */}
-                <div className="mb-3">
-                  <p className="text-xs tracking-[0.15em] text-gray-500 uppercase mb-1.5">
-                    FOREST · BATHTUB
-                  </p>
-                  <h3 className="text-xl md:text-2xl font-serif text-gray-900 mb-2">
-                    {room.name}
-                  </h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed line-clamp-2">
-                    {room.description}
-                  </p>
-                </div>
-
-                {/* Room Specifications */}
-                <div className="grid grid-cols-2 gap-3 py-3 border-t border-b border-gray-200 mb-3">
-                  {/* Adults */}
-                  <div className="flex items-center gap-1.5">
-                    <FiUsers className="text-gray-700 text-base" />
-                    <span className="text-xs md:text-sm text-gray-700">
-                      <strong>Adults:</strong> {room.adults}
-                    </span>
-                  </div>
-
-                  {/* Children */}
-                  <div className="flex items-center gap-1.5">
-                    <FiUsers className="text-gray-700 text-base" />
-                    <span className="text-xs md:text-sm text-gray-700">
-                      <strong>Children:</strong> {room.children}
-                    </span>
-                  </div>
-
-                  {/* Size */}
-                  <div className="flex items-center gap-1.5">
-                    <FiMaximize className="text-gray-700 text-base" />
-                    <span className="text-xs md:text-sm text-gray-700">
-                      <strong>Size:</strong> {room.size}
-                    </span>
-                  </div>
-
-                  {/* Bed Type */}
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span className="text-xs md:text-sm text-gray-700">
-                      <strong>Bed Type:</strong> {room.bedType}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                <div className="mb-4">
-                  <h4 className="text-xs tracking-[0.15em] text-gray-600 uppercase mb-2">
-                    Amenities:
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {room.amenities.map((amenity, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-center w-8 h-8 bg-gray-100 text-gray-700 hover:bg-gray-900 hover:text-white transition-all duration-300 text-sm"
-                        title={amenity}
-                      >
-                        {getAmenityIcon(amenity)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* View Details Button */}
-                <a
-                  href="#"
-                  className="inline-block text-xs tracking-[0.15em] text-gray-900 font-light uppercase border-b border-gray-900 hover:text-gray-600 hover:border-gray-600 transition-all duration-300 pb-0.5"
-                >
-                  View Details
-                </a>
-              </div>
-            </motion.div>
-          ))}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm">Back to Available Rooms</span>
+            </button>
+          )}
+          <p className="text-center text-sm text-gray-600 mb-1 italic">
+            The Arboreal Resort
+          </p>
+          <h1 className="text-center text-base md:text-lg text-gray-800 mb-4">
+            {searchData ? (
+              `${searchData.checkIn} | ${searchData.checkOut}`
+            ) : (
+              "Experience Luxury and Nature Combined"
+            )}
+          </h1>
+         
         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <Testimonials />
+      {/* Main Content Container */}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Room Type Tabs */}
+        <div className="flex justify-center gap-0 mb-8 overflow-x-auto">
+          {rooms.map((room, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTab(index)}
+              className={`
+                relative px-6 py-3 text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-4 rounded-full
+                ${
+                  activeTab === index
+                    ? "border-gray-800 text-gray-900 bg-white"
+                    : "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }
+              `}
+            >
+              {room.name}
+              {/* Green dot indicator for available room */}
+              {originalRoomTab === index && (
+                <span className="absolute top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Room Details Card */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className=""
+          >
+            {/* Availability Notice Banner */}
+            {backendRoom && !isCurrentRoomAvailable() && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 bg-gray-50 border-l-4 border-gray-500 p-4 rounded-r-lg"
+              >
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">Exploring other rooms</p>
+                    <p className="text-xs text-gray-700 mt-1">
+                      This room's availability hasn't been checked yet. Click "Check Availability" to see current pricing and book.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Large Hero Image with Navigation */}
+            <div className="relative w-full h-[500px] overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentImageIndex}
+                  src={`/${images[currentImageIndex]}`}
+                  alt={`${currentRoom.name}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={goToPrevImage}
+                className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center transition-all duration-300 shadow-lg z-10"
+                aria-label="Previous image"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-800"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={goToNextImage}
+                className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center transition-all duration-300 shadow-lg z-10"
+                aria-label="Next image"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-800"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Image Progress Indicators */}
+            <div className="flex justify-center gap-2 py-4 ">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`h-1 transition-all duration-300 rounded-md ${
+                    currentImageIndex === index
+                      ? "w-[150px] bg-gray-800"
+                      : "w-[100px] bg-gray-300 hover:bg-gray-400"
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Room Title */}
+            <div className="text-center py-6 border-b border-gray-200">
+              <h2 className="text-2xl md:text-3xl font-serif text-gray-900">
+                The {currentRoom.name.toLowerCase()}
+              </h2>
+            </div>
+
+            {/* Room Description */}
+            <div className="px-8 md:px-16 py-8 text-center border-b border-gray-200">
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                {currentRoom.description}
+              </p>
+            </div>
+<div className="bg-white shadow-sm">
+            {/* Room Details Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 px-8 md:px-16 py-8 border-b border-gray-200">
+              {/* Adults */}
+              <div className="flex items-start gap-3">
+                <BsPersonFill className="text-2xl text-gray-700 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Adults:</p>
+                  <p className="text-sm font-medium text-gray-900">2</p>
+                </div>
+              </div>
+
+              {/* Children */}
+              <div className="flex items-start gap-3">
+                <BsPerson className="text-2xl text-gray-700 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Children:</p>
+                  <p className="text-sm font-medium text-gray-900">1</p>
+                </div>
+              </div>
+
+              {/* Bed Type */}
+              <div className="flex items-start gap-3">
+                <IoBedOutline className="text-2xl text-gray-700 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Bed Type:</p>
+                  <p className="text-sm font-medium text-gray-900">Double Bed</p>
+                </div>
+              </div>
+
+              {/* Size */}
+              <div className="flex items-start gap-3">
+                <BiExpand className="text-2xl text-gray-700 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Size:</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {currentRoom.details.area.split("(")[0].trim()}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Amenities Section */}
+            <div className="px-8 md:px-16 py-8 border-b border-gray-200">
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+                Amenities:
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {currentRoom.room_exclusive_features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-gray-700 text-sm">{feature}</span>
+                  </div>
+                ))}
+                {currentRoom.all_stays_include.map((item, index) => (
+                  <div key={`stay-${index}`} className="flex items-start gap-2">
+                    <span className="text-gray-700 text-sm">{item}</span>
+                  </div>
+                ))}
+                {currentRoom.bath_and_wellness &&
+                  currentRoom.bath_and_wellness.map((item, index) => (
+                    <div key={`bath-${index}`} className="flex items-start gap-2">
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Pricing and Book Now Section */}
+            <div className="px-8 md:px-16 py-8">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="text-center md:text-left">
+                  {/* Only show pricing if it's the available room from backend */}
+                  {isCurrentRoomAvailable() && backendRoom && backendRoom.room_rates_info && (
+                    <>
+                      <p className="text-xs text-gray-600 mb-1">
+                        {searchData ? "Per night" : "Total at"}
+                      </p>
+                      <p className="text-2xl md:text-3xl font-semibold text-gray-900">
+                        {getRoomPrice()}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        (including taxes & fees)
+                      </p>
+                    </>
+                  )}
+                  {/* Message for rooms being explored */}
+                  {!isCurrentRoomAvailable() && backendRoom && (
+                    <p className="text-sm text-gray-600 italic">
+                      Check availability for current pricing
+                    </p>
+                  )}
+                </div>
+                <button 
+                  onClick={handleBookNow}
+                  className={`w-full md:w-auto px-12 py-3 transition-all duration-300 text-sm font-medium rounded-full ${
+                    isCurrentRoomAvailable() 
+                      ? "bg-gray-900 text-white hover:bg-gray-800" 
+                      : "bg-gray-600 text-white hover:bg-gray-700"
+                  }`}
+                >
+                  {isCurrentRoomAvailable() ? "Book This Room" : "Check Availability"}
+                </button>
+              </div>
+            </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Add Another Room Button */}
+        <div className="mt-8 text-right">
+          <button className="text-sm text-gray-600 hover:text-gray-900 underline transition-colors duration-300">
+            Add Another Room
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

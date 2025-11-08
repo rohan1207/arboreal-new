@@ -6,53 +6,56 @@ const RoomShowcase = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  // Each room is a separate entity
+  // Each room has 3 images: [left, center, right]
   const rooms = [
     {
       id: 1,
       title: "The Classic sunroom",
-      image: "/slider1.jpg",
+      images: [
+        "/Classic_Sunroom_1.jpg",
+        "/Classic_Sunroom_2.jpg",
+        "/Classic_Sunroom_3.jpg",
+      ],
       link: "#",
     },
     {
       id: 2,
-      title: "The Tree-House Resort",
-      image: "/slider2.jpg",
+      title: "Forest Bathtub Suite",
+      images: [
+        "/Forest_Bathtub_01.jpg",
+        "/Forest_Bathtub_02.jpg",
+        "/Forest_Bathtub_03.jpg",
+      ],
       link: "#",
     },
     {
       id: 3,
-      title: "The Amazing Nature",
-      image: "/slider3.jpg",
+      title: "Forest Private Pool",
+      images: [
+        "/Forest_Private_Pool_1.jpg",
+        "/Forest_Private_Pool_2.jpg",
+        "/Forest_Private_Pool_3.jpg",
+      ],
       link: "#",
     },
     {
       id: 4,
-      title: "The Mountain View Suite",
-      image: "/slider4.jpg",
+      title: "Luxury Sunroom Arboreal",
+      images: [
+        "/Luxury_Sunroom_Arboreal_01.jpg",
+        "/Luxury_Sunroom_Arboreal_02.jpg",
+        "/Luxury_Sunroom_Arboreal_03.jpg",
+      ],
       link: "#",
     },
   ];
 
-  // Get 3 rooms to display: left, center (main), right
-  const getVisibleRooms = () => {
-    const leftIndex = (currentIndex - 1 + rooms.length) % rooms.length;
-    const centerIndex = currentIndex;
-    const rightIndex = (currentIndex + 1) % rooms.length;
-    
-    return [
-      { ...rooms[leftIndex], position: 'left' },
-      { ...rooms[centerIndex], position: 'center' },
-      { ...rooms[rightIndex], position: 'right' },
-    ];
-  };
-
-  // Auto-slide every 4 seconds
+  // Auto-slide every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % rooms.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, [rooms.length]);
@@ -67,12 +70,11 @@ const RoomShowcase = () => {
     setCurrentIndex((prev) => (prev + 1) % rooms.length);
   };
 
-  const visibleRooms = getVisibleRooms();
-  const centerRoom = visibleRooms[1];
+  const currentRoom = rooms[currentIndex];
 
-  const variants = {
+  const slideVariants = {
     enter: (direction) => ({
-      x: direction > 0 ? '100%' : '-100%',
+      x: direction > 0 ? 1000 : -1000,
       opacity: 0,
     }),
     center: {
@@ -80,13 +82,13 @@ const RoomShowcase = () => {
       opacity: 1,
     },
     exit: (direction) => ({
-      x: direction > 0 ? '-100%' : '100%',
+      x: direction > 0 ? -1000 : 1000,
       opacity: 0,
     }),
   };
 
   return (
-    <section className="relative py-16 md:py-20 bg-[#f5f3ed]">
+    <section className="relative py-16 md:py-20 bg-[#f5f3ed] overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
@@ -109,106 +111,119 @@ const RoomShowcase = () => {
           </motion.h2>
         </div>
 
-        {/* Images Grid with Navigation Arrows */}
-        <div className="relative flex items-center justify-center mb-10">
-          {/* Left Arrow */}
+        {/* Room Carousel - Full Row Slides */}
+        <div className="relative">
+          {/* Navigation Arrows */}
           <motion.button
             onClick={goToPrevious}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute left-0 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/80 hover:bg-white shadow-lg transition-all duration-300"
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
             aria-label="Previous room"
           >
             <FiChevronLeft className="text-xl md:text-2xl text-gray-800" />
           </motion.button>
 
-          {/* Carousel Container with Overflow Hidden */}
-          <div className="relative w-full max-w-6xl mx-12 md:mx-16 overflow-hidden">
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.button
+            onClick={goToNext}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
+            aria-label="Next room"
+          >
+            <FiChevronRight className="text-xl md:text-2xl text-gray-800" />
+          </motion.button>
+
+          {/* Carousel Container */}
+          <div className="relative w-full overflow-hidden">
+            <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentIndex}
                 custom={direction}
-                variants={variants}
+                variants={slideVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
                 transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.4 },
+                  x: { type: "spring", stiffness: 250, damping: 35 },
+                  opacity: { duration: 0.3 },
                 }}
-                className="flex items-center justify-center gap-3 md:gap-4"
+                className="flex items-center justify-center gap-2 md:gap-4 px-12 md:px-20"
               >
-                {/* Left Room - Narrow & Vertically Centered */}
+                {/* Left Image - Narrow */}
                 <a
-                  href={visibleRooms[0].link}
-                  className="relative w-[15%] md:w-[18%] h-[250px] md:h-[350px] overflow-hidden group cursor-pointer flex-shrink-0"
+                  href={currentRoom.link}
+                  className="relative w-[20%] md:w-[22%] h-[280px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
                 >
                   <img
-                    src={visibleRooms[0].image}
-                    alt={visibleRooms[0].title}
+                    src={currentRoom.images[0]}
+                    alt={`${currentRoom.title} - View 1`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30 group-hover:from-black/5 group-hover:to-black/20 transition-all duration-500" />
                 </a>
 
-                {/* Center Room - Main Focus */}
+                {/* Center Image - Large */}
                 <a
-                  href={visibleRooms[1].link}
-                  className="relative w-[50%] md:w-[46%] h-[320px] md:h-[450px] overflow-hidden group cursor-pointer flex-shrink-0"
+                  href={currentRoom.link}
+                  className="relative w-[50%] md:w-[48%] h-[350px] md:h-[480px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm shadow-xl"
                 >
                   <img
-                    src={visibleRooms[1].image}
-                    alt={visibleRooms[1].title}
+                    src={currentRoom.images[1]}
+                    alt={`${currentRoom.title} - Main View`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 group-hover:to-transparent transition-all duration-500" />
                 </a>
 
-                {/* Right Room - Narrow & Vertically Centered */}
+                {/* Right Image - Narrow */}
                 <a
-                  href={visibleRooms[2].link}
-                  className="relative w-[15%] md:w-[18%] h-[250px] md:h-[350px] overflow-hidden group cursor-pointer flex-shrink-0"
+                  href={currentRoom.link}
+                  className="relative w-[20%] md:w-[22%] h-[280px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
                 >
                   <img
-                    src={visibleRooms[2].image}
-                    alt={visibleRooms[2].title}
+                    src={currentRoom.images[2]}
+                    alt={`${currentRoom.title} - View 2`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30 group-hover:from-black/5 group-hover:to-black/20 transition-all duration-500" />
                 </a>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Right Arrow */}
-          <motion.button
-            onClick={goToNext}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="absolute right-0 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/80 hover:bg-white shadow-lg transition-all duration-300"
-            aria-label="Next room"
+          {/* Room Title Below Images */}
+          <motion.div
+            key={`title-${currentIndex}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-center mt-6 md:mt-8"
           >
-            <FiChevronRight className="text-xl md:text-2xl text-gray-800" />
-          </motion.button>
+            <h3 className="text-2xl md:text-3xl font-serif text-gray-900">
+              {currentRoom.title}
+            </h3>
+          </motion.div>
         </div>
 
-        {/* Center Room Title - Clickable */}
-        <motion.div
-          key={`title-${currentIndex}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-center"
-        >
-          <a
-            href={centerRoom.link}
-            className="inline-block group"
-          >
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300">
-              {centerRoom.title}
-            </h3>
-          </a>
-        </motion.div>
+        {/* Pagination Dots */}
+        <div className="flex justify-center items-center gap-2 mt-8">
+          {rooms.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setDirection(index > currentIndex ? 1 : -1);
+                setCurrentIndex(index);
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? "w-8 bg-gray-800"
+                  : "w-2 bg-gray-400 hover:bg-gray-600"
+              }`}
+              aria-label={`Go to room ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

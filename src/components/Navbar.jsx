@@ -126,9 +126,9 @@ const Navbar = () => {
                   whileHover={{ scale: 1.02 }}
                   className="cursor-pointer"
                 >
-                  <img 
-                    src="/logo.png" 
-                    alt="Arboreal Resort" 
+                  <img
+                    src="/logo.png"
+                    alt="Arboreal Resort"
                     className="h-16 lg:h-24 w-auto object-contain"
                   />
                 </motion.div>
@@ -180,9 +180,9 @@ const Navbar = () => {
                     whileHover={{ scale: 1.02 }}
                     className="cursor-pointer"
                   >
-                    <img 
-                      src="/blacklogo.png" 
-                      alt="Swaranjali Resort" 
+                    <img
+                      src="/blacklogo.png"
+                      alt="Swaranjali Resort"
                       className="h-10 lg:h-16 w-auto"
                     />
                   </motion.div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const AccommodationCards = () => {
   const accommodations = [
@@ -75,18 +76,20 @@ const AccommodationCards = () => {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="flex justify-center mt-16"
         >
-          <button className="group relative px-8 py-3 overflow-hidden">
+          <Link to="/rooms">
+          <button className="group relative px-8 py-3 overflow-hidden rounded-full">
             {/* Button Text */}
             <span className="relative z-10 text-sm tracking-[0.15em] text-gray-900 font-light uppercase transition-colors duration-300 group-hover:text-white">
               View all accommodation
             </span>
-            
+
             {/* Bottom Border */}
             <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
-            
+
             {/* Hover Background */}
             <div className="absolute inset-0 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
           </button>
+          </Link>
         </motion.div>
       </div>
     </section>

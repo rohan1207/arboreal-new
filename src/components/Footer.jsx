@@ -1,7 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FiMail, FiPhone, FiMapPin, FiFacebook, FiInstagram, FiTwitter, FiYoutube } from "react-icons/fi";
+import {
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiFacebook,
+  FiInstagram,
+  FiTwitter,
+  FiYoutube,
+} from "react-icons/fi";
 
 const Footer = () => {
   const quickLinks = [
@@ -23,19 +31,18 @@ const Footer = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 }
-    }
+      transition: { duration: 0.6 },
+    },
   };
 
   return (
     <footer className="relative bg-[#f5f3ed] border-t border-gray-200">
       {/* Top Decorative Border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-      
+
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
-          
           {/* Brand Section */}
           <motion.div
             initial="hidden"
@@ -52,10 +59,11 @@ const Footer = () => {
               />
             </Link>
             <p className="text-gray-600 font-light text-sm leading-relaxed max-w-xs">
-              Escape to tranquility. Experience luxury amidst nature at Arboreal Resort, 
-              where every moment is a celebration of serenity and elegance.
+              Escape to tranquility. Experience luxury amidst nature at Arboreal
+              Resort, where every moment is a celebration of serenity and
+              elegance.
             </p>
-            
+
             {/* Social Media */}
             <div className="flex items-center gap-3">
               <a
@@ -165,19 +173,25 @@ const Footer = () => {
                   <FiMapPin className="w-4 h-4 text-gray-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">Address</p>
+                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
+                    Address
+                  </p>
                   <p className="text-sm text-gray-700 font-light leading-relaxed">
-                    Arboreal Resort, Nature Valley,<br />Serenity Hills, 123456
+                    Arboreal Resort, Nature Valley,
+                    <br />
+                    Serenity Hills, 123456
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
                   <FiPhone className="w-4 h-4 text-gray-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">Call Us</p>
+                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
+                    Call Us
+                  </p>
                   <a
                     href="tel:+919876543210"
                     className="text-sm text-gray-700 hover:text-gray-900 transition-colors duration-300 font-light"
@@ -186,13 +200,15 @@ const Footer = () => {
                   </a>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
                   <FiMail className="w-4 h-4 text-gray-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">Email</p>
+                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
+                    Email
+                  </p>
                   <a
                     href="mailto:info@arborealresort.com"
                     className="text-sm text-gray-700 hover:text-gray-900 transition-colors duration-300 font-light break-all"
@@ -215,7 +231,8 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-500 font-light text-center md:text-left">
-              © {new Date().getFullYear()} Arboreal Resort. All rights reserved. Crafted with love.
+              © {new Date().getFullYear()} Arboreal Resort. All rights reserved.
+              Crafted with love.
             </p>
             <div className="flex items-center gap-6 text-xs">
               <Link

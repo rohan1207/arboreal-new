@@ -50,14 +50,15 @@ const ImageSlider = () => {
             The Arboreal Resort.
           </h1>
           <p className="text-sm md:text-base text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-4">
-            A perfect getaway destination in Lonavala for you and your loved ones. 
-            Be one with nature and live your best life with us at the Arboreal Resort 
-            in Lonavala. A beautiful tree house surrounded by the vast and deep forest, 
-            along with the flowing serenity of waterfalls, birds chirping and nature's 
-            sounds that gives a perfect experience of a rainforest resort. A Morning at 
-            our resort is what anyone should experience with a view from the balcony 
-            such as none other, birds chirping, blowing wind, waving trees, that gives 
-            you an amazing experience you should ever have.
+            A perfect getaway destination in Lonavala for you and your loved
+            ones. Be one with nature and live your best life with us at the
+            Arboreal Resort in Lonavala. A beautiful tree house surrounded by
+            the vast and deep forest, along with the flowing serenity of
+            waterfalls, birds chirping and nature's sounds that gives a perfect
+            experience of a rainforest resort. A Morning at our resort is what
+            anyone should experience with a view from the balcony such as none
+            other, birds chirping, blowing wind, waving trees, that gives you an
+            amazing experience you should ever have.
           </p>
         </div>
 
@@ -93,8 +94,8 @@ const ImageSlider = () => {
 
               const getOpacity = () => {
                 if (position === 0) return 1;
-                if (position === -1 || position === 1) return 0.5;
-                return 0.25;
+                if (position === -1 || position === 1) return 1;
+                return 1;
               };
 
               const getZIndex = () => {
@@ -137,10 +138,10 @@ const ImageSlider = () => {
                       className="w-full h-full object-cover"
                     />
 
-                    {/* Subtle overlay on non-center images */}
+                    {/* Subtle overlay on non-center images
                     {!isCentered && (
-                      <div className="absolute inset-0 bg-black/20" />
-                    )}
+                      <div className="absolu" />
+                    )} */}
                   </div>
                 </div>
               );

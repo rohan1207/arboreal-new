@@ -9,7 +9,8 @@ const BlogPage = () => {
       title: "Best Time to Visit Lonavala",
       description:
         "Discover the perfect season to experience the magic of Lonavala. From monsoon waterfalls to winter mist, learn when to plan your perfect getaway to The Arboreal Resort.",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       date: "October 15, 2024",
       readTime: "5 min read",
       link: "#",
@@ -20,7 +21,8 @@ const BlogPage = () => {
       title: "Yoga & Meditation in Nature",
       description:
         "Experience tranquility like never before. Our wellness programs combine ancient practices with the serene beauty of our natural surroundings for ultimate relaxation.",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80",
       date: "October 12, 2024",
       readTime: "4 min read",
       link: "#",
@@ -31,7 +33,8 @@ const BlogPage = () => {
       title: "Farm to Table Dining Experience",
       description:
         "Savor the freshest flavors from our organic gardens. Our chefs craft exquisite dishes using locally sourced ingredients, creating a true farm-to-table experience.",
-      image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
       date: "October 8, 2024",
       readTime: "6 min read",
       link: "#",
@@ -42,7 +45,8 @@ const BlogPage = () => {
       title: "Exploring the Western Ghats",
       description:
         "Embark on unforgettable trails through the lush Western Ghats. From sunrise treks to hidden waterfalls, discover the natural wonders surrounding The Arboreal Resort. Our guided nature walks offer intimate encounters with local flora and fauna.",
-      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
+      image:
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
       date: "October 5, 2024",
       readTime: "8 min read",
       link: "#",
@@ -53,7 +57,8 @@ const BlogPage = () => {
       title: "Our Eco-Friendly Practices",
       description:
         "Learn about our commitment to sustainable luxury. From rainwater harvesting to solar energy, discover how we preserve nature while offering premium comfort.",
-      image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
       date: "September 28, 2024",
       readTime: "7 min read",
       link: "#",
@@ -64,7 +69,8 @@ const BlogPage = () => {
       title: "Romantic Getaway Ideas",
       description:
         "Create unforgettable memories with your loved one. From candlelit dinners under the stars to couples' spa treatments, discover romantic experiences at our resort.",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
       date: "September 22, 2024",
       readTime: "5 min read",
       link: "#",
@@ -110,8 +116,7 @@ const BlogPage = () => {
       <motion.section
         className="relative h-[60vh] md:h-[70vh] bg-cover bg-center flex items-center justify-center text-white overflow-hidden"
         style={{
-          backgroundImage:
-            "url('/slider1.jpg')",
+          backgroundImage: "url('/slider1.jpg')",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -162,7 +167,7 @@ const BlogPage = () => {
               <motion.article
                 key={blog.id}
                 variants={itemVariants}
-                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
               >
                 {/* Image */}
                 <div className="block relative overflow-hidden">
@@ -174,10 +179,10 @@ const BlogPage = () => {
                     />
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                  
+
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
                       {blog.category}
                     </span>
                   </div>
@@ -224,7 +229,7 @@ const BlogPage = () => {
             {/* Second Row - 1 Large Card (spans 2 columns) */}
             <motion.article
               variants={itemVariants}
-              className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
             >
               {/* Image */}
               <div className="block relative overflow-hidden">
@@ -236,10 +241,10 @@ const BlogPage = () => {
                   />
                 </div>
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                
+
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase">
+                  <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
                     {blogs[3].category}
                   </span>
                 </div>
@@ -287,7 +292,7 @@ const BlogPage = () => {
               <motion.article
                 key={blog.id}
                 variants={itemVariants}
-                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
               >
                 {/* Image */}
                 <div className="block relative overflow-hidden">
@@ -299,10 +304,10 @@ const BlogPage = () => {
                     />
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                  
+
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
                       {blog.category}
                     </span>
                   </div>
@@ -369,11 +374,11 @@ const BlogPage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-white/40 transition-all duration-300"
+                className="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-full text-white placeholder-gray-400 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300"
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 transition-all duration-300 font-light text-sm uppercase tracking-wider whitespace-nowrap"
+                className="px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-sm uppercase tracking-wider whitespace-nowrap shadow-lg hover:shadow-xl"
               >
                 Subscribe
               </button>

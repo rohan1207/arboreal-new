@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 const LocationMap = () => {
   const locationDetails = {
     title: "Getting here",
-    address: "The Arboreal, Pvt. Road, Gorkhande Apati, Lonavala, Maharashtra 412108",
+    address:
+      "The Arboreal, Pvt. Road, Gorkhande Apati, Lonavala, Maharashtra 412108",
     mapLink: "https://maps.app.goo.gl/2EL8NXUZgh4An2NL8",
-    embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3779.6740519416508!2d73.42024677496694!3d18.67861708244583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be803df3ec90e3b%3A0xf96fb840dcac5cce!2sThe%20Arboreal!5e0!3m2!1sen!2sin!4v1762453871538!5m2!1sen!2sin",
+    embedUrl:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3779.6740519416508!2d73.42024677496694!3d18.67861708244583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be803df3ec90e3b%3A0xf96fb840dcac5cce!2sThe%20Arboreal!5e0!3m2!1sen!2sin!4v1762453871538!5m2!1sen!2sin",
   };
 
   return (
@@ -115,7 +117,9 @@ const LocationMap = () => {
               </svg>
             </div>
             <h3 className="text-lg font-serif text-gray-900">From Mumbai</h3>
-            <p className="text-sm text-gray-600 font-light">83 km via Mumbai-Pune Expressway</p>
+            <p className="text-sm text-gray-600 font-light">
+              83 km via Mumbai-Pune Expressway
+            </p>
           </div>
 
           {/* Airport Info */}
@@ -135,8 +139,12 @@ const LocationMap = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-serif text-gray-900">Nearest Airport</h3>
-            <p className="text-sm text-gray-600 font-light">Pune Airport - 65 km away</p>
+            <h3 className="text-lg font-serif text-gray-900">
+              Nearest Airport
+            </h3>
+            <p className="text-sm text-gray-600 font-light">
+              Pune Airport - 65 km away
+            </p>
           </div>
 
           {/* Train Info */}
@@ -156,8 +164,12 @@ const LocationMap = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-serif text-gray-900">Railway Station</h3>
-            <p className="text-sm text-gray-600 font-light">Lonavala Station - 8 km away</p>
+            <h3 className="text-lg font-serif text-gray-900">
+              Railway Station
+            </h3>
+            <p className="text-sm text-gray-600 font-light">
+              Lonavala Station - 8 km away
+            </p>
           </div>
         </motion.div>
       </div>

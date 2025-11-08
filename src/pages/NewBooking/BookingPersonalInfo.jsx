@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const BookingPersonalInfo = () => {
   const navigate = useNavigate();
@@ -8,58 +8,58 @@ const BookingPersonalInfo = () => {
   const { room, searchData, bookingDetails } = location.state || {};
 
   const [formData, setFormData] = useState({
-    title: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    gender: '',
-    address: '',
-    city: '',
-    state: '',
-    country: 'India',
-    zipcode: '',
-    specialRequest: ''
+    title: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "India",
+    zipcode: "",
+    specialRequest: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const titles = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.'];
-  const genders = ['Male', 'Female', 'Other'];
+  const titles = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."];
+  const genders = ["Male", "Female", "Other"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.title) newErrors.title = 'Title is required';
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
+    if (!formData.title) newErrors.title = "Title is required";
+    if (!formData.firstName) newErrors.firstName = "First name is required";
+    if (!formData.lastName) newErrors.lastName = "Last name is required";
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
     if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = "Phone number is required";
     } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be 10 digits';
+      newErrors.phone = "Phone number must be 10 digits";
     }
-    if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.city) newErrors.city = 'City is required';
-    if (!formData.state) newErrors.state = 'State is required';
-    if (!formData.country) newErrors.country = 'Country is required';
-    if (!formData.zipcode) newErrors.zipcode = 'Zipcode is required';
+    if (!formData.address) newErrors.address = "Address is required";
+    if (!formData.city) newErrors.city = "City is required";
+    if (!formData.state) newErrors.state = "State is required";
+    if (!formData.country) newErrors.country = "Country is required";
+    if (!formData.zipcode) newErrors.zipcode = "Zipcode is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -69,23 +69,23 @@ const BookingPersonalInfo = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     // Navigate to extras page
-    navigate('/booking/extras', {
+    navigate("/booking/extras", {
       state: {
         room,
         searchData,
         bookingDetails,
-        personalInfo: formData
-      }
+        personalInfo: formData,
+      },
     });
   };
 
   if (!room || !searchData || !bookingDetails) {
-    navigate('/availability');
+    navigate("/availability");
     return null;
   }
 
@@ -99,21 +99,27 @@ const BookingPersonalInfo = () => {
               <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Select Date</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Select Date
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
                 2
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">Personal Information</span>
+              <span className="ml-2 text-sm font-medium text-gray-900">
+                Personal Information
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Booking Confirmation</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Booking Confirmation
+              </span>
             </div>
           </div>
         </div>
@@ -133,7 +139,9 @@ const BookingPersonalInfo = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Guest Details Section */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4 text-gray-800">Guest Details</h3>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                    Guest Details
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Title */}
                     <div>
@@ -145,15 +153,21 @@ const BookingPersonalInfo = () => {
                         value={formData.title}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.title ? 'border-red-500' : 'border-gray-300'
+                          errors.title ? "border-red-500" : "border-gray-300"
                         }`}
                       >
                         <option value="">Select Title</option>
-                        {titles.map(title => (
-                          <option key={title} value={title}>{title}</option>
+                        {titles.map((title) => (
+                          <option key={title} value={title}>
+                            {title}
+                          </option>
                         ))}
                       </select>
-                      {errors.title && <p className="mt-1 text-sm text-red-500">{errors.title}</p>}
+                      {errors.title && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.title}
+                        </p>
+                      )}
                     </div>
 
                     {/* Gender */}
@@ -168,8 +182,10 @@ const BookingPersonalInfo = () => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       >
                         <option value="">Select Gender</option>
-                        {genders.map(gender => (
-                          <option key={gender} value={gender}>{gender}</option>
+                        {genders.map((gender) => (
+                          <option key={gender} value={gender}>
+                            {gender}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -185,11 +201,17 @@ const BookingPersonalInfo = () => {
                         value={formData.firstName}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.firstName ? 'border-red-500' : 'border-gray-300'
+                          errors.firstName
+                            ? "border-red-500"
+                            : "border-gray-300"
                         }`}
                         placeholder="Enter first name"
                       />
-                      {errors.firstName && <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>}
+                      {errors.firstName && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.firstName}
+                        </p>
+                      )}
                     </div>
 
                     {/* Last Name */}
@@ -203,11 +225,15 @@ const BookingPersonalInfo = () => {
                         value={formData.lastName}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.lastName ? 'border-red-500' : 'border-gray-300'
+                          errors.lastName ? "border-red-500" : "border-gray-300"
                         }`}
                         placeholder="Enter last name"
                       />
-                      {errors.lastName && <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>}
+                      {errors.lastName && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.lastName}
+                        </p>
+                      )}
                     </div>
 
                     {/* Email */}
@@ -221,11 +247,15 @@ const BookingPersonalInfo = () => {
                         value={formData.email}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.email ? 'border-red-500' : 'border-gray-300'
+                          errors.email ? "border-red-500" : "border-gray-300"
                         }`}
                         placeholder="your.email@example.com"
                       />
-                      {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     {/* Phone */}
@@ -239,19 +269,25 @@ const BookingPersonalInfo = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.phone ? 'border-red-500' : 'border-gray-300'
+                          errors.phone ? "border-red-500" : "border-gray-300"
                         }`}
                         placeholder="10-digit mobile number"
                         maxLength="10"
                       />
-                      {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+                      {errors.phone && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.phone}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
 
                 {/* Address Section */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4 text-gray-800">Address</h3>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                    Address
+                  </h3>
                   <div className="grid grid-cols-1 gap-4">
                     {/* Address */}
                     <div>
@@ -264,11 +300,15 @@ const BookingPersonalInfo = () => {
                         value={formData.address}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                          errors.address ? 'border-red-500' : 'border-gray-300'
+                          errors.address ? "border-red-500" : "border-gray-300"
                         }`}
                         placeholder="Enter your address"
                       />
-                      {errors.address && <p className="mt-1 text-sm text-red-500">{errors.address}</p>}
+                      {errors.address && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.address}
+                        </p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -283,11 +323,15 @@ const BookingPersonalInfo = () => {
                           value={formData.city}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                            errors.city ? 'border-red-500' : 'border-gray-300'
+                            errors.city ? "border-red-500" : "border-gray-300"
                           }`}
                           placeholder="Enter city"
                         />
-                        {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+                        {errors.city && (
+                          <p className="mt-1 text-sm text-red-500">
+                            {errors.city}
+                          </p>
+                        )}
                       </div>
 
                       {/* State */}
@@ -301,11 +345,15 @@ const BookingPersonalInfo = () => {
                           value={formData.state}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                            errors.state ? 'border-red-500' : 'border-gray-300'
+                            errors.state ? "border-red-500" : "border-gray-300"
                           }`}
                           placeholder="Enter state"
                         />
-                        {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
+                        {errors.state && (
+                          <p className="mt-1 text-sm text-red-500">
+                            {errors.state}
+                          </p>
+                        )}
                       </div>
 
                       {/* Country */}
@@ -319,11 +367,17 @@ const BookingPersonalInfo = () => {
                           value={formData.country}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                            errors.country ? 'border-red-500' : 'border-gray-300'
+                            errors.country
+                              ? "border-red-500"
+                              : "border-gray-300"
                           }`}
                           placeholder="Enter country"
                         />
-                        {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country}</p>}
+                        {errors.country && (
+                          <p className="mt-1 text-sm text-red-500">
+                            {errors.country}
+                          </p>
+                        )}
                       </div>
 
                       {/* Zipcode */}
@@ -337,12 +391,18 @@ const BookingPersonalInfo = () => {
                           value={formData.zipcode}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                            errors.zipcode ? 'border-red-500' : 'border-gray-300'
+                            errors.zipcode
+                              ? "border-red-500"
+                              : "border-gray-300"
                           }`}
                           placeholder="Enter zipcode"
                           maxLength="6"
                         />
-                        {errors.zipcode && <p className="mt-1 text-sm text-red-500">{errors.zipcode}</p>}
+                        {errors.zipcode && (
+                          <p className="mt-1 text-sm text-red-500">
+                            {errors.zipcode}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -390,7 +450,9 @@ const BookingPersonalInfo = () => {
               animate={{ opacity: 1, x: 0 }}
               className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">Room Summary</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">
+                Room Summary
+              </h3>
 
               {/* Room Details */}
               <div className="mb-4">
@@ -402,11 +464,15 @@ const BookingPersonalInfo = () => {
               <div className="space-y-3 py-4 border-t border-b">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Check-in</span>
-                  <span className="font-semibold">{new Date(bookingDetails.checkIn).toLocaleDateString()}</span>
+                  <span className="font-semibold">
+                    {new Date(bookingDetails.checkIn).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Check-out</span>
-                  <span className="font-semibold">{new Date(bookingDetails.checkOut).toLocaleDateString()}</span>
+                  <span className="font-semibold">
+                    {new Date(bookingDetails.checkOut).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Nights</span>
@@ -415,7 +481,8 @@ const BookingPersonalInfo = () => {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Guests</span>
                   <span className="font-semibold">
-                    {searchData.adults} Adults, {searchData.children || 0} Children
+                    {searchData.adults} Adults, {searchData.children || 0}{" "}
+                    Children
                   </span>
                 </div>
               </div>
@@ -425,7 +492,8 @@ const BookingPersonalInfo = () => {
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Total Amount</span>
                   <span className="text-amber-600">
-                    {room.currency_sign}{bookingDetails.totalPrice.toFixed(2)}
+                    {room.currency_sign}
+                    {bookingDetails.totalPrice.toFixed(2)}
                   </span>
                 </div>
               </div>

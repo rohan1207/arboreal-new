@@ -2,9 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { FiUser, FiMail, FiPhone, FiMapPin, FiCreditCard, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+import {
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiCreditCard,
+  FiAlertCircle,
+  FiCheckCircle,
+} from "react-icons/fi";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 const BookingForm = () => {
   const location = useLocation();
@@ -24,27 +33,27 @@ const BookingForm = () => {
     email: "",
     phone: "",
     gender: "",
-    
+
     // Address
     address: "",
     city: "",
     state: "",
     country: "",
     zipcode: "",
-    
+
     // Payment
     paymentMode: "Pay at Hotel",
-    
+
     // Special Requests
     specialRequest: "",
-    
+
     // Card Details (optional)
     cardNumber: "",
     cardType: "",
     cardHolderName: "",
     expiryMonth: "",
     expiryYear: "",
-    cvv: ""
+    cvv: "",
   });
 
   useEffect(() => {
@@ -61,12 +70,14 @@ const BookingForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const calculateTotalPrice = () => {
     const nights = calculateNights();
-    const baseRate = parseFloat(room.room_rates_info?.avg_per_night_after_discount || 0);
+    const baseRate = parseFloat(
+      room.room_rates_info?.avg_per_night_after_discount || 0
+    );
     return (baseRate * nights).toFixed(2);
   };
 
@@ -98,7 +109,9 @@ const BookingForm = () => {
           Rateplan_Id: room.Rateplan_Id || "",
           Ratetype_Id: room.Ratetype_Id || "",
           Roomtype_Id: room.Roomtype_Id || room.RoomType_Id || "",
-          baserate: room.room_rates_info?.avg_per_night_after_discount?.toString() || "0",
+          baserate:
+            room.room_rates_info?.avg_per_night_after_discount?.toString() ||
+            "0",
           extradultrate: room.extra_adult_rate?.toString() || "0",
           extrachildrate: room.extra_child_rate?.toString() || "0",
           number_adults: searchData.adults?.toString() || "2",
@@ -108,8 +121,8 @@ const BookingForm = () => {
           First_Name: formData.firstName,
           Last_Name: formData.lastName,
           Gender: formData.gender,
-          SpecialRequest: formData.specialRequest
-        }
+          SpecialRequest: formData.specialRequest,
+        },
       },
       check_in_date: searchData.checkIn,
       check_out_date: searchData.checkOut,
@@ -123,7 +136,7 @@ const BookingForm = () => {
       Zipcode: formData.zipcode,
       Source_Id: "Website",
       Device: "Web",
-      Languagekey: "en"
+      Languagekey: "en",
     };
 
     // Add card details if payment mode is card
@@ -134,27 +147,30 @@ const BookingForm = () => {
         cc_expiremonth: formData.expiryMonth,
         cc_expireyear: formData.expiryYear,
         cvvcode: formData.cvv,
-        cardholdername: formData.cardHolderName
+        cardholdername: formData.cardHolderName,
       };
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/booking/create`, bookingPayload);
+      const response = await axios.post(
+        `${API_BASE_URL}/api/booking/create`,
+        bookingPayload
+      );
 
       if (response.data.success) {
         setSuccess(true);
         setReservationNo(response.data.data.ReservationNo);
-        
+
         // Scroll to top to show success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
         // Redirect to confirmation page after 3 seconds
         setTimeout(() => {
-          navigate('/booking-confirmation', { 
-            state: { 
+          navigate("/booking-confirmation", {
+            state: {
               reservationNo: response.data.data.ReservationNo,
-              bookingDetails: { ...bookingPayload, room, searchData }
-            }
+              bookingDetails: { ...bookingPayload, room, searchData },
+            },
           });
         }, 3000);
       } else {
@@ -162,7 +178,10 @@ const BookingForm = () => {
       }
     } catch (err) {
       console.error("Booking error:", err);
-      setError(err.response?.data?.message || "Failed to create booking. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to create booking. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -190,7 +209,8 @@ const BookingForm = () => {
             <p className="text-3xl font-serif text-gray-900">{reservationNo}</p>
           </div>
           <p className="text-sm text-gray-600">
-            A confirmation email has been sent to <strong>{formData.email}</strong>
+            A confirmation email has been sent to{" "}
+            <strong>{formData.email}</strong>
           </p>
         </motion.div>
       </div>
@@ -241,7 +261,7 @@ const BookingForm = () => {
                   <FiUser className="w-6 h-6" />
                   Guest Details
                 </h2>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
@@ -260,7 +280,7 @@ const BookingForm = () => {
                       <option value="Dr">Dr.</option>
                     </select>
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                       First Name *
@@ -275,7 +295,7 @@ const BookingForm = () => {
                       placeholder="John"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                       Last Name *
@@ -310,7 +330,7 @@ const BookingForm = () => {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                       Phone Number *
@@ -356,7 +376,7 @@ const BookingForm = () => {
                   <FiMapPin className="w-6 h-6" />
                   Address Details
                 </h2>
-                
+
                 <div className="grid grid-cols-1 gap-6 mb-6">
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
@@ -387,7 +407,7 @@ const BookingForm = () => {
                       placeholder="Mumbai"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                       State
@@ -417,7 +437,7 @@ const BookingForm = () => {
                       placeholder="India"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                       Zipcode
@@ -440,7 +460,7 @@ const BookingForm = () => {
                   <FiCreditCard className="w-6 h-6" />
                   Payment Method
                 </h2>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <label className="flex items-center p-4 border-2 border-gray-300 cursor-pointer hover:border-gray-900 transition-all">
                     <input
@@ -453,7 +473,7 @@ const BookingForm = () => {
                     />
                     <span className="text-sm">Pay at Hotel</span>
                   </label>
-                  
+
                   <label className="flex items-center p-4 border-2 border-gray-300 cursor-pointer hover:border-gray-900 transition-all">
                     <input
                       type="radio"
@@ -484,7 +504,7 @@ const BookingForm = () => {
                         maxLength="16"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                         Card Holder Name
@@ -514,7 +534,7 @@ const BookingForm = () => {
                           maxLength="2"
                         />
                       </div>
-                      
+
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                           Expiry Year
@@ -548,7 +568,7 @@ const BookingForm = () => {
                           <option value="Amex">American Express</option>
                         </select>
                       </div>
-                      
+
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
                           CVV
@@ -627,25 +647,35 @@ const BookingForm = () => {
                 <h3 className="text-xl font-serif text-gray-900">
                   {room.Room_Name || room.Roomtype_Name}
                 </h3>
-                
+
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex justify-between">
                     <span>Check-in:</span>
-                    <span className="font-medium text-gray-900">{formatDate(searchData.checkIn)}</span>
+                    <span className="font-medium text-gray-900">
+                      {formatDate(searchData.checkIn)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Check-out:</span>
-                    <span className="font-medium text-gray-900">{formatDate(searchData.checkOut)}</span>
+                    <span className="font-medium text-gray-900">
+                      {formatDate(searchData.checkOut)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Nights:</span>
-                    <span className="font-medium text-gray-900">{calculateNights()}</span>
+                    <span className="font-medium text-gray-900">
+                      {calculateNights()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Guests:</span>
                     <span className="font-medium text-gray-900">
-                      {searchData.adults} Adult{searchData.adults > 1 ? 's' : ''} 
-                      {searchData.children > 0 && `, ${searchData.children} Child${searchData.children > 1 ? 'ren' : ''}`}
+                      {searchData.adults} Adult
+                      {searchData.adults > 1 ? "s" : ""}
+                      {searchData.children > 0 &&
+                        `, ${searchData.children} Child${
+                          searchData.children > 1 ? "ren" : ""
+                        }`}
                     </span>
                   </div>
                 </div>
@@ -655,10 +685,14 @@ const BookingForm = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">
-                    {room.currency_sign}{room.room_rates_info?.avg_per_night_after_discount?.toLocaleString()} × {calculateNights()} night{calculateNights() > 1 ? 's' : ''}
+                    {room.currency_sign}
+                    {room.room_rates_info?.avg_per_night_after_discount?.toLocaleString()}{" "}
+                    × {calculateNights()} night
+                    {calculateNights() > 1 ? "s" : ""}
                   </span>
                   <span className="font-medium text-gray-900">
-                    {room.currency_sign}{calculateTotalPrice()}
+                    {room.currency_sign}
+                    {calculateTotalPrice()}
                   </span>
                 </div>
               </div>
@@ -666,9 +700,12 @@ const BookingForm = () => {
               {/* Total */}
               <div className="pt-4 border-t-2 border-gray-900">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-serif text-gray-900">Total</span>
+                  <span className="text-lg font-serif text-gray-900">
+                    Total
+                  </span>
                   <span className="text-2xl font-serif text-gray-900">
-                    {room.currency_sign}{calculateTotalPrice()}
+                    {room.currency_sign}
+                    {calculateTotalPrice()}
                   </span>
                 </div>
               </div>

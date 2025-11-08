@@ -1,32 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 const BookingPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { room, searchData, bookingDetails, personalInfo, selectedExtras } = location.state || {};
+  const { room, searchData, bookingDetails, personalInfo, selectedExtras } =
+    location.state || {};
 
   const [paymentGateways, setPaymentGateways] = useState([]);
-  const [selectedPaymentMode, setSelectedPaymentMode] = useState('Pay at Hotel');
+  const [selectedPaymentMode, setSelectedPaymentMode] =
+    useState("Pay at Hotel");
   const [selectedGateway, setSelectedGateway] = useState(null);
   const [cardDetails, setCardDetails] = useState({
-    cardNumber: '',
-    cardType: 'Visa',
-    cardHolderName: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: ''
+    cardNumber: "",
+    cardType: "Visa",
+    cardHolderName: "",
+    expiryMonth: "",
+    expiryYear: "",
+    cvv: "",
   });
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     if (!room || !searchData || !bookingDetails || !personalInfo) {
-      navigate('/availability');
+      navigate("/availability");
       return;
     }
 
@@ -35,10 +38,12 @@ const BookingPayment = () => {
 
   const fetchPaymentGateways = async () => {
     try {
-      console.log('=== Fetching Payment Gateways ===');
-      const response = await axios.get(`${API_BASE_URL}/api/booking/payment-gateways`);
-      console.log('Payment Gateways Response:', response.data);
-      
+      console.log("=== Fetching Payment Gateways ===");
+      const response = await axios.get(
+        `${API_BASE_URL}/api/booking/payment-gateways`
+      );
+      console.log("Payment Gateways Response:", response.data);
+
       if (response.data.success) {
         setPaymentGateways(response.data.data);
         console.log(`Found ${response.data.data.length} payment gateways`);
@@ -48,23 +53,29 @@ const BookingPayment = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching payment gateways:', error);
+      console.error("Error fetching payment gateways:", error);
     }
   };
 
   const handleCardDetailsChange = (e) => {
     const { name, value } = e.target;
-    setCardDetails(prev => ({
+    setCardDetails((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmitBooking = async () => {
     // Validate
-    if (selectedPaymentMode === 'Credit Card') {
-      if (!cardDetails.cardNumber || !cardDetails.cardHolderName || !cardDetails.expiryMonth || !cardDetails.expiryYear || !cardDetails.cvv) {
-        alert('Please fill in all card details');
+    if (selectedPaymentMode === "Credit Card") {
+      if (
+        !cardDetails.cardNumber ||
+        !cardDetails.cardHolderName ||
+        !cardDetails.expiryMonth ||
+        !cardDetails.expiryYear ||
+        !cardDetails.cvv
+      ) {
+        alert("Please fill in all card details");
         return;
       }
     }
@@ -79,7 +90,9 @@ const BookingPayment = () => {
         Ratetype_Id: String(room.ratetypeunkid),
         Roomtype_Id: String(room.roomtypeunkid),
         baserate: String(
-          room.room_rates_info.rack_rate ?? room.room_rates_info.avg_per_night_after_discount ?? "0"
+          room.room_rates_info.rack_rate ??
+            room.room_rates_info.avg_per_night_after_discount ??
+            "0"
         ),
         extradultrate: String(room.extra_adult_rates_info?.rack_rate ?? "0"),
         extrachildrate: String(room.extra_child_rates_info?.rack_rate ?? "0"),
@@ -89,17 +102,19 @@ const BookingPayment = () => {
         First_Name: String(personalInfo.firstName || ""),
         Last_Name: String(personalInfo.lastName || ""),
         Gender: personalInfo.gender || "",
-        SpecialRequest: personalInfo.specialRequest || ""
+        SpecialRequest: personalInfo.specialRequest || "",
       };
 
       // Only add ExtraChild_Age if there are children (MANDATORY if number_children is not zero)
       if (searchData.children > 0) {
-        roomDetails.ExtraChild_Age = Array(searchData.children).fill("5").join(",");
+        roomDetails.ExtraChild_Age = Array(searchData.children)
+          .fill("5")
+          .join(",");
       }
 
       const bookingPayload = {
         Room_Details: {
-          Room_1: roomDetails
+          Room_1: roomDetails,
         },
         check_in_date: bookingDetails.checkIn,
         check_out_date: bookingDetails.checkOut,
@@ -114,62 +129,80 @@ const BookingPayment = () => {
         City: personalInfo.city || "",
         Zipcode: personalInfo.zipcode || "",
         Device: "WEB",
-        Languagekey: "en"
+        Languagekey: "en",
       };
 
       // ONLY add ExtraCharge if there are valid extras with non-zero rates
       // Do NOT send if all extras have Rs0.0000
-      const hasValidExtras = selectedExtras && 
-                            Object.keys(selectedExtras).length > 0 && 
-                            bookingDetails.extrasCharge > 0;
-      
+      const hasValidExtras =
+        selectedExtras &&
+        Object.keys(selectedExtras).length > 0 &&
+        bookingDetails.extrasCharge > 0;
+
       if (hasValidExtras) {
         bookingPayload.ExtraCharge = selectedExtras;
       }
 
       // Add card details if payment mode is Credit Card (all fields mandatory per API doc)
-      if (selectedPaymentMode === 'Credit Card') {
+      if (selectedPaymentMode === "Credit Card") {
         const cardTypeMap = {
-          'Visa': 'VISA',
-          'MasterCard': 'MASTERCARD',
-          'American Express': 'AMEX',
-          'Discover': 'DISCOVER'
+          Visa: "VISA",
+          MasterCard: "MASTERCARD",
+          "American Express": "AMEX",
+          Discover: "DISCOVER",
         };
 
-        if (!cardDetails.cardNumber || !cardDetails.cardHolderName || !cardDetails.expiryMonth || !cardDetails.expiryYear || !cardDetails.cvv || !cardDetails.cardType) {
-          alert('Please fill in all card details (number, name, type, expiry, CVV).');
+        if (
+          !cardDetails.cardNumber ||
+          !cardDetails.cardHolderName ||
+          !cardDetails.expiryMonth ||
+          !cardDetails.expiryYear ||
+          !cardDetails.cvv ||
+          !cardDetails.cardType
+        ) {
+          alert(
+            "Please fill in all card details (number, name, type, expiry, CVV)."
+          );
           setProcessing(false);
           return;
         }
 
         bookingPayload.CardDetails = {
           cc_cardnumber: String(cardDetails.cardNumber).trim(),
-          cc_cardtype: cardTypeMap[cardDetails.cardType] || cardDetails.cardType.toUpperCase(),
-          cc_expiremonth: String(cardDetails.expiryMonth).padStart(2, '0'),
+          cc_cardtype:
+            cardTypeMap[cardDetails.cardType] ||
+            cardDetails.cardType.toUpperCase(),
+          cc_expiremonth: String(cardDetails.expiryMonth).padStart(2, "0"),
           cc_expireyear: String(cardDetails.expiryYear),
           cvvcode: String(cardDetails.cvv),
-          cardholdername: cardDetails.cardHolderName.trim()
+          cardholdername: cardDetails.cardHolderName.trim(),
         };
       }
 
       // Add payment gateway if payment mode is Credit Card
-      if (selectedPaymentMode === 'Credit Card') {
-        const gatewayId = selectedGateway || (paymentGateways?.[0]?.paymenttypeunkid || null);
+      if (selectedPaymentMode === "Credit Card") {
+        const gatewayId =
+          selectedGateway || paymentGateways?.[0]?.paymenttypeunkid || null;
         if (gatewayId) {
           bookingPayload.paymenttypeunkid = gatewayId;
         } else {
-          console.warn('Credit Card selected but no payment gateway available/selected');
+          console.warn(
+            "Credit Card selected but no payment gateway available/selected"
+          );
         }
       }
 
-      console.log('Submitting booking:', bookingPayload);
+      console.log("Submitting booking:", bookingPayload);
 
       // Submit booking
-      const response = await axios.post(`${API_BASE_URL}/api/booking/create`, bookingPayload);
+      const response = await axios.post(
+        `${API_BASE_URL}/api/booking/create`,
+        bookingPayload
+      );
 
       if (response.data.success) {
         // Navigate to confirmation page
-        navigate('/booking-confirmation', {
+        navigate("/booking-confirmation", {
           state: {
             reservationNo: response.data.data.ReservationNo,
             bookingDetails: {
@@ -178,26 +211,36 @@ const BookingPayment = () => {
               searchData,
               Email_Address: personalInfo.email,
               MobileNo: personalInfo.phone,
-              totalAmount: bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0)
-            }
-          }
+              totalAmount:
+                bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0),
+            },
+          },
         });
       } else {
-        alert(response.data.message || 'Booking failed. Please try again.');
+        alert(response.data.message || "Booking failed. Please try again.");
       }
     } catch (error) {
-      console.error('Booking error:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error array content:', JSON.stringify(error.response?.data?.error, null, 2));
-      
+      console.error("Booking error:", error);
+      console.error("Error response:", error.response?.data);
+      console.error(
+        "Error array content:",
+        JSON.stringify(error.response?.data?.error, null, 2)
+      );
+
       // Handle error array from ezeetechnosys
-      let errorMessage = 'Booking failed. Please try again.';
-      
-      if (error.response?.data?.error && Array.isArray(error.response.data.error)) {
+      let errorMessage = "Booking failed. Please try again.";
+
+      if (
+        error.response?.data?.error &&
+        Array.isArray(error.response.data.error)
+      ) {
         // If error is an array, get the first error object
         const errorObj = error.response.data.error[0];
-        errorMessage = errorObj?.Error_Message || errorObj?.error || JSON.stringify(errorObj);
-        console.error('Parsed error message:', errorMessage);
+        errorMessage =
+          errorObj?.Error_Message ||
+          errorObj?.error ||
+          JSON.stringify(errorObj);
+        console.error("Parsed error message:", errorMessage);
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.data?.error) {
@@ -205,13 +248,17 @@ const BookingPayment = () => {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       const errorDetails = error.response?.data?.errorDetails;
-      
+
       if (errorDetails) {
-        alert(`Booking Failed\n\nError: ${errorMessage}\nCode: ${errorDetails.Error_Code}\n\nPlease check your booking details and try again.`);
+        alert(
+          `Booking Failed\n\nError: ${errorMessage}\nCode: ${errorDetails.Error_Code}\n\nPlease check your booking details and try again.`
+        );
       } else {
-        alert(`Booking Failed\n\n${errorMessage}\n\nPlease check the console for more details.`);
+        alert(
+          `Booking Failed\n\n${errorMessage}\n\nPlease check the console for more details.`
+        );
       }
     } finally {
       setProcessing(false);
@@ -222,11 +269,27 @@ const BookingPayment = () => {
     return null;
   }
 
-  const totalAmount = bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
-  const cardTypes = ['Visa', 'MasterCard', 'American Express', 'Discover'];
-  const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+  const totalAmount =
+    bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
+  const cardTypes = ["Visa", "MasterCard", "American Express", "Discover"];
+  const months = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+  ];
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 20 }, (_, i) => (currentYear + i).toString());
+  const years = Array.from({ length: 20 }, (_, i) =>
+    (currentYear + i).toString()
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-8">
@@ -238,21 +301,27 @@ const BookingPayment = () => {
               <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Select Date</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Select Date
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Personal Info</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Personal Info
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">Payment</span>
+              <span className="ml-2 text-sm font-medium text-gray-900">
+                Payment
+              </span>
             </div>
           </div>
         </div>
@@ -271,20 +340,24 @@ const BookingPayment = () => {
 
               {/* Payment Mode Selection */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">Select Payment Mode</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Select Payment Mode
+                </h3>
                 <div className="space-y-3">
                   <label className="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-amber-600 transition-all">
                     <input
                       type="radio"
                       name="paymentMode"
                       value="Pay at Hotel"
-                      checked={selectedPaymentMode === 'Pay at Hotel'}
+                      checked={selectedPaymentMode === "Pay at Hotel"}
                       onChange={(e) => setSelectedPaymentMode(e.target.value)}
                       className="w-5 h-5 text-amber-600"
                     />
                     <div className="ml-4">
                       <p className="font-semibold">Pay at Hotel</p>
-                      <p className="text-sm text-gray-600">Pay when you check-in</p>
+                      <p className="text-sm text-gray-600">
+                        Pay when you check-in
+                      </p>
                     </div>
                   </label>
 
@@ -293,58 +366,70 @@ const BookingPayment = () => {
                       type="radio"
                       name="paymentMode"
                       value="Credit Card"
-                      checked={selectedPaymentMode === 'Credit Card'}
+                      checked={selectedPaymentMode === "Credit Card"}
                       onChange={(e) => setSelectedPaymentMode(e.target.value)}
                       className="w-5 h-5 text-amber-600"
                     />
                     <div className="ml-4">
                       <p className="font-semibold">Credit/Debit Card</p>
-                      <p className="text-sm text-gray-600">Secure card payment</p>
+                      <p className="text-sm text-gray-600">
+                        Secure card payment
+                      </p>
                     </div>
                   </label>
                 </div>
-                
+
                 {/* Info about payment gateways */}
                 {paymentGateways.length === 0 && (
                   <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-xs text-blue-800">
-                      <strong>Note:</strong> Payment gateways (like Razorpay, PayU) are managed through ezeetechnosys. 
-                      Currently, no online payment gateways are configured. Card details will be stored for manual processing.
+                      <strong>Note:</strong> Payment gateways (like Razorpay,
+                      PayU) are managed through ezeetechnosys. Currently, no
+                      online payment gateways are configured. Card details will
+                      be stored for manual processing.
                     </p>
                   </div>
                 )}
               </div>
 
               {/* Payment Gateways (if available) */}
-              {paymentGateways.length > 0 && selectedPaymentMode === 'Credit Card' && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold mb-4">Select Payment Gateway</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {paymentGateways.map((gateway) => (
-                      <button
-                        key={gateway.paymenttypeunkid}
-                        onClick={() => setSelectedGateway(gateway.paymenttypeunkid)}
-                        className={`
+              {paymentGateways.length > 0 &&
+                selectedPaymentMode === "Credit Card" && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-4">
+                      Select Payment Gateway
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {paymentGateways.map((gateway) => (
+                        <button
+                          key={gateway.paymenttypeunkid}
+                          onClick={() =>
+                            setSelectedGateway(gateway.paymenttypeunkid)
+                          }
+                          className={`
                           p-4 border-2 rounded-lg text-left transition-all
-                          ${selectedGateway === gateway.paymenttypeunkid 
-                            ? 'border-amber-600 bg-amber-50' 
-                            : 'border-gray-200 hover:border-amber-300'
+                          ${
+                            selectedGateway === gateway.paymenttypeunkid
+                              ? "border-amber-600 bg-amber-50"
+                              : "border-gray-200 hover:border-amber-300"
                           }
                         `}
-                      >
-                        <p className="font-semibold">{gateway.paymenttype}</p>
-                        <p className="text-sm text-gray-600">{gateway.shortcode}</p>
-                      </button>
-                    ))}
+                        >
+                          <p className="font-semibold">{gateway.paymenttype}</p>
+                          <p className="text-sm text-gray-600">
+                            {gateway.shortcode}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Card Details Form */}
-              {selectedPaymentMode === 'Credit Card' && (
+              {selectedPaymentMode === "Credit Card" && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
+                  animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-6"
                 >
@@ -362,8 +447,10 @@ const BookingPayment = () => {
                         onChange={handleCardDetailsChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
                       >
-                        {cardTypes.map(type => (
-                          <option key={type} value={type}>{type}</option>
+                        {cardTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -411,8 +498,10 @@ const BookingPayment = () => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
                       >
                         <option value="">Select Month</option>
-                        {months.map(month => (
-                          <option key={month} value={month}>{month}</option>
+                        {months.map((month) => (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -429,8 +518,10 @@ const BookingPayment = () => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
                       >
                         <option value="">Select Year</option>
-                        {years.map(year => (
-                          <option key={year} value={year}>{year}</option>
+                        {years.map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -488,19 +579,24 @@ const BookingPayment = () => {
               animate={{ opacity: 1, x: 0 }}
               className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">Final Summary</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">
+                Final Summary
+              </h3>
 
               {/* Room Details */}
               <div className="mb-4 pb-4 border-b">
                 <h4 className="font-semibold">{room.Room_Name}</h4>
-                <p className="text-sm text-gray-600">{bookingDetails.nights} nights</p>
+                <p className="text-sm text-gray-600">
+                  {bookingDetails.nights} nights
+                </p>
               </div>
 
               {/* Guest Info */}
               <div className="mb-4 pb-4 border-b">
                 <p className="text-sm text-gray-600 mb-1">Guest:</p>
                 <p className="font-semibold text-sm">
-                  {personalInfo.title} {personalInfo.firstName} {personalInfo.lastName}
+                  {personalInfo.title} {personalInfo.firstName}{" "}
+                  {personalInfo.lastName}
                 </p>
               </div>
 
@@ -509,7 +605,8 @@ const BookingPayment = () => {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Room Rate</span>
                   <span className="font-semibold">
-                    {room.currency_sign}{bookingDetails.totalPrice.toFixed(2)}
+                    {room.currency_sign}
+                    {bookingDetails.totalPrice.toFixed(2)}
                   </span>
                 </div>
 
@@ -517,7 +614,8 @@ const BookingPayment = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Extra Services</span>
                     <span className="font-semibold">
-                      {room.currency_sign}{bookingDetails.extrasCharge.toFixed(2)}
+                      {room.currency_sign}
+                      {bookingDetails.extrasCharge.toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -528,7 +626,8 @@ const BookingPayment = () => {
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Total to Pay</span>
                   <span className="text-amber-600">
-                    {room.currency_sign}{totalAmount.toFixed(2)}
+                    {room.currency_sign}
+                    {totalAmount.toFixed(2)}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
@@ -539,7 +638,9 @@ const BookingPayment = () => {
               {/* Important Notes */}
               <div className="mt-6 pt-6 border-t">
                 <p className="text-xs text-gray-600">
-                  <strong>Note:</strong> Check-in time is after {room.check_in_time || '2:00 PM'} and check-out time is before {room.check_out_time || '12:00 PM'}.
+                  <strong>Note:</strong> Check-in time is after{" "}
+                  {room.check_in_time || "2:00 PM"} and check-out time is before{" "}
+                  {room.check_out_time || "12:00 PM"}.
                 </p>
               </div>
             </motion.div>

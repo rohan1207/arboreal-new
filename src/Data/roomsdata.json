@@ -2,7 +2,7 @@
   "ResortRooms": [
     {
       "name": "Classic Sunroom",
-      "image": "/slider1.jpg",
+      "image": ["Classic_Sunroom_1.jpg, Classic_Sunroom_2.jpg, Classic_Sunroom_3.jpg, Classic_Sunroom_4.jpg, Classic_Sunroom_5.jpg, Classic_Sunroom_6.jpg"],
       "description": "Bathed in soft daylight and surrounded by the whisper of trees, the Classic Sunroom is where nature and quiet refinement meet. Large glass walls frame the forest like a living painting, flooding the space with golden morning light. Handcrafted wooden furniture, warm earthy tones, and southern yellow pine flooring create an atmosphere that feels timeless — serene yet full of quiet vitality.",
       "details": {
         "area": "30 square meters (322 square feet)",
@@ -26,7 +26,7 @@
     },
     {
       "name": "Forest Bathtub Room",
-      "image": "/slider2.jpg",
+      "image": ["Forest_Bathtub_01.jpg", "Forest_Bathtub_02.jpg", "Forest_Bathtub_03.jpg", "Forest_Bathtub_04.jpg", "Forest_Bathtub_05.jpg", "Forest_Bathtub_06.jpg", "Forest_Bathtub_07.jpg"],
       "description": "Hidden deep within the green expanse of The Arboreal Resort, the Forest Bathtub Room invites you to experience pure immersion in nature. Crafted entirely in warm pinewood and framed by sweeping glass windows, the room opens into dense foliage, blending the calm of natural light with the elegance of handcrafted interiors.",
       "details": {
         "area": "55 square meters (600 square feet)",
@@ -55,7 +55,7 @@
     },
     {
       "name": "Luxury Sunroom",
-      "image": "/slider3.jpg",
+      "image": ["Luxury_Sunroom_Arboreal_01.jpg", "Luxury_Sunroom_Arboreal_02.jpg", "Luxury_Sunroom_Arboreal_03.jpg", "Luxury_Sunroom_Arboreal_04.jpg", "Luxury_Sunroom_Arboreal_05.jpg", "Luxury_Sunroom_Arboreal_06.jpg", "Luxury_Sunroom_Arboreal_07.jpg", "Luxury_Sunroom_Arboreal_08.jpg"],
       "description": "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and lake views.",
       "details": {
         "area": "55 square meters (600 square feet)",
@@ -90,7 +90,7 @@
     },
     {
       "name": "Forest Private Pool Room",
-      "image": "/slider4.jpg",
+      "image": ["Forest_Private_Pool_1.jpg", "Forest_Private_Pool_2.jpg", "Forest_Private_Pool_3.jpg", "Forest_Private_Pool_4.jpg", "Forest_Private_Pool_5.jpg", "Forest_Private_Pool_6.jpg, Forest_Private_Pool_7.jpg, Forest_Private_Pool_8.jpg"],
       "description": "The Forest Room – Private Pool offers a sublime blend of privacy, nature, and luxury. Featuring a king-size bed, modern comforts, and a private pool on the balcony — perfect for two adults (plus one child).",
       "details": {
         "area": "60 square meters (650 square feet)",

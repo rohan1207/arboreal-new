@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 const BookingExtras = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { room, searchData, bookingDetails, personalInfo } = location.state || {};
+  const { room, searchData, bookingDetails, personalInfo } =
+    location.state || {};
 
   const [extras, setExtras] = useState([]);
   const [selectedExtras, setSelectedExtras] = useState({});
@@ -19,7 +21,7 @@ const BookingExtras = () => {
   // Fetch available extras
   useEffect(() => {
     if (!room || !searchData || !bookingDetails || !personalInfo) {
-      navigate('/availability');
+      navigate("/availability");
       return;
     }
 
@@ -33,7 +35,7 @@ const BookingExtras = () => {
         setExtras(response.data.data);
       }
     } catch (error) {
-      console.error('Error fetching extras:', error);
+      console.error("Error fetching extras:", error);
     } finally {
       setLoading(false);
     }
@@ -41,13 +43,13 @@ const BookingExtras = () => {
 
   // Handle extra selection
   const handleExtraToggle = (extraId) => {
-    setSelectedExtras(prev => {
+    setSelectedExtras((prev) => {
       const newSelected = { ...prev };
       if (newSelected[extraId]) {
         delete newSelected[extraId];
       } else {
         newSelected[extraId] = {
-          quantity: 1
+          quantity: 1,
         };
       }
       return newSelected;
@@ -57,12 +59,12 @@ const BookingExtras = () => {
   // Handle quantity change
   const handleQuantityChange = (extraId, quantity) => {
     if (quantity < 1) return;
-    setSelectedExtras(prev => ({
+    setSelectedExtras((prev) => ({
       ...prev,
       [extraId]: {
         ...prev[extraId],
-        quantity: parseInt(quantity)
-      }
+        quantity: parseInt(quantity),
+      },
     }));
   };
 
@@ -80,64 +82,70 @@ const BookingExtras = () => {
     try {
       setCalculating(true);
 
-      const extraChargeIds = Object.keys(selectedExtras).join(',');
+      const extraChargeIds = Object.keys(selectedExtras).join(",");
       const totalExtraItems = Object.values(selectedExtras)
-        .map(extra => extra.quantity)
-        .join(',');
+        .map((extra) => extra.quantity)
+        .join(",");
 
-      const response = await axios.post(`${API_BASE_URL}/api/booking/calculate-extras`, {
-        checkInDate: bookingDetails.checkIn,
-        checkOutDate: bookingDetails.checkOut,
-        extraChargeId: extraChargeIds,
-        totalExtraItem: totalExtraItems
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/api/booking/calculate-extras`,
+        {
+          checkInDate: bookingDetails.checkIn,
+          checkOutDate: bookingDetails.checkOut,
+          extraChargeId: extraChargeIds,
+          totalExtraItem: totalExtraItems,
+        }
+      );
 
       if (response.data.success) {
         setTotalExtrasCharge(response.data.data.totalCharge);
       }
     } catch (error) {
-      console.error('Error calculating extras:', error);
+      console.error("Error calculating extras:", error);
     } finally {
       setCalculating(false);
     }
   };
 
   const handleSkip = () => {
-    navigate('/booking/payment', {
+    navigate("/booking/payment", {
       state: {
         room,
         searchData,
         bookingDetails: {
           ...bookingDetails,
-          extrasCharge: 0
+          extrasCharge: 0,
         },
         personalInfo,
-        selectedExtras: {}
-      }
+        selectedExtras: {},
+      },
     });
   };
 
   const handleContinue = () => {
     // Prepare extras data for booking
-    const extrasData = Object.entries(selectedExtras).reduce((acc, [extraId, data], index) => {
-      acc[`Extra_${index + 1}`] = {
-        ExtraChargeId: extraId,
-        ChargeAdult: data.quantity.toString()
-      };
-      return acc;
-    }, {});
+    const extrasData = Object.entries(selectedExtras).reduce(
+      (acc, [extraId, data], index) => {
+        acc[`Extra_${index + 1}`] = {
+          ExtraChargeId: extraId,
+          ChargeAdult: data.quantity.toString(),
+        };
+        return acc;
+      },
+      {}
+    );
 
-    navigate('/booking/payment', {
+    navigate("/booking/payment", {
       state: {
         room,
         searchData,
         bookingDetails: {
           ...bookingDetails,
-          extrasCharge: totalExtrasCharge
+          extrasCharge: totalExtrasCharge,
         },
         personalInfo,
-        selectedExtras: extrasData
-      }
+        selectedExtras: extrasData,
+      },
     });
   };
 
@@ -157,21 +165,27 @@ const BookingExtras = () => {
               <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Select Date</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Select Date
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">Personal Info</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Personal Info
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-amber-600"></div>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">Extras & Payment</span>
+              <span className="ml-2 text-sm font-medium text-gray-900">
+                Extras & Payment
+              </span>
             </div>
           </div>
         </div>
@@ -194,33 +208,53 @@ const BookingExtras = () => {
               {loading ? (
                 <div className="text-center py-12">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-                  <p className="mt-4 text-gray-600">Loading available extras...</p>
+                  <p className="mt-4 text-gray-600">
+                    Loading available extras...
+                  </p>
                 </div>
               ) : extras.length === 0 ? (
                 <div className="text-center py-12">
-                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                    />
                   </svg>
-                  <p className="mt-4 text-gray-600 font-semibold">No extra services available at the moment</p>
+                  <p className="mt-4 text-gray-600 font-semibold">
+                    No extra services available at the moment
+                  </p>
                   <p className="mt-2 text-sm text-gray-500">
-                    Extra services (like spa, transport, welcome drinks) need to be configured in the hotel's booking system.
+                    Extra services (like spa, transport, welcome drinks) need to
+                    be configured in the hotel's booking system.
                   </p>
                   <p className="mt-2 text-xs text-gray-400">
-                    Click "Skip" or "Continue to Payment" to proceed with your booking.
+                    Click "Skip" or "Continue to Payment" to proceed with your
+                    booking.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {extras.map((extra, index) => {
                     const isSelected = selectedExtras[extra.ExtraChargeId];
-                    
+
                     return (
                       <motion.div
                         key={`${extra.ExtraChargeId}-${index}`}
                         whileHover={{ scale: 1.01 }}
                         className={`
                           border-2 rounded-lg p-6 cursor-pointer transition-all
-                          ${isSelected ? 'border-amber-600 bg-amber-50' : 'border-gray-200 hover:border-amber-300'}
+                          ${
+                            isSelected
+                              ? "border-amber-600 bg-amber-50"
+                              : "border-gray-200 hover:border-amber-300"
+                          }
                         `}
                         onClick={() => handleExtraToggle(extra.ExtraChargeId)}
                       >
@@ -234,13 +268,22 @@ const BookingExtras = () => {
                                 className="w-5 h-5 text-amber-600 rounded focus:ring-amber-500"
                               />
                               <div>
-                                <h3 className="font-semibold text-lg">{extra.charge}</h3>
-                                <p className="text-sm text-gray-600 mt-1">{extra.ShortCode}</p>
+                                <h3 className="font-semibold text-lg">
+                                  {extra.charge}
+                                </h3>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  {extra.ShortCode}
+                                </p>
                                 {extra.description && (
-                                  <p className="text-sm text-gray-500 mt-2">{extra.description}</p>
+                                  <p className="text-sm text-gray-500 mt-2">
+                                    {extra.description}
+                                  </p>
                                 )}
                                 <div className="mt-2 text-sm text-gray-600">
-                                  <span className="font-medium">Charge Rule:</span> {extra.ChargeRule}
+                                  <span className="font-medium">
+                                    Charge Rule:
+                                  </span>{" "}
+                                  {extra.ChargeRule}
                                 </div>
                               </div>
                             </div>
@@ -248,24 +291,36 @@ const BookingExtras = () => {
 
                           <div className="text-right">
                             <p className="text-xl font-bold text-amber-600">
-                              {room.currency_sign}{extra.Rate}
+                              {room.currency_sign}
+                              {extra.Rate}
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
-                              per {extra.ChargeRule ? extra.ChargeRule.toLowerCase() : 'item'}
+                              per{" "}
+                              {extra.ChargeRule
+                                ? extra.ChargeRule.toLowerCase()
+                                : "item"}
                             </p>
                           </div>
                         </div>
 
                         {/* Quantity Selector */}
-                        {isSelected && extra.ChargeRule === 'PERQUANTITY' && (
-                          <div className="mt-4 pt-4 border-t border-gray-200" onClick={(e) => e.stopPropagation()}>
+                        {isSelected && extra.ChargeRule === "PERQUANTITY" && (
+                          <div
+                            className="mt-4 pt-4 border-t border-gray-200"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Quantity
                             </label>
                             <div className="flex items-center space-x-3">
                               <button
                                 type="button"
-                                onClick={() => handleQuantityChange(extra.ExtraChargeId, isSelected.quantity - 1)}
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    extra.ExtraChargeId,
+                                    isSelected.quantity - 1
+                                  )
+                                }
                                 className="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-amber-600 hover:text-amber-600 transition-colors"
                               >
                                 -
@@ -274,12 +329,22 @@ const BookingExtras = () => {
                                 type="number"
                                 min="1"
                                 value={isSelected.quantity}
-                                onChange={(e) => handleQuantityChange(extra.ExtraChargeId, e.target.value)}
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    extra.ExtraChargeId,
+                                    e.target.value
+                                  )
+                                }
                                 className="w-20 text-center border-2 border-gray-300 rounded-lg py-2 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                               />
                               <button
                                 type="button"
-                                onClick={() => handleQuantityChange(extra.ExtraChargeId, isSelected.quantity + 1)}
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    extra.ExtraChargeId,
+                                    isSelected.quantity + 1
+                                  )
+                                }
                                 className="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-amber-600 hover:text-amber-600 transition-colors"
                               >
                                 +
@@ -326,12 +391,16 @@ const BookingExtras = () => {
               animate={{ opacity: 1, x: 0 }}
               className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">Booking Summary</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">
+                Booking Summary
+              </h3>
 
               {/* Room Details */}
               <div className="mb-4 pb-4 border-b">
                 <h4 className="font-semibold">{room.Room_Name}</h4>
-                <p className="text-sm text-gray-600">{bookingDetails.nights} nights</p>
+                <p className="text-sm text-gray-600">
+                  {bookingDetails.nights} nights
+                </p>
               </div>
 
               {/* Price Breakdown */}
@@ -339,7 +408,8 @@ const BookingExtras = () => {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Room Rate</span>
                   <span className="font-semibold">
-                    {room.currency_sign}{bookingDetails.totalPrice.toFixed(2)}
+                    {room.currency_sign}
+                    {bookingDetails.totalPrice.toFixed(2)}
                   </span>
                 </div>
 
@@ -360,12 +430,19 @@ const BookingExtras = () => {
               {/* Selected Extras List */}
               {Object.keys(selectedExtras).length > 0 && (
                 <div className="mb-4 pb-4 border-t pt-4">
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Selected Extras:</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-2">
+                    Selected Extras:
+                  </p>
                   <ul className="space-y-2">
                     {Object.entries(selectedExtras).map(([extraId, data]) => {
-                      const extra = extras.find(e => e.ExtraChargeId === extraId);
+                      const extra = extras.find(
+                        (e) => e.ExtraChargeId === extraId
+                      );
                       return (
-                        <li key={extraId} className="text-xs text-gray-600 flex justify-between">
+                        <li
+                          key={extraId}
+                          className="text-xs text-gray-600 flex justify-between"
+                        >
                           <span>{extra?.charge}</span>
                           <span>×{data.quantity}</span>
                         </li>
@@ -380,7 +457,8 @@ const BookingExtras = () => {
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Total Amount</span>
                   <span className="text-amber-600">
-                    {room.currency_sign}{totalAmount.toFixed(2)}
+                    {room.currency_sign}
+                    {totalAmount.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -389,9 +467,12 @@ const BookingExtras = () => {
               <div className="mt-6 pt-6 border-t">
                 <p className="text-sm text-gray-600 mb-2">Guest Details:</p>
                 <p className="font-semibold text-sm">
-                  {personalInfo.title} {personalInfo.firstName} {personalInfo.lastName}
+                  {personalInfo.title} {personalInfo.firstName}{" "}
+                  {personalInfo.lastName}
                 </p>
-                <p className="text-xs text-gray-600 mt-1">{personalInfo.email}</p>
+                <p className="text-xs text-gray-600 mt-1">
+                  {personalInfo.email}
+                </p>
               </div>
             </motion.div>
           </div>

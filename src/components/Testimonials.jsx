@@ -12,36 +12,36 @@ const Testimonials = () => {
       name: "Priya Sharma",
       text: "This resort offers an escape into pure bliss! Everything. The rooms were so spacious, and it was really better our stunning stay! The amenities were top-notch from start to finish! The service was impeccable, the food at the resort was great! I felt at home. I'd happily be returning vacation, I didn't really want the last place to be. The adventure now was really great.",
       rating: 5,
-      image: "/slider1.jpg"
+      image: "/slider1.jpg",
     },
     {
       id: 2,
       name: "Rajesh Kumar",
       text: "An absolutely breathtaking experience! The forest views from our room were stunning, and the staff went above and beyond to make our stay special. The private bathtub experience was unforgettable. Every detail was carefully thought out, from the welcome drinks to the personalized service. We celebrated our anniversary here and couldn't have chosen a better place.",
       rating: 5,
-      image: "/slider2.jpg"
+      image: "/slider2.jpg",
     },
     {
       id: 3,
       name: "Anjali Patel",
       text: "A hidden gem in the heart of nature! The luxury sunroom exceeded all our expectations. Waking up to birds chirping and sunlight streaming through panoramic windows was magical. The spa treatments were divine, and the restaurant served the most delicious local cuisine. Perfect for couples seeking romance and relaxation.",
       rating: 5,
-      image: "/slider3.jpg"
+      image: "/slider3.jpg",
     },
     {
       id: 4,
       name: "Vikram Reddy",
       text: "Outstanding hospitality and pristine facilities! Our family had an amazing time at this resort. The kids loved the pool, and we enjoyed the peaceful forest walks. The rooms were spotlessly clean and beautifully decorated. The staff remembered our names and preferences throughout our stay. Highly recommend for family vacations!",
       rating: 5,
-      image: "/slider4.jpg"
+      image: "/slider4.jpg",
     },
     {
       id: 5,
       name: "Neha Kapoor",
       text: "Pure luxury meets natural beauty! This was our dream honeymoon destination. The private pool room was spectacular, offering complete privacy and romance. The sunset views from our deck were breathtaking. Every meal was a culinary masterpiece. The resort perfectly balances modern amenities with rustic charm. We're already planning our next visit!",
       rating: 5,
-      image: "/slider5.jpg"
-    }
+      image: "/slider5.jpg",
+    },
   ];
 
   const currentTestimonial = testimonials[currentIndex];

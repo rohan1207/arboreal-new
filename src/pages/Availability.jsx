@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { 
-  FiUsers, 
-  FiMaximize, 
-  FiWifi, 
-  FiCoffee, 
+import {
+  FiUsers,
+  FiMaximize,
+  FiWifi,
+  FiCoffee,
   FiSun,
   FiDroplet,
   FiGrid,
-  FiAirplay
+  FiAirplay,
 } from "react-icons/fi";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 const Availability = () => {
   const [searchParams] = useSearchParams();
@@ -37,7 +38,7 @@ const Availability = () => {
     { icon: <FiDroplet />, name: "Bath" },
     { icon: <FiCoffee />, name: "Coffee" },
     { icon: <FiGrid />, name: "Balcony" },
-    { icon: <FiAirplay />, name: "TV" }
+    { icon: <FiAirplay />, name: "TV" },
   ];
 
   useEffect(() => {
@@ -71,7 +72,8 @@ const Availability = () => {
     } catch (err) {
       console.error("Search error:", err);
       setError(
-        err.response?.data?.message || "Failed to fetch available rooms. Please try again."
+        err.response?.data?.message ||
+          "Failed to fetch available rooms. Please try again."
       );
     } finally {
       setLoading(false);
@@ -125,11 +127,23 @@ const Availability = () => {
           className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center border border-amber-100"
         >
           <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <svg
+              className="w-10 h-10 text-red-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
           </div>
-          <h2 className="text-3xl font-light text-gray-800 mb-4 tracking-wide">We Apologize</h2>
+          <h2 className="text-3xl font-light text-gray-800 mb-4 tracking-wide">
+            We Apologize
+          </h2>
           <p className="text-gray-600 mb-8 leading-relaxed">{error}</p>
           <button
             onClick={() => navigate("/")}
@@ -171,48 +185,103 @@ const Availability = () => {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
                   <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 font-medium">Check In</p>
-                    <p className="text-sm font-semibold text-gray-800">{formatDate(searchData.checkIn)}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Check Out</p>
-                    <p className="text-sm font-semibold text-gray-800">{formatDate(searchData.checkOut)}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Guests</p>
+                    <p className="text-xs text-gray-500 font-medium">
+                      Check In
+                    </p>
                     <p className="text-sm font-semibold text-gray-800">
-                      {searchData.adults} Adults{searchData.children > 0 && `, ${searchData.children} Children`}
+                      {formatDate(searchData.checkIn)}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
                   <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 font-medium">Duration</p>
-                    <p className="text-sm font-semibold text-gray-800">{calculateNights()} Night{calculateNights() > 1 ? 's' : ''}</p>
+                    <p className="text-xs text-gray-500 font-medium">
+                      Check Out
+                    </p>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {formatDate(searchData.checkOut)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
+                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">Guests</p>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {searchData.adults} Adults
+                      {searchData.children > 0 &&
+                        `, ${searchData.children} Children`}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
+                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">
+                      Duration
+                    </p>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {calculateNights()} Night
+                      {calculateNights() > 1 ? "s" : ""}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -234,16 +303,26 @@ const Availability = () => {
             className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-amber-100 p-16 text-center"
           >
             <div className="w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-12 h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              <svg
+                className="w-12 h-12 text-amber-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
               </svg>
             </div>
             <h3 className="text-2xl font-light text-gray-800 mb-3 tracking-wide">
               No Accommodations Available
             </h3>
             <p className="text-gray-600 leading-relaxed max-w-md mx-auto">
-              We apologize, but there are no rooms available for your selected dates. 
-              Please consider adjusting your travel dates.
+              We apologize, but there are no rooms available for your selected
+              dates. Please consider adjusting your travel dates.
             </p>
           </motion.div>
         ) : (
@@ -254,10 +333,15 @@ const Availability = () => {
               className="text-center mb-8"
             >
               <p className="text-gray-600 text-lg">
-                We found <span className="font-semibold text-amber-600">{rooms.length}</span> exquisite accommodation{rooms.length > 1 ? 's' : ''} for your stay
+                We found{" "}
+                <span className="font-semibold text-amber-600">
+                  {rooms.length}
+                </span>{" "}
+                exquisite accommodation{rooms.length > 1 ? "s" : ""} for your
+                stay
               </p>
             </motion.div>
-            
+
             <div className="space-y-6">
               {rooms.map((room, index) => (
                 <motion.div
@@ -278,15 +362,35 @@ const Availability = () => {
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                          <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          <svg
+                            className="w-16 h-16 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
                           </svg>
                         </div>
                       )}
                       {/* Favorite Icon */}
                       <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg">
-                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -300,7 +404,8 @@ const Availability = () => {
                             {room.Room_Name || room.Roomtype_Name}
                           </h3>
                           <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                            {room.Room_Description || "Escape to luxury and comfort. This beautifully designed room offers a perfect blend of modern amenities and natural tranquility, ensuring an unforgettable stay in the heart of nature."}
+                            {room.Room_Description ||
+                              "Escape to luxury and comfort. This beautifully designed room offers a perfect blend of modern amenities and natural tranquility, ensuring an unforgettable stay in the heart of nature."}
                           </p>
                         </div>
 
@@ -310,7 +415,9 @@ const Availability = () => {
                           <div className="flex items-center gap-2">
                             <FiUsers className="text-gray-600 text-lg" />
                             <div>
-                              <p className="text-xs text-gray-500">Adults: {room.Room_Max_adult || 2}</p>
+                              <p className="text-xs text-gray-500">
+                                Adults: {room.Room_Max_adult || 2}
+                              </p>
                             </div>
                           </div>
 
@@ -318,7 +425,9 @@ const Availability = () => {
                           <div className="flex items-center gap-2">
                             <FiUsers className="text-gray-600 text-lg" />
                             <div>
-                              <p className="text-xs text-gray-500">Children: {room.Room_Max_child || 1}</p>
+                              <p className="text-xs text-gray-500">
+                                Children: {room.Room_Max_child || 1}
+                              </p>
                             </div>
                           </div>
 
@@ -326,24 +435,40 @@ const Availability = () => {
                           <div className="flex items-center gap-2">
                             <FiMaximize className="text-gray-600 text-lg" />
                             <div>
-                              <p className="text-xs text-gray-500">Size: {room.Room_Size || '35'} m²</p>
+                              <p className="text-xs text-gray-500">
+                                Size: {room.Room_Size || "35"} m²
+                              </p>
                             </div>
                           </div>
 
                           {/* Bed Type */}
                           <div className="flex items-center gap-2">
-                            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            <svg
+                              className="w-5 h-5 text-gray-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                              />
                             </svg>
                             <div>
-                              <p className="text-xs text-gray-500">Bed Type: {room.Bed_Type || 'Double Bed'}</p>
+                              <p className="text-xs text-gray-500">
+                                Bed Type: {room.Bed_Type || "Double Bed"}
+                              </p>
                             </div>
                           </div>
                         </div>
 
                         {/* Amenities */}
                         <div className="mb-4">
-                          <p className="text-xs text-gray-600 uppercase tracking-wider mb-2">Amenities:</p>
+                          <p className="text-xs text-gray-600 uppercase tracking-wider mb-2">
+                            Amenities:
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             {defaultAmenities.map((amenity, idx) => (
                               <div
@@ -362,17 +487,24 @@ const Availability = () => {
                           <div>
                             <p className="text-xs text-gray-500 mb-1">From</p>
                             <p className="text-2xl md:text-3xl font-serif text-gray-900">
-                              {room.currency_sign}{room.room_rates_info?.avg_per_night_after_discount?.toLocaleString() || '944,850'} 
-                              <span className="text-sm text-gray-600 font-normal"> / night</span>
+                              {room.currency_sign}
+                              {room.room_rates_info?.avg_per_night_after_discount?.toLocaleString() ||
+                                "944,850"}
+                              <span className="text-sm text-gray-600 font-normal">
+                                {" "}
+                                / night
+                              </span>
                             </p>
                           </div>
                           <button
-                            onClick={() => navigate('/booking/calendar', { 
-                              state: { 
-                                room, 
-                                searchData 
-                              }
-                            })}
+                            onClick={() =>
+                              navigate("/booking/calendar", {
+                                state: {
+                                  room,
+                                  searchData,
+                                },
+                              })
+                            }
                             className="px-6 py-3 bg-gray-900 text-white text-sm uppercase tracking-wider hover:bg-gray-800 transition-all duration-300 font-medium whitespace-nowrap"
                           >
                             Book a room
@@ -381,10 +513,28 @@ const Availability = () => {
 
                         {/* Additional Details Link */}
                         <div className="mt-3 text-right">
-                          <button className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-300 flex items-center gap-1 ml-auto">
+                          <button 
+                            onClick={() => navigate("/rooms", {
+                              state: {
+                                room: room,
+                                searchData: searchData
+                              }
+                            })}
+                            className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-300 flex items-center gap-1 ml-auto"
+                          >
                             <span>Additional Details</span>
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 5l7 7-7 7"
+                              />
                             </svg>
                           </button>
                         </div>

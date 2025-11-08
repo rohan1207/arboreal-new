@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiMapPin, FiPhone, FiMail, FiClock, FiSend } from 'react-icons/fi';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FiMapPin, FiPhone, FiMail, FiClock, FiSend } from "react-icons/fi";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -18,7 +18,7 @@ const ContactUs = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
 
   const contactInfo = [
@@ -28,36 +28,28 @@ const ContactUs = () => {
       details: [
         "The Arboreal, Pvt. Road,",
         "Gevhande Apati, Lonavala,",
-        "Maharashtra 412108"
+        "Maharashtra 412108",
       ],
-      link: "https://maps.app.goo.gl/2EL8NXUZgh4An2NL8"
+      link: "https://maps.app.goo.gl/2EL8NXUZgh4An2NL8",
     },
     {
       icon: <FiPhone className="w-6 h-6" />,
       title: "Call Us",
-      details: [
-        "+91 777 50 23535",
-        "+91 976 78 55988"
-      ],
-      link: "tel:+917775023535"
+      details: ["+91 777 50 23535", "+91 976 78 55988"],
+      link: "tel:+917775023535",
     },
     {
       icon: <FiMail className="w-6 h-6" />,
       title: "Email Us",
-      details: [
-        "reservations@thearborealresort.com"
-      ],
-      link: "mailto:reservations@thearborealresort.com"
+      details: ["reservations@thearborealresort.com"],
+      link: "mailto:reservations@thearborealresort.com",
     },
     {
       icon: <FiClock className="w-6 h-6" />,
       title: "Working Hours",
-      details: [
-        "24/7 Reception",
-        "Always Available"
-      ],
-      link: null
-    }
+      details: ["24/7 Reception", "Always Available"],
+      link: null,
+    },
   ];
 
   const fadeInUp = {
@@ -65,16 +57,19 @@ const ContactUs = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 }
-    }
+      transition: { duration: 0.6 },
+    },
   };
 
   return (
     <div className="bg-[#f5f3ed]">
       {/* Hero Section */}
-      <motion.section 
+      <motion.section
         className="relative h-[60vh] md:h-[70vh] bg-cover bg-center flex items-center justify-center text-white overflow-hidden"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1600&q=80')" }}
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1600&q=80')",
+        }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -89,7 +84,7 @@ const ContactUs = () => {
           >
             Get in Touch
           </motion.p>
-          <motion.h1 
+          <motion.h1
             className="text-4xl md:text-6xl lg:text-7xl font-serif font-light mb-6"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -97,13 +92,14 @@ const ContactUs = () => {
           >
             Contact Us
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-sm md:text-lg font-light leading-relaxed max-w-2xl mx-auto"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            We're here to help you create unforgettable moments. Reach out to us for inquiries, reservations, and any assistance you may need.
+            We're here to help you create unforgettable moments. Reach out to us
+            for inquiries, reservations, and any assistance you may need.
           </motion.p>
         </div>
       </motion.section>
@@ -118,9 +114,9 @@ const ContactUs = () => {
             variants={{
               visible: {
                 transition: {
-                  staggerChildren: 0.1
-                }
-              }
+                  staggerChildren: 0.1,
+                },
+              },
             }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
@@ -128,9 +124,9 @@ const ContactUs = () => {
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="bg-white p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group rounded-2xl border border-gray-100"
               >
-                <div className="w-14 h-14 bg-gray-900 text-white rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 bg-gradient-to-br from-gray-900 to-gray-700 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
                   {info.icon}
                 </div>
                 <h3 className="text-lg font-serif text-gray-900 mb-4">
@@ -146,13 +142,27 @@ const ContactUs = () => {
                 {info.link && (
                   <a
                     href={info.link}
-                    target={info.link.startsWith('http') ? '_blank' : '_self'}
+                    target={info.link.startsWith("http") ? "_blank" : "_self"}
                     rel="noopener noreferrer"
-                    className="inline-block mt-4 text-xs uppercase tracking-wider text-gray-900 hover:text-gray-600 transition-colors duration-300 font-medium"
+                    className="inline-flex items-center gap-2 mt-6 text-xs uppercase tracking-wider text-gray-900 hover:text-gray-600 transition-colors duration-300 font-medium group/link"
                   >
-                    {info.title === "Visit Us" ? "Get Directions →" : 
-                     info.title === "Call Us" ? "Call Now →" : 
-                     info.title === "Email Us" ? "Send Email →" : ""}
+                    <span>
+                      {info.title === "Visit Us"
+                        ? "Get Directions"
+                        : info.title === "Call Us"
+                        ? "Call Now"
+                        : info.title === "Email Us"
+                        ? "Send Email"
+                        : ""}
+                    </span>
+                    <svg 
+                      className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-300" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </a>
                 )}
               </motion.div>
@@ -170,95 +180,116 @@ const ContactUs = () => {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white p-8 md:p-12 shadow-lg"
+            className="bg-white p-8 md:p-12 shadow-xl rounded-3xl border border-gray-100"
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-light text-gray-900 mb-3">
-              Send Us a Message
-            </h2>
-            <p className="text-sm text-gray-600 font-light mb-8">
-              Fill out the form below and we'll get back to you as soon as possible.
-            </p>
+            <div className="mb-8">
+              <div className="inline-block p-3 bg-gray-100 rounded-2xl mb-4">
+                <FiSend className="w-6 h-6 text-gray-900" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif font-light text-gray-900 mb-3">
+                Send Us a Message
+              </h2>
+              <p className="text-sm text-gray-600 font-light">
+                Fill out the form below and we'll get back to you as soon as
+                possible.
+              </p>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
+                <label
+                  htmlFor="name"
+                  className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium"
+                >
                   Your Name *
                 </label>
-                <input 
-                  type="text" 
-                  name="name" 
-                  id="name" 
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="John Doe" 
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light"
+                  placeholder="John Doe"
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light bg-gray-50 focus:bg-white"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="email" className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
+                  <label
+                    htmlFor="email"
+                    className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium"
+                  >
                     Email *
                   </label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    id="email" 
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="john@example.com" 
-                    className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light"
+                    placeholder="john@example.com"
+                    className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light bg-gray-50 focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
+                  <label
+                    htmlFor="phone"
+                    className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium"
+                  >
                     Phone
                   </label>
-                  <input 
-                    type="tel" 
-                    name="phone" 
-                    id="phone" 
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+91 98765 43210" 
-                    className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light"
+                    placeholder="+91 98765 43210"
+                    className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light bg-gray-50 focus:bg-white"
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="subject" className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
+                <label
+                  htmlFor="subject"
+                  className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium"
+                >
                   Subject *
                 </label>
-                <input 
-                  type="text" 
-                  name="subject" 
-                  id="subject" 
+                <input
+                  type="text"
+                  name="subject"
+                  id="subject"
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  placeholder="Reservation Inquiry" 
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light"
+                  placeholder="Reservation Inquiry"
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light bg-gray-50 focus:bg-white"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium">
+                <label
+                  htmlFor="message"
+                  className="block text-xs uppercase tracking-wider text-gray-700 mb-2 font-medium"
+                >
                   Message *
                 </label>
-                <textarea 
-                  name="message" 
-                  id="message" 
-                  rows="6" 
+                <textarea
+                  name="message"
+                  id="message"
+                  rows="6"
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  placeholder="Tell us more about your inquiry..." 
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light resize-none"
+                  placeholder="Tell us more about your inquiry..."
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-sm font-light resize-none bg-gray-50 focus:bg-white"
                 ></textarea>
               </div>
               <div>
-                <motion.button 
-                  type="submit" 
-                  className="w-full bg-gray-900 text-white font-light py-4 px-8 hover:bg-gray-800 transition-all duration-300 flex items-center justify-center gap-3 text-sm uppercase tracking-wider shadow-lg hover:shadow-xl"
+                <motion.button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white font-light py-4 px-8 rounded-xl hover:from-gray-800 hover:to-gray-700 transition-all duration-300 flex items-center justify-center gap-3 text-sm uppercase tracking-wider shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -275,7 +306,7 @@ const ContactUs = () => {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white shadow-lg overflow-hidden"
+            className="bg-white shadow-xl overflow-hidden rounded-3xl border border-gray-100"
           >
             <div className="h-full min-h-[500px] lg:min-h-full">
               <iframe
@@ -287,6 +318,7 @@ const ContactUs = () => {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="The Arboreal Resort Location"
+                className="rounded-3xl"
               ></iframe>
             </div>
           </motion.div>
@@ -306,11 +338,12 @@ const ContactUs = () => {
               Ready to Experience Paradise?
             </h2>
             <p className="text-sm md:text-base text-gray-300 font-light mb-8 max-w-2xl mx-auto">
-              Book your stay at The Arboreal Resort and immerse yourself in luxury amidst nature's tranquility.
+              Book your stay at The Arboreal Resort and immerse yourself in
+              luxury amidst nature's tranquility.
             </p>
             <a
               href="/availability"
-              className="inline-block px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 transition-all duration-300 font-light text-sm uppercase tracking-wider shadow-lg hover:shadow-xl"
+              className="inline-block px-10 py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-sm uppercase tracking-wider shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               Check Availability
             </a>
@@ -322,4 +355,3 @@ const ContactUs = () => {
 };
 
 export default ContactUs;
-

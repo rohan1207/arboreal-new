@@ -9,7 +9,8 @@ const BentoBlogs = () => {
       title: "Extend Your Stay",
       description:
         "Unwind and relax with days of late nights at cozy, daily breakfast and warm airport transfers from Cam Ranh Airport.",
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
       link: "#",
       size: "small",
     },
@@ -19,7 +20,8 @@ const BentoBlogs = () => {
       title: "Fragrant flavours",
       description:
         "Discover delicious menus & recipes celebrating the fragrant flavours of Vietnamese cuisine, making the most of seasonal market produce and the daily catch.",
-      image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
       link: "#",
       size: "small",
     },
@@ -29,7 +31,8 @@ const BentoBlogs = () => {
       title: "What's on at Arboreal",
       description:
         "Celebrate the year-round resort on Vietnam's favorite coastline with Arboreal's cast of programmes of ever-changing events and experiences.",
-      image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80",
       link: "#",
       size: "small",
     },
@@ -39,7 +42,8 @@ const BentoBlogs = () => {
       title: "Wellness Pool Villa Experience",
       description:
         "Nestled amidst the hillsides lies the retreat designed for those who seek to dedicate their stay on wellness. Enjoy treatments, therapies and movement classes to recontexture privacy without leaving the waterside Lake Wellness Pool Villa or the secluded Forest Wellness Pool Villa.",
-      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80",
+      image:
+        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80",
       link: "#",
       size: "large",
     },
@@ -80,6 +84,27 @@ const BentoBlogs = () => {
   return (
     <section className="py-16 md:py-24 px-6 md:px-12 lg:px-20 bg-[#f5f3ed]">
       <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-12 md:mb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-serif italic text-gray-600 text-lg md:text-xl mb-3"
+          >
+            Stories & Insights
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 font-normal"
+          >
+            Discover Arboreal
+          </motion.h2>
+        </div>
+
         {/* Bento Grid */}
         <motion.div
           variants={containerVariants}
@@ -112,10 +137,7 @@ const BentoBlogs = () => {
                 <p className="text-xs tracking-[0.2em] text-gray-600 font-light uppercase mb-3">
                   {blog.category}
                 </p>
-                <a
-                  href={blog.link}
-                  className="group/title inline-block mb-3"
-                >
+                <a href={blog.link} className="group/title inline-block mb-3">
                   <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                     {blog.title}
                   </h3>
@@ -157,10 +179,7 @@ const BentoBlogs = () => {
               <p className="text-xs tracking-[0.2em] text-gray-600 font-light uppercase mb-3">
                 {blogs[3].category}
               </p>
-              <a
-                href={blogs[3].link}
-                className="group/title inline-block mb-3"
-              >
+              <a href={blogs[3].link} className="group/title inline-block mb-3">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[3].title}
                 </h3>
@@ -200,10 +219,7 @@ const BentoBlogs = () => {
               <p className="text-xs tracking-[0.2em] text-gray-600 font-light uppercase mb-3">
                 {blogs[4].category}
               </p>
-              <a
-                href={blogs[4].link}
-                className="group/title inline-block mb-3"
-              >
+              <a href={blogs[4].link} className="group/title inline-block mb-3">
                 <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[4].title}
                 </h3>
