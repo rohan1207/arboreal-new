@@ -33,6 +33,13 @@ const BookingPayment = () => {
       return;
     }
 
+    console.log("=== BookingPayment Page Loaded ===");
+    console.log("Room:", room);
+    console.log("Search Data:", searchData);
+    console.log("Booking Details:", bookingDetails);
+    console.log("Personal Info:", personalInfo);
+    console.log("Selected Extras:", selectedExtras);
+
     fetchPaymentGateways();
   }, []);
 
@@ -83,128 +90,32 @@ const BookingPayment = () => {
     setProcessing(true);
 
     try {
-      // Prepare booking data matching ezeetechnosys exact format from API documentation
-      const roomDetails = {
-        // Ensure all ID and rate fields are strings as per API sample
-        Rateplan_Id: String(room.roomrateunkid),
-        Ratetype_Id: String(room.ratetypeunkid),
-        Roomtype_Id: String(room.roomtypeunkid),
-        baserate: String(
-          room.room_rates_info.rack_rate ??
-            room.room_rates_info.avg_per_night_after_discount ??
-            "0"
-        ),
-        extradultrate: String(room.extra_adult_rates_info?.rack_rate ?? "0"),
-        extrachildrate: String(room.extra_child_rates_info?.rack_rate ?? "0"),
-        number_adults: String(searchData.adults),
-        number_children: String(searchData.children || 0),
-        Title: personalInfo.title || "",
-        First_Name: String(personalInfo.firstName || ""),
-        Last_Name: String(personalInfo.lastName || ""),
-        Gender: personalInfo.gender || "",
-        SpecialRequest: personalInfo.specialRequest || "",
-      };
+      // STEP 1: Create booking first using InsertBooking API
+      // This gives us the ReservationNo which is needed for everything else
+      const bookingPayload = await prepareBookingPayload();
 
-      // Only add ExtraChild_Age if there are children (MANDATORY if number_children is not zero)
-      if (searchData.children > 0) {
-        roomDetails.ExtraChild_Age = Array(searchData.children)
-          .fill("5")
-          .join(",");
-      }
-
-      const bookingPayload = {
-        Room_Details: {
-          Room_1: roomDetails,
-        },
-        check_in_date: bookingDetails.checkIn,
-        check_out_date: bookingDetails.checkOut,
-        // Use empty string for Booking_Payment_Mode per API sample to avoid mismatched enum
-        Booking_Payment_Mode: "",
-        Email_Address: personalInfo.email,
-        Source_Id: "",
-        MobileNo: String(personalInfo.phone || ""),
-        Address: personalInfo.address || "",
-        State: personalInfo.state || "",
-        Country: personalInfo.country || "",
-        City: personalInfo.city || "",
-        Zipcode: personalInfo.zipcode || "",
-        Device: "WEB",
-        Languagekey: "en",
-      };
-
-      // ONLY add ExtraCharge if there are valid extras with non-zero rates
-      // Do NOT send if all extras have Rs0.0000
-      const hasValidExtras =
-        selectedExtras &&
-        Object.keys(selectedExtras).length > 0 &&
-        bookingDetails.extrasCharge > 0;
-
-      if (hasValidExtras) {
-        bookingPayload.ExtraCharge = selectedExtras;
-      }
-
-      // Add card details if payment mode is Credit Card (all fields mandatory per API doc)
-      if (selectedPaymentMode === "Credit Card") {
-        const cardTypeMap = {
-          Visa: "VISA",
-          MasterCard: "MASTERCARD",
-          "American Express": "AMEX",
-          Discover: "DISCOVER",
-        };
-
-        if (
-          !cardDetails.cardNumber ||
-          !cardDetails.cardHolderName ||
-          !cardDetails.expiryMonth ||
-          !cardDetails.expiryYear ||
-          !cardDetails.cvv ||
-          !cardDetails.cardType
-        ) {
-          alert(
-            "Please fill in all card details (number, name, type, expiry, CVV)."
-          );
-          setProcessing(false);
-          return;
-        }
-
-        bookingPayload.CardDetails = {
-          cc_cardnumber: String(cardDetails.cardNumber).trim(),
-          cc_cardtype:
-            cardTypeMap[cardDetails.cardType] ||
-            cardDetails.cardType.toUpperCase(),
-          cc_expiremonth: String(cardDetails.expiryMonth).padStart(2, "0"),
-          cc_expireyear: String(cardDetails.expiryYear),
-          cvvcode: String(cardDetails.cvv),
-          cardholdername: cardDetails.cardHolderName.trim(),
-        };
-      }
-
-      // Add payment gateway if payment mode is Credit Card
-      if (selectedPaymentMode === "Credit Card") {
-        const gatewayId =
-          selectedGateway || paymentGateways?.[0]?.paymenttypeunkid || null;
-        if (gatewayId) {
-          bookingPayload.paymenttypeunkid = gatewayId;
-        } else {
-          console.warn(
-            "Credit Card selected but no payment gateway available/selected"
-          );
-        }
-      }
-
-      console.log("Submitting booking:", bookingPayload);
-
-      // Submit booking
-      const response = await axios.post(
+      console.log("STEP 1: Creating booking with eZee API...");
+      console.log("Booking Payload:", JSON.stringify(bookingPayload, null, 2));
+      
+      const bookingResponse = await axios.post(
         `${API_BASE_URL}/api/booking/create`,
         bookingPayload
       );
 
-      if (response.data.success) {
-        // Navigate to confirmation page
+      if (!bookingResponse.data.success) {
+        throw new Error(bookingResponse.data.message || "Booking creation failed");
+      }
+
+      const { ReservationNo, Inventory_Mode } = bookingResponse.data.data;
+      console.log("✅ Booking created successfully! ReservationNo:", ReservationNo);
+
+      // STEP 2: Handle payment based on payment mode
+      if (selectedPaymentMode === "Pay at Hotel") {
+        // No online payment needed - navigate directly to confirmation
         navigate("/booking-confirmation", {
           state: {
-            reservationNo: response.data.data.ReservationNo,
+            reservationNo: ReservationNo,
+            paymentMode: "Pay at Hotel",
             bookingDetails: {
               ...bookingPayload,
               room,
@@ -216,53 +127,295 @@ const BookingPayment = () => {
             },
           },
         });
-      } else {
-        alert(response.data.message || "Booking failed. Please try again.");
+      } else if (selectedPaymentMode === "Credit Card") {
+        // STEP 2a: Create Razorpay Order
+        console.log("STEP 2: Creating Razorpay order...");
+        const totalAmount =
+          bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
+
+        const orderResponse = await axios.post(
+          `${API_BASE_URL}/api/payment/create-order`,
+          {
+            amount: totalAmount,
+            currency: room.currency_id || "INR",
+            reservationNo: ReservationNo,
+            email: personalInfo.email,
+            phone: personalInfo.phone,
+            name: `${personalInfo.firstName} ${personalInfo.lastName}`,
+          }
+        );
+
+        if (!orderResponse.data.success) {
+          throw new Error("Failed to create payment order");
+        }
+
+        const { orderId } = orderResponse.data.data;
+        console.log("✅ Razorpay order created:", orderId);
+
+        // STEP 2b: Open Razorpay Payment Gateway
+        const options = {
+          key: "rzp_test_YOUR_KEY_ID", // Replace with your actual Razorpay key from dashboard
+          amount: totalAmount * 100, // Convert to paise
+          currency: room.currency_id || "INR",
+          name: "Arboreal Resort",
+          description: `Booking for ${room.Room_Name}`,
+          order_id: orderId,
+          prefill: {
+            name: `${personalInfo.firstName} ${personalInfo.lastName}`,
+            email: personalInfo.email,
+            contact: personalInfo.phone,
+          },
+          theme: {
+            color: "#D97706", // Amber color matching your brand
+          },
+          handler: async function (response) {
+            // STEP 3: Payment successful - Verify payment
+            console.log("STEP 3: Payment successful, verifying...");
+            try {
+              const verifyResponse = await axios.post(
+                `${API_BASE_URL}/api/payment/verify`,
+                {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  reservationNo: ReservationNo,
+                  inventoryMode: Inventory_Mode,
+                }
+              );
+
+              if (verifyResponse.data.success) {
+                console.log("✅ Payment verified and booking confirmed!");
+                // Navigate to confirmation page
+                navigate("/booking-confirmation", {
+                  state: {
+                    reservationNo: ReservationNo,
+                    paymentId: response.razorpay_payment_id,
+                    paymentMode: "Online Payment",
+                    bookingStatus: "CONFIRMED",
+                    bookingDetails: {
+                      ...bookingPayload,
+                      room,
+                      searchData,
+                      Email_Address: personalInfo.email,
+                      MobileNo: personalInfo.phone,
+                      totalAmount,
+                    },
+                  },
+                });
+              } else {
+                throw new Error("Payment verification failed");
+              }
+            } catch (error) {
+              console.error("Payment verification error:", error);
+              alert(
+                "Payment was successful but verification failed. Please contact support with your reservation number: " +
+                  ReservationNo
+              );
+            }
+          },
+          modal: {
+            ondismiss: async function () {
+              // STEP 3b: Payment cancelled - Mark booking as failed
+              console.log("Payment cancelled by user");
+              try {
+                await axios.post(`${API_BASE_URL}/api/payment/fail`, {
+                  reservationNo: ReservationNo,
+                  inventoryMode: Inventory_Mode,
+                  errorText: "Payment cancelled by user",
+                });
+              } catch (error) {
+                console.error("Failed to mark booking as failed:", error);
+              }
+              
+              setProcessing(false);
+              alert("Payment cancelled. Booking has been marked as failed.");
+            },
+          },
+        };
+
+        // Load Razorpay script and open payment modal
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => {
+          const rzp = new window.Razorpay(options);
+          rzp.on("payment.failed", async function (response) {
+            console.error("Payment failed:", response.error);
+            // Mark booking as failed
+            try {
+              await axios.post(`${API_BASE_URL}/api/payment/fail`, {
+                reservationNo: ReservationNo,
+                inventoryMode: Inventory_Mode,
+                errorText: response.error.description || "Payment failed",
+              });
+            } catch (error) {
+              console.error("Failed to mark booking as failed:", error);
+            }
+
+            setProcessing(false);
+            alert(
+              `Payment failed: ${response.error.description}\nReservation: ${ReservationNo}`
+            );
+          });
+          rzp.open();
+        };
+        script.onerror = () => {
+          setProcessing(false);
+          alert("Failed to load payment gateway. Please try again.");
+        };
+        document.body.appendChild(script);
       }
     } catch (error) {
       console.error("Booking error:", error);
       console.error("Error response:", error.response?.data);
-      console.error(
-        "Error array content:",
-        JSON.stringify(error.response?.data?.error, null, 2)
-      );
+      console.error("Full error details:", JSON.stringify(error.response?.data, null, 2));
 
-      // Handle error array from ezeetechnosys
+      // Handle error
       let errorMessage = "Booking failed. Please try again.";
 
       if (
         error.response?.data?.error &&
         Array.isArray(error.response.data.error)
       ) {
-        // If error is an array, get the first error object
         const errorObj = error.response.data.error[0];
         errorMessage =
           errorObj?.Error_Message ||
           errorObj?.error ||
           JSON.stringify(errorObj);
-        console.error("Parsed error message:", errorMessage);
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
       } else if (error.message) {
         errorMessage = error.message;
       }
 
-      const errorDetails = error.response?.data?.errorDetails;
-
-      if (errorDetails) {
-        alert(
-          `Booking Failed\n\nError: ${errorMessage}\nCode: ${errorDetails.Error_Code}\n\nPlease check your booking details and try again.`
-        );
-      } else {
-        alert(
-          `Booking Failed\n\n${errorMessage}\n\nPlease check the console for more details.`
-        );
-      }
-    } finally {
+      alert(`Booking Failed\n\n${errorMessage}`);
       setProcessing(false);
     }
+  };
+
+  // Helper function to prepare booking payload
+  const prepareBookingPayload = () => {
+    console.log("=== Preparing Booking Payload ===");
+    console.log("Room data:", room);
+    console.log("Personal Info:", personalInfo);
+    console.log("Search Data:", searchData);
+    console.log("Booking Details:", bookingDetails);
+
+    // Validate required fields
+    if (!personalInfo?.email) {
+      throw new Error("Email address is required");
+    }
+    if (!personalInfo?.firstName) {
+      throw new Error("First name is required");
+    }
+    if (!personalInfo?.lastName) {
+      throw new Error("Last name is required");
+    }
+    if (!bookingDetails?.checkIn) {
+      throw new Error("Check-in date is required");
+    }
+    if (!bookingDetails?.checkOut) {
+      throw new Error("Check-out date is required");
+    }
+
+    const roomDetails = {
+      // Ensure all ID and rate fields are strings as per API sample
+      Rateplan_Id: String(room.roomrateunkid),
+      Ratetype_Id: String(room.ratetypeunkid),
+      Roomtype_Id: String(room.roomtypeunkid),
+      baserate: String(
+        room.room_rates_info.rack_rate ??
+          room.room_rates_info.avg_per_night_after_discount ??
+          "0"
+      ),
+      extradultrate: String(room.extra_adult_rates_info?.rack_rate ?? "0"),
+      extrachildrate: String(room.extra_child_rates_info?.rack_rate ?? "0"),
+      number_adults: String(searchData.adults),
+      number_children: String(searchData.children || 0),
+      Title: personalInfo.title || "",
+      First_Name: String(personalInfo.firstName || ""),
+      Last_Name: String(personalInfo.lastName || ""),
+      Gender: personalInfo.gender || "",
+      SpecialRequest: personalInfo.specialRequest || "",
+    };
+
+    // Only add ExtraChild_Age if there are children (MANDATORY if number_children is not zero)
+    if (searchData.children > 0) {
+      roomDetails.ExtraChild_Age = Array(searchData.children)
+        .fill("5")
+        .join(",");
+    }
+
+    const bookingPayload = {
+      Room_Details: {
+        Room_1: roomDetails,
+      },
+      check_in_date: bookingDetails.checkIn,
+      check_out_date: bookingDetails.checkOut,
+      Booking_Payment_Mode: "",
+      Email_Address: personalInfo.email,
+      Source_Id: "",
+      MobileNo: String(personalInfo.phone || ""),
+      Address: personalInfo.address || "",
+      State: personalInfo.state || "",
+      Country: personalInfo.country || "",
+      City: personalInfo.city || "",
+      Zipcode: personalInfo.zipcode || "",
+      Device: "WEB",
+      Languagekey: "en",
+    };
+
+    // Add extras if valid
+    // NOTE: Temporarily disabled to test if this is causing the ParametersMissing error
+    // const hasValidExtras =
+    //   selectedExtras &&
+    //   Object.keys(selectedExtras).length > 0 &&
+    //   bookingDetails.extrasCharge > 0;
+
+    // if (hasValidExtras) {
+    //   bookingPayload.ExtraCharge = selectedExtras;
+    // }
+
+    console.log("Extras disabled for testing. Selected extras:", selectedExtras);
+
+    // IMPORTANT: Only add card details if NOT using a payment gateway
+    // If using payment gateway (paymenttypeunkid), eZee handles payment collection
+    // Card details should NOT be sent when using their payment gateway integration
+    
+    // TESTING: Temporarily removing payment gateway from initial booking creation
+    // Payment gateway might need to be handled separately after booking is created
+    if (selectedPaymentMode === "Credit Card") {
+      const gatewayId =
+        selectedGateway || paymentGateways?.[0]?.paymenttypeunkid || null;
+      
+      if (gatewayId) {
+        // Using payment gateway - DON'T add to initial booking
+        // bookingPayload.paymenttypeunkid = gatewayId;
+        console.log("Payment gateway will be handled after booking creation:", gatewayId);
+      } else {
+        // No payment gateway - add card details for manual processing
+        const cardTypeMap = {
+          Visa: "VISA",
+          MasterCard: "MASTERCARD",
+          "American Express": "AMEX",
+          Discover: "DISCOVER",
+        };
+
+        bookingPayload.CardDetails = {
+          cc_cardnumber: String(cardDetails.cardNumber).trim(),
+          cc_cardtype:
+            cardTypeMap[cardDetails.cardType] ||
+            cardDetails.cardType.toUpperCase(),
+          cc_expiremonth: String(cardDetails.expiryMonth).padStart(2, "0"),
+          cc_expireyear: String(cardDetails.expiryYear),
+          cvvcode: String(cardDetails.cvv),
+          cardholdername: cardDetails.cardHolderName.trim(),
+        };
+        console.log("Using direct card details (no gateway)");
+      }
+    }
+
+    console.log("Final booking payload:", JSON.stringify(bookingPayload, null, 2));
+    return bookingPayload;
   };
 
   if (!room || !searchData || !bookingDetails || !personalInfo) {
