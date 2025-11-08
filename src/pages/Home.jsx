@@ -6,7 +6,7 @@ import AccommodationCards from "../components/AccommodationCards";
 import RoomShowcase from "../components/RoomShowcase";
 import BentoBlogs from "../components/BentoBlogs";
 import LocationMap from "../components/LocationMap";
-import Testimonials from "../components/Testimonials";
+// import Testimonials from "../components/Testimonials";
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
       <AccommodationCards />
       <RoomShowcase />
       <BentoBlogs />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <LocationMap />
     </div>
   );

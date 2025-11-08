@@ -145,7 +145,7 @@ const Navbar = () => {
                     : "bg-white/95 text-gray-900 hover:bg-white backdrop-blur-sm"
                 } hover:shadow-xl transform hover:scale-105`}
               >
-                Book
+                Reserve
               </Link>
             </div>
           </div>
