@@ -65,7 +65,30 @@ const Availability = () => {
       if (response.data.success) {
         // Ezee API returns the room data directly as an array
         const roomData = response.data.data || [];
-        setRooms(roomData);
+        
+        // Filter out rooms with invalid ID configuration
+        // eZee InsertBooking API requires Rateplan_Id, Ratetype_Id, Roomtype_Id to be DIFFERENT
+        // Some rooms may have all three IDs identical which causes booking failures
+        const validRooms = roomData.filter(room => {
+          const hasDuplicateIds = 
+            room.roomrateunkid === room.ratetypeunkid && 
+            room.roomrateunkid === room.roomtypeunkid;
+          
+          if (hasDuplicateIds) {
+            console.warn(
+              `⚠️ Filtering out room "${room.Room_Name}" - has duplicate IDs:`,
+              `roomrateunkid=${room.roomrateunkid}, ratetypeunkid=${room.ratetypeunkid}, roomtypeunkid=${room.roomtypeunkid}`
+            );
+          }
+          
+          return !hasDuplicateIds;
+        });
+        
+        setRooms(validRooms);
+        
+        if (validRooms.length === 0 && roomData.length > 0) {
+          setError("No bookable rooms available. All rooms have invalid configurations. Please contact support.");
+        }
       } else {
         setError("No rooms available for the selected dates");
       }
@@ -157,36 +180,36 @@ const Availability = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-slate-100 pt-32 pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-slate-100 pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-8 sm:pb-10 md:pb-12 lg:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elegant Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12"
         >
-          <h1 className="text-4xl lg:text-5xl font-light text-gray-800 mb-3 tracking-wide">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 mb-2 sm:mb-3 tracking-wide px-2">
             Your Perfect Retreat Awaits
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto"></div>
+          <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto"></div>
         </motion.div>
 
         {/* Search Summary Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-amber-100 p-8 mb-12"
+          className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-amber-100 p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 md:mb-10 lg:mb-12"
         >
-          <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
             <div className="flex-1">
-              <h2 className="text-2xl font-light text-gray-800 mb-4 tracking-wide">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-light text-gray-800 mb-3 sm:mb-4 tracking-wide">
                 Your Selection
               </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -199,19 +222,19 @@ const Availability = () => {
                       />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
                       Check In
                     </p>
-                    <p className="text-sm font-semibold text-gray-800">
+                    <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate">
                       {formatDate(searchData.checkIn)}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -224,19 +247,19 @@ const Availability = () => {
                       />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
                       Check Out
                     </p>
-                    <p className="text-sm font-semibold text-gray-800">
+                    <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate">
                       {formatDate(searchData.checkOut)}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -249,19 +272,19 @@ const Availability = () => {
                       />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Guests</p>
-                    <p className="text-sm font-semibold text-gray-800">
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium">Guests</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate">
                       {searchData.adults} Adults
                       {searchData.children > 0 &&
                         `, ${searchData.children} Children`}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -274,11 +297,11 @@ const Availability = () => {
                       />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
                       Duration
                     </p>
-                    <p className="text-sm font-semibold text-gray-800">
+                    <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate">
                       {calculateNights()} Night
                       {calculateNights() > 1 ? "s" : ""}
                     </p>
@@ -288,7 +311,7 @@ const Availability = () => {
             </div>
             <button
               onClick={() => navigate("/")}
-              className="px-6 py-3 border-2 border-amber-600 text-amber-600 rounded-full hover:bg-amber-600 hover:text-white transition-all duration-300 font-medium"
+              className="w-full lg:w-auto px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-amber-600 text-amber-600 rounded-full hover:bg-amber-600 hover:text-white transition-all duration-300 font-medium text-sm sm:text-base"
             >
               Modify Search
             </button>
@@ -330,9 +353,9 @@ const Availability = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center mb-8"
+              className="text-center mb-6 sm:mb-8"
             >
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-sm sm:text-base md:text-lg px-4">
                 We found{" "}
                 <span className="font-semibold text-amber-600">
                   {rooms.length}
@@ -342,7 +365,7 @@ const Availability = () => {
               </p>
             </motion.div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 md:space-y-6">
               {rooms.map((room, index) => (
                 <motion.div
                   key={room.roomrateunkid || index}
@@ -353,7 +376,7 @@ const Availability = () => {
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                     {/* Image Section */}
-                    <div className="relative h-64 lg:h-auto lg:min-h-full overflow-hidden">
+                    <div className="relative h-48 sm:h-56 md:h-64 lg:h-auto lg:min-h-full overflow-hidden">
                       {room.room_main_image ? (
                         <motion.img
                           src={room.room_main_image}
@@ -378,9 +401,9 @@ const Availability = () => {
                         </div>
                       )}
                       {/* Favorite Icon */}
-                      <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg">
+                      <button className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg">
                         <svg
-                          className="w-5 h-5 text-gray-600"
+                          className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -396,55 +419,55 @@ const Availability = () => {
                     </div>
 
                     {/* Details Section */}
-                    <div className="lg:col-span-2 p-6">
+                    <div className="lg:col-span-2 p-4 sm:p-5 md:p-6">
                       <div className="flex flex-col h-full">
                         {/* Room Title */}
-                        <div className="mb-4">
-                          <h3 className="text-2xl font-serif text-gray-900 mb-2">
+                        <div className="mb-3 sm:mb-4">
+                          <h3 className="text-xl sm:text-2xl font-serif text-gray-900 mb-1.5 sm:mb-2">
                             {room.Room_Name || room.Roomtype_Name}
                           </h3>
-                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-2">
                             {room.Room_Description ||
                               "Escape to luxury and comfort. This beautifully designed room offers a perfect blend of modern amenities and natural tranquility, ensuring an unforgettable stay in the heart of nature."}
                           </p>
                         </div>
 
                         {/* Room Info Grid */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4">
                           {/* Adults */}
-                          <div className="flex items-center gap-2">
-                            <FiUsers className="text-gray-600 text-lg" />
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <FiUsers className="text-gray-600 text-base sm:text-lg flex-shrink-0" />
                             <div>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-[10px] sm:text-xs text-gray-500">
                                 Adults: {room.Room_Max_adult || 2}
                               </p>
                             </div>
                           </div>
 
                           {/* Children */}
-                          <div className="flex items-center gap-2">
-                            <FiUsers className="text-gray-600 text-lg" />
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <FiUsers className="text-gray-600 text-base sm:text-lg flex-shrink-0" />
                             <div>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-[10px] sm:text-xs text-gray-500">
                                 Children: {room.Room_Max_child || 1}
                               </p>
                             </div>
                           </div>
 
                           {/* Size */}
-                          <div className="flex items-center gap-2">
-                            <FiMaximize className="text-gray-600 text-lg" />
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <FiMaximize className="text-gray-600 text-base sm:text-lg flex-shrink-0" />
                             <div>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-[10px] sm:text-xs text-gray-500">
                                 Size: {room.Room_Size || "35"} m²
                               </p>
                             </div>
                           </div>
 
                           {/* Bed Type */}
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 sm:gap-2">
                             <svg
-                              className="w-5 h-5 text-gray-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 flex-shrink-0"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -457,23 +480,23 @@ const Availability = () => {
                               />
                             </svg>
                             <div>
-                              <p className="text-xs text-gray-500">
-                                Bed Type: {room.Bed_Type || "Double Bed"}
+                              <p className="text-[10px] sm:text-xs text-gray-500">
+                                Bed: {room.Bed_Type || "Double Bed"}
                               </p>
                             </div>
                           </div>
                         </div>
 
                         {/* Amenities */}
-                        <div className="mb-4">
-                          <p className="text-xs text-gray-600 uppercase tracking-wider mb-2">
+                        <div className="mb-3 sm:mb-4">
+                          <p className="text-[10px] sm:text-xs text-gray-600 uppercase tracking-wider mb-1.5 sm:mb-2">
                             Amenities:
                           </p>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {defaultAmenities.map((amenity, idx) => (
                               <div
                                 key={idx}
-                                className="flex items-center justify-center w-9 h-9 bg-gray-100 text-gray-700 hover:bg-gray-900 hover:text-white transition-all duration-300 text-sm"
+                                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gray-100 text-gray-700 hover:bg-gray-900 hover:text-white transition-all duration-300 text-xs sm:text-sm"
                                 title={amenity.name}
                               >
                                 {amenity.icon}
@@ -483,14 +506,14 @@ const Availability = () => {
                         </div>
 
                         {/* Price and Book Button */}
-                        <div className="mt-auto flex flex-col md:flex-row items-start md:items-end justify-between pt-4 border-t border-gray-200 gap-4">
+                        <div className="mt-auto flex flex-col md:flex-row items-start md:items-end justify-between pt-3 sm:pt-4 border-t border-gray-200 gap-3 sm:gap-4">
                           <div>
-                            <p className="text-xs text-gray-500 mb-1">From</p>
-                            <p className="text-2xl md:text-3xl font-serif text-gray-900">
+                            <p className="text-[10px] sm:text-xs text-gray-500 mb-1">From</p>
+                            <p className="text-xl sm:text-2xl md:text-3xl font-serif text-gray-900">
                               {room.currency_sign}
                               {room.room_rates_info?.avg_per_night_after_discount?.toLocaleString() ||
                                 "944,850"}
-                              <span className="text-sm text-gray-600 font-normal">
+                              <span className="text-xs sm:text-sm text-gray-600 font-normal">
                                 {" "}
                                 / night
                               </span>
@@ -505,22 +528,24 @@ const Availability = () => {
                                 },
                               })
                             }
-                            className="px-6 py-3 bg-gray-900 text-white text-sm uppercase tracking-wider hover:bg-gray-800 transition-all duration-300 font-medium whitespace-nowrap"
+                            className="w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-gray-900 text-white text-xs sm:text-sm uppercase tracking-wider hover:bg-gray-800 transition-all duration-300 font-medium whitespace-nowrap"
                           >
                             Book a room
                           </button>
                         </div>
 
                         {/* Additional Details Link */}
-                        <div className="mt-3 text-right">
-                          <button 
-                            onClick={() => navigate("/rooms", {
-                              state: {
-                                room: room,
-                                searchData: searchData
-                              }
-                            })}
-                            className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-300 flex items-center gap-1 ml-auto"
+                        <div className="mt-2 sm:mt-3 text-right">
+                          <button
+                            onClick={() =>
+                              navigate("/rooms", {
+                                state: {
+                                  room: room,
+                                  searchData: searchData,
+                                },
+                              })
+                            }
+                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-900 transition-colors duration-300 flex items-center gap-1 ml-auto"
                           >
                             <span>Additional Details</span>
                             <svg

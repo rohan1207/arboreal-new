@@ -13,17 +13,7 @@ const BookingPayment = () => {
     location.state || {};
 
   const [paymentGateways, setPaymentGateways] = useState([]);
-  const [selectedPaymentMode, setSelectedPaymentMode] =
-    useState("Pay at Hotel");
   const [selectedGateway, setSelectedGateway] = useState(null);
-  const [cardDetails, setCardDetails] = useState({
-    cardNumber: "",
-    cardType: "Visa",
-    cardHolderName: "",
-    expiryMonth: "",
-    expiryYear: "",
-    cvv: "",
-  });
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
 
@@ -51,16 +41,18 @@ const BookingPayment = () => {
       );
       console.log("Payment Gateways Response:", response.data);
 
-      if (response.data.success) {
+      if (response.data.success && response.data.data.length > 0) {
         setPaymentGateways(response.data.data);
-        console.log(`Found ${response.data.data.length} payment gateways`);
-        // Auto-select first gateway if user chose Credit Card but hasn't picked a gateway yet
-        if (response.data.data.length > 0 && !selectedGateway) {
-          setSelectedGateway(response.data.data[0].paymenttypeunkid);
-        }
+        console.log(`Found ${response.data.data.length} Razorpay gateway(s)`);
+        // Auto-select first Razorpay gateway
+        setSelectedGateway(response.data.data[0].paymenttypeunkid);
+      } else {
+        console.log("No Razorpay gateways configured");
+        setPaymentGateways([]);
       }
     } catch (error) {
       console.error("Error fetching payment gateways:", error);
+      setPaymentGateways([]);
     }
   };
 
@@ -72,204 +64,152 @@ const BookingPayment = () => {
     }));
   };
 
-  const handleSubmitBooking = async () => {
-    // Validate
-    if (selectedPaymentMode === "Credit Card") {
-      if (
-        !cardDetails.cardNumber ||
-        !cardDetails.cardHolderName ||
-        !cardDetails.expiryMonth ||
-        !cardDetails.expiryYear ||
-        !cardDetails.cvv
-      ) {
-        alert("Please fill in all card details");
-        return;
-      }
-    }
+  const openRazorpayPopup = async (reservationNo, totalAmount) => {
+    try {
+      console.log("\n=== STEP 2: Opening Razorpay Popup ===");
+      
+      // Create Razorpay order
+      const orderResponse = await axios.post(
+        `${API_BASE_URL}/api/booking/razorpay/create-order`,
+        {
+          amount: totalAmount,
+          currency: room.currency_code || "INR",
+          receipt: `receipt_${reservationNo}`,
+          notes: {
+            reservationNo,
+            email: personalInfo.email,
+            phone: personalInfo.phone,
+            name: `${personalInfo.firstName} ${personalInfo.lastName}`
+          }
+        }
+      );
 
+      if (!orderResponse.data.success) {
+        throw new Error("Failed to create Razorpay order");
+      }
+
+      const { orderId, amount, currency, key } = orderResponse.data;
+      
+      console.log("Razorpay Order Created:", { orderId, amount, currency });
+
+      // Configure Razorpay options
+      const options = {
+        key: key,
+        amount: amount,
+        currency: currency,
+        name: "The Arboreal Resort",
+        description: `Booking Payment - ${reservationNo}`,
+        order_id: orderId,
+        prefill: {
+          name: `${personalInfo.firstName} ${personalInfo.lastName}`,
+          email: personalInfo.email,
+          contact: personalInfo.phone
+        },
+        theme: {
+          color: "#D97706" // Amber color matching your theme
+        },
+        handler: async function (response) {
+          console.log("\n=== Payment Successful ===");
+          console.log("Payment Response:", response);
+          
+          try {
+            // Verify payment and confirm booking with eZee
+            const verifyResponse = await axios.post(
+              `${API_BASE_URL}/api/booking/razorpay/verify-payment`,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                reservationNo: reservationNo
+              }
+            );
+
+            if (verifyResponse.data.success && verifyResponse.data.ezeeConfirmed) {
+              console.log("✅ Payment verified and booking confirmed in eZee!");
+              
+              // Navigate to success page
+              navigate("/booking-confirmation", {
+                state: {
+                  reservationNo: reservationNo,
+                  paymentMode: "Online - Razorpay",
+                  paymentId: response.razorpay_payment_id,
+                  bookingConfirmed: true,
+                  bookingDetails: {
+                    room,
+                    searchData,
+                    personalInfo,
+                    totalAmount,
+                    email: personalInfo.email,
+                    phone: personalInfo.phone
+                  }
+                }
+              });
+            } else {
+              throw new Error(verifyResponse.data.message || "Booking confirmation failed");
+            }
+          } catch (verifyError) {
+            console.error("Payment verification error:", verifyError);
+            alert("Payment was successful but booking confirmation failed. Please contact support with your payment ID: " + response.razorpay_payment_id);
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            console.log("Payment popup closed by user");
+            setProcessing(false);
+            alert("Payment cancelled. Your booking (Reservation No: " + reservationNo + ") is pending payment confirmation.");
+          }
+        }
+      };
+
+      // Open Razorpay popup
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+    } catch (error) {
+      console.error("Error opening Razorpay popup:", error);
+      setProcessing(false);
+      alert("Failed to initialize payment. Please try again.");
+    }
+  };
+
+  const handleSubmitBooking = async () => {
     setProcessing(true);
 
     try {
-      // STEP 1: Create booking first using InsertBooking API
-      // This gives us the ReservationNo which is needed for everything else
+      // STEP 1: Create booking with eZee API
       const bookingPayload = await prepareBookingPayload();
 
       console.log("STEP 1: Creating booking with eZee API...");
       console.log("Booking Payload:", JSON.stringify(bookingPayload, null, 2));
-      
+
       const bookingResponse = await axios.post(
         `${API_BASE_URL}/api/booking/create`,
         bookingPayload
       );
 
       if (!bookingResponse.data.success) {
-        throw new Error(bookingResponse.data.message || "Booking creation failed");
-      }
-
-      const { ReservationNo, Inventory_Mode } = bookingResponse.data.data;
-      console.log("✅ Booking created successfully! ReservationNo:", ReservationNo);
-
-      // STEP 2: Handle payment based on payment mode
-      if (selectedPaymentMode === "Pay at Hotel") {
-        // No online payment needed - navigate directly to confirmation
-        navigate("/booking-confirmation", {
-          state: {
-            reservationNo: ReservationNo,
-            paymentMode: "Pay at Hotel",
-            bookingDetails: {
-              ...bookingPayload,
-              room,
-              searchData,
-              Email_Address: personalInfo.email,
-              MobileNo: personalInfo.phone,
-              totalAmount:
-                bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0),
-            },
-          },
-        });
-      } else if (selectedPaymentMode === "Credit Card") {
-        // STEP 2a: Create Razorpay Order
-        console.log("STEP 2: Creating Razorpay order...");
-        const totalAmount =
-          bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
-
-        const orderResponse = await axios.post(
-          `${API_BASE_URL}/api/payment/create-order`,
-          {
-            amount: totalAmount,
-            currency: room.currency_id || "INR",
-            reservationNo: ReservationNo,
-            email: personalInfo.email,
-            phone: personalInfo.phone,
-            name: `${personalInfo.firstName} ${personalInfo.lastName}`,
-          }
+        throw new Error(
+          bookingResponse.data.message || "Booking creation failed"
         );
-
-        if (!orderResponse.data.success) {
-          throw new Error("Failed to create payment order");
-        }
-
-        const { orderId } = orderResponse.data.data;
-        console.log("✅ Razorpay order created:", orderId);
-
-        // STEP 2b: Open Razorpay Payment Gateway
-        const options = {
-          key: "rzp_test_YOUR_KEY_ID", // Replace with your actual Razorpay key from dashboard
-          amount: totalAmount * 100, // Convert to paise
-          currency: room.currency_id || "INR",
-          name: "Arboreal Resort",
-          description: `Booking for ${room.Room_Name}`,
-          order_id: orderId,
-          prefill: {
-            name: `${personalInfo.firstName} ${personalInfo.lastName}`,
-            email: personalInfo.email,
-            contact: personalInfo.phone,
-          },
-          theme: {
-            color: "#D97706", // Amber color matching your brand
-          },
-          handler: async function (response) {
-            // STEP 3: Payment successful - Verify payment
-            console.log("STEP 3: Payment successful, verifying...");
-            try {
-              const verifyResponse = await axios.post(
-                `${API_BASE_URL}/api/payment/verify`,
-                {
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                  reservationNo: ReservationNo,
-                  inventoryMode: Inventory_Mode,
-                }
-              );
-
-              if (verifyResponse.data.success) {
-                console.log("✅ Payment verified and booking confirmed!");
-                // Navigate to confirmation page
-                navigate("/booking-confirmation", {
-                  state: {
-                    reservationNo: ReservationNo,
-                    paymentId: response.razorpay_payment_id,
-                    paymentMode: "Online Payment",
-                    bookingStatus: "CONFIRMED",
-                    bookingDetails: {
-                      ...bookingPayload,
-                      room,
-                      searchData,
-                      Email_Address: personalInfo.email,
-                      MobileNo: personalInfo.phone,
-                      totalAmount,
-                    },
-                  },
-                });
-              } else {
-                throw new Error("Payment verification failed");
-              }
-            } catch (error) {
-              console.error("Payment verification error:", error);
-              alert(
-                "Payment was successful but verification failed. Please contact support with your reservation number: " +
-                  ReservationNo
-              );
-            }
-          },
-          modal: {
-            ondismiss: async function () {
-              // STEP 3b: Payment cancelled - Mark booking as failed
-              console.log("Payment cancelled by user");
-              try {
-                await axios.post(`${API_BASE_URL}/api/payment/fail`, {
-                  reservationNo: ReservationNo,
-                  inventoryMode: Inventory_Mode,
-                  errorText: "Payment cancelled by user",
-                });
-              } catch (error) {
-                console.error("Failed to mark booking as failed:", error);
-              }
-              
-              setProcessing(false);
-              alert("Payment cancelled. Booking has been marked as failed.");
-            },
-          },
-        };
-
-        // Load Razorpay script and open payment modal
-        const script = document.createElement("script");
-        script.src = "https://checkout.razorpay.com/v1/checkout.js";
-        script.onload = () => {
-          const rzp = new window.Razorpay(options);
-          rzp.on("payment.failed", async function (response) {
-            console.error("Payment failed:", response.error);
-            // Mark booking as failed
-            try {
-              await axios.post(`${API_BASE_URL}/api/payment/fail`, {
-                reservationNo: ReservationNo,
-                inventoryMode: Inventory_Mode,
-                errorText: response.error.description || "Payment failed",
-              });
-            } catch (error) {
-              console.error("Failed to mark booking as failed:", error);
-            }
-
-            setProcessing(false);
-            alert(
-              `Payment failed: ${response.error.description}\nReservation: ${ReservationNo}`
-            );
-          });
-          rzp.open();
-        };
-        script.onerror = () => {
-          setProcessing(false);
-          alert("Failed to load payment gateway. Please try again.");
-        };
-        document.body.appendChild(script);
       }
+
+      const { ReservationNo } = bookingResponse.data.data;
+      console.log(
+        "✅ Booking created successfully! ReservationNo:",
+        ReservationNo
+      );
+
+      // Calculate total amount
+      const totalAmount =
+        bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
+
+      // STEP 2: Open Razorpay payment popup (automatically opens after booking creation)
+      await openRazorpayPopup(ReservationNo, totalAmount);
+
     } catch (error) {
       console.error("Booking error:", error);
       console.error("Error response:", error.response?.data);
-      console.error("Full error details:", JSON.stringify(error.response?.data, null, 2));
 
-      // Handle error
       let errorMessage = "Booking failed. Please try again.";
 
       if (
@@ -277,7 +217,11 @@ const BookingPayment = () => {
         Array.isArray(error.response.data.error)
       ) {
         const errorObj = error.response.data.error[0];
+        console.log("=== EZEE ERROR DETAILS ===");
+        console.log("Full error object:", JSON.stringify(errorObj, null, 2));
+        
         errorMessage =
+          errorObj?.["Error Details"]?.Error_Message ||
           errorObj?.Error_Message ||
           errorObj?.error ||
           JSON.stringify(errorObj);
@@ -299,6 +243,20 @@ const BookingPayment = () => {
     console.log("Personal Info:", personalInfo);
     console.log("Search Data:", searchData);
     console.log("Booking Details:", bookingDetails);
+    
+    // Log the critical IDs
+    console.log("=== CRITICAL IDS FROM ROOM OBJECT ===");
+    console.log("Package_Id (will be used for Rateplan_Id):", room.Package_Id);
+    console.log("roomrateunkid:", room.roomrateunkid);
+    console.log("ratetypeunkid (Ratetype_Id):", room.ratetypeunkid);
+    console.log("roomtypeunkid (Roomtype_Id):", room.roomtypeunkid);
+    console.log("rack_rate (baserate):", room.room_rates_info?.rack_rate);
+    console.log("extra_adult rack_rate:", room.extra_adult_rates_info?.rack_rate);
+    console.log("extra_child rack_rate:", room.extra_child_rates_info?.rack_rate);
+    console.log("\n=== RATE INFO STRUCTURE ===");
+    console.log("room_rates_info.exclusive_tax:", room.room_rates_info?.exclusive_tax);
+    console.log("extra_adult_rates_info.exclusive_tax:", room.extra_adult_rates_info?.exclusive_tax);
+    console.log("extra_child_rates_info.exclusive_tax:", room.extra_child_rates_info?.exclusive_tax);
 
     // Validate required fields
     if (!personalInfo?.email) {
@@ -317,51 +275,91 @@ const BookingPayment = () => {
       throw new Error("Check-out date is required");
     }
 
-    const roomDetails = {
-      // Ensure all ID and rate fields are strings as per API sample
-      Rateplan_Id: String(room.roomrateunkid),
-      Ratetype_Id: String(room.ratetypeunkid),
-      Roomtype_Id: String(room.roomtypeunkid),
-      baserate: String(
-        room.room_rates_info.rack_rate ??
-          room.room_rates_info.avg_per_night_after_discount ??
-          "0"
-      ),
-      extradultrate: String(room.extra_adult_rates_info?.rack_rate ?? "0"),
-      extrachildrate: String(room.extra_child_rates_info?.rack_rate ?? "0"),
-      number_adults: String(searchData.adults),
-      number_children: String(searchData.children || 0),
-      Title: personalInfo.title || "",
-      First_Name: String(personalInfo.firstName || ""),
-      Last_Name: String(personalInfo.lastName || ""),
-      Gender: personalInfo.gender || "",
-      SpecialRequest: personalInfo.specialRequest || "",
-    };
-
-    // Only add ExtraChild_Age if there are children (MANDATORY if number_children is not zero)
-    if (searchData.children > 0) {
-      roomDetails.ExtraChild_Age = Array(searchData.children)
-        .fill("5")
-        .join(",");
+    // CRITICAL: Validate check-in date is not in the past or today
+    // eZee API rejects bookings for today - must be tomorrow or later
+    const checkInDate = new Date(bookingDetails.checkIn);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0); // Reset time to start of day
+    
+    if (checkInDate < tomorrow) {
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      throw new Error(
+        `Check-in date must be tomorrow or later. Please select ${tomorrowStr} or a future date. eZee API does not accept bookings for today or past dates.`
+      );
     }
 
+    // Get base rate - Use the ACTUAL SELLING PRICE from exclusive_tax
+    // eZee InsertBooking API expects the per-night rate from the room search
+    // Use the first date's exclusive_tax value (the actual per-night selling price)
+    const firstDateExclusiveTax = Object.values(room.room_rates_info?.exclusive_tax || {})[0];
+    const baseRate = String(
+      Math.round(parseFloat(firstDateExclusiveTax ?? "0"))
+    );
+    
+    // For extra adult/child, use the exclusive_tax rate (actual per-night charge)
+    const firstDateExtraAdultTax = Object.values(room.extra_adult_rates_info?.exclusive_tax || {})[0];
+    const extraAdultRate = String(
+      Math.round(parseFloat(firstDateExtraAdultTax ?? "0"))
+    );
+    
+    const firstDateExtraChildTax = Object.values(room.extra_child_rates_info?.exclusive_tax || {})[0];
+    const extraChildRate = String(
+      Math.round(parseFloat(firstDateExtraChildTax ?? "0"))
+    );
+
+    const roomDetails = {
+      // All ID fields must be strings from room object
+      Rateplan_Id: String(room.roomrateunkid || ""),
+      Ratetype_Id: String(room.ratetypeunkid || ""),
+      Roomtype_Id: String(room.roomtypeunkid || ""),
+      // Rates as simple string numbers (matching Postman example format)
+      baserate: baseRate,
+      extradultrate: extraAdultRate,
+      extrachildrate: extraChildRate,
+      // Number of adults and children as strings
+      number_adults: String(searchData.adults),
+      number_children: String(searchData.children || 0),
+      // Guest details - Following EXACT Postman example format
+      // Postman uses empty strings for Title and Gender!
+      Title: "",  // Empty string as per Postman example
+      First_Name: String(personalInfo.firstName || ""),
+      Last_Name: String(personalInfo.lastName || ""),
+      Gender: "",  // Empty string as per Postman example
+      SpecialRequest: "",  // Empty string as per Postman example
+    };
+
+    // CRITICAL: ExtraChild_Age is MANDATORY if number_children > 0
+    // API expects a SINGLE age value (like "5"), NOT comma-separated values
+    if (searchData.children > 0) {
+      // Use default age "5" for all children
+      roomDetails.ExtraChild_Age = "5";
+    }
+    
+    // Log the constructed room details
+    console.log("=== CONSTRUCTED ROOM DETAILS ===");
+    console.log(JSON.stringify(roomDetails, null, 2));
+
+    // Build booking payload - EXACTLY matching Postman collection example
     const bookingPayload = {
       Room_Details: {
         Room_1: roomDetails,
       },
-      check_in_date: bookingDetails.checkIn,
-      check_out_date: bookingDetails.checkOut,
-      Booking_Payment_Mode: "",
+      check_in_date: bookingDetails.checkIn,  // Format: YYYY-MM-DD
+      check_out_date: bookingDetails.checkOut,  // Format: YYYY-MM-DD
+      Booking_Payment_Mode: "",  // Empty string as per Postman example
       Email_Address: personalInfo.email,
-      Source_Id: "",
-      MobileNo: String(personalInfo.phone || ""),
-      Address: personalInfo.address || "",
-      State: personalInfo.state || "",
-      Country: personalInfo.country || "",
-      City: personalInfo.city || "",
-      Zipcode: personalInfo.zipcode || "",
-      Device: "WEB",
-      Languagekey: "en",
+      Source_Id: "",  // Empty string as per Postman example
+      MobileNo: "",  // Empty string as per Postman example
+      Address: "",  // Empty string as per Postman example
+      State: "",  // Empty string as per Postman example
+      Country: "",  // Empty string as per Postman example
+      City: "",  // Empty string as per Postman example
+      Zipcode: "",  // Empty string as per Postman example
+      Fax: "",  // Empty string as per Postman example
+      Device: "",  // Empty string as per Postman example
+      Languagekey: "",  // Empty string as per Postman example
+      paymenttypeunkid: ""  // Empty string as per Postman example
     };
 
     // Add extras if valid
@@ -375,46 +373,15 @@ const BookingPayment = () => {
     //   bookingPayload.ExtraCharge = selectedExtras;
     // }
 
-    console.log("Extras disabled for testing. Selected extras:", selectedExtras);
+    console.log(
+      "Extras disabled for testing. Selected extras:",
+      selectedExtras
+    );
 
-    // IMPORTANT: Only add card details if NOT using a payment gateway
-    // If using payment gateway (paymenttypeunkid), eZee handles payment collection
-    // Card details should NOT be sent when using their payment gateway integration
-    
-    // TESTING: Temporarily removing payment gateway from initial booking creation
-    // Payment gateway might need to be handled separately after booking is created
-    if (selectedPaymentMode === "Credit Card") {
-      const gatewayId =
-        selectedGateway || paymentGateways?.[0]?.paymenttypeunkid || null;
-      
-      if (gatewayId) {
-        // Using payment gateway - DON'T add to initial booking
-        // bookingPayload.paymenttypeunkid = gatewayId;
-        console.log("Payment gateway will be handled after booking creation:", gatewayId);
-      } else {
-        // No payment gateway - add card details for manual processing
-        const cardTypeMap = {
-          Visa: "VISA",
-          MasterCard: "MASTERCARD",
-          "American Express": "AMEX",
-          Discover: "DISCOVER",
-        };
-
-        bookingPayload.CardDetails = {
-          cc_cardnumber: String(cardDetails.cardNumber).trim(),
-          cc_cardtype:
-            cardTypeMap[cardDetails.cardType] ||
-            cardDetails.cardType.toUpperCase(),
-          cc_expiremonth: String(cardDetails.expiryMonth).padStart(2, "0"),
-          cc_expireyear: String(cardDetails.expiryYear),
-          cvvcode: String(cardDetails.cvv),
-          cardholdername: cardDetails.cardHolderName.trim(),
-        };
-        console.log("Using direct card details (no gateway)");
-      }
-    }
-
-    console.log("Final booking payload:", JSON.stringify(bookingPayload, null, 2));
+    console.log(
+      "Final booking payload:",
+      JSON.stringify(bookingPayload, null, 2)
+    );
     return bookingPayload;
   };
 
@@ -424,301 +391,140 @@ const BookingPayment = () => {
 
   const totalAmount =
     bookingDetails.totalPrice + (bookingDetails.extrasCharge || 0);
-  const cardTypes = ["Visa", "MasterCard", "American Express", "Discover"];
-  const months = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-  ];
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 20 }, (_, i) =>
-    (currentYear + i).toString()
-  );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-8">
+    <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-6 sm:pb-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
+        <div className="mb-6 sm:mb-8 overflow-x-auto">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-4 min-w-max px-4">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500">
                 Select Date
               </span>
             </div>
-            <div className="w-16 h-0.5 bg-green-600"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500 hidden sm:inline">
                 Personal Info
               </span>
+              <span className="ml-1 text-xs font-medium text-gray-500 sm:hidden">
+                Info
+              </span>
             </div>
-            <div className="w-16 h-0.5 bg-green-600"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-900">
                 Payment
               </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Payment Section */}
           <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-lg p-8"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8"
             >
-              <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mb-4 sm:mb-6">
                 Payment Details
               </h2>
 
-              {/* Payment Mode Selection */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">
-                  Select Payment Mode
-                </h3>
-                <div className="space-y-3">
-                  <label className="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-amber-600 transition-all">
-                    <input
-                      type="radio"
-                      name="paymentMode"
-                      value="Pay at Hotel"
-                      checked={selectedPaymentMode === "Pay at Hotel"}
-                      onChange={(e) => setSelectedPaymentMode(e.target.value)}
-                      className="w-5 h-5 text-amber-600"
-                    />
-                    <div className="ml-4">
-                      <p className="font-semibold">Pay at Hotel</p>
-                      <p className="text-sm text-gray-600">
-                        Pay when you check-in
-                      </p>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-amber-600 transition-all">
-                    <input
-                      type="radio"
-                      name="paymentMode"
-                      value="Credit Card"
-                      checked={selectedPaymentMode === "Credit Card"}
-                      onChange={(e) => setSelectedPaymentMode(e.target.value)}
-                      className="w-5 h-5 text-amber-600"
-                    />
-                    <div className="ml-4">
-                      <p className="font-semibold">Credit/Debit Card</p>
-                      <p className="text-sm text-gray-600">
-                        Secure card payment
-                      </p>
-                    </div>
-                  </label>
-                </div>
-
-                {/* Info about payment gateways */}
-                {paymentGateways.length === 0 && (
-                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-xs text-blue-800">
-                      <strong>Note:</strong> Payment gateways (like Razorpay,
-                      PayU) are managed through ezeetechnosys. Currently, no
-                      online payment gateways are configured. Card details will
-                      be stored for manual processing.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Payment Gateways (if available) */}
-              {paymentGateways.length > 0 &&
-                selectedPaymentMode === "Credit Card" && (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-4">
-                      Select Payment Gateway
+              {/* Payment Gateway Information */}
+              {paymentGateways.length > 0 ? (
+                <div className="mb-6 sm:mb-8">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <h3 className="text-base sm:text-lg font-semibold">
+                      Secure Payment via Razorpay
                     </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {paymentGateways.map((gateway) => (
-                        <button
-                          key={gateway.paymenttypeunkid}
-                          onClick={() =>
-                            setSelectedGateway(gateway.paymenttypeunkid)
-                          }
-                          className={`
-                          p-4 border-2 rounded-lg text-left transition-all
-                          ${
-                            selectedGateway === gateway.paymenttypeunkid
-                              ? "border-amber-600 bg-amber-50"
-                              : "border-gray-200 hover:border-amber-300"
-                          }
-                        `}
-                        >
-                          <p className="font-semibold">{gateway.paymenttype}</p>
-                          <p className="text-sm text-gray-600">
-                            {gateway.shortcode}
-                          </p>
-                        </button>
-                      ))}
-                    </div>
+                    <span className="px-2.5 sm:px-3 py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs font-semibold rounded-full">
+                      ✓ Secure
+                    </span>
                   </div>
-                )}
-
-              {/* Card Details Form */}
-              {selectedPaymentMode === "Credit Card" && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="space-y-6"
-                >
-                  <h3 className="text-lg font-semibold">Card Information</h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Card Type */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Type
-                      </label>
-                      <select
-                        name="cardType"
-                        value={cardDetails.cardType}
-                        onChange={handleCardDetailsChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
+                  
+                  {/* Selected Gateway Display */}
+                  {paymentGateways.map((gateway) => (
+                    gateway.paymenttypeunkid === selectedGateway && (
+                      <div
+                        key={gateway.paymenttypeunkid}
+                        className="p-4 sm:p-6 border-2 border-amber-600 bg-amber-50 rounded-lg"
                       >
-                        {cardTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+                          <div>
+                            <p className="font-semibold text-base sm:text-lg">{gateway.paymenttype}</p>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                              Click "Proceed to Payment" to complete your booking securely
+                            </p>
+                          </div>
+                          <svg className="w-10 h-10 sm:w-12 sm:h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                        </div>
+                      </div>
+                    )
+                  ))}
 
-                    {/* Card Holder Name */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Holder Name
-                      </label>
-                      <input
-                        type="text"
-                        name="cardHolderName"
-                        value={cardDetails.cardHolderName}
-                        onChange={handleCardDetailsChange}
-                        placeholder="Name on card"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
-                      />
-                    </div>
-
-                    {/* Card Number */}
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Number
-                      </label>
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        value={cardDetails.cardNumber}
-                        onChange={handleCardDetailsChange}
-                        placeholder="1234 5678 9012 3456"
-                        maxLength="16"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
-                      />
-                    </div>
-
-                    {/* Expiry Month */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Expiry Month
-                      </label>
-                      <select
-                        name="expiryMonth"
-                        value={cardDetails.expiryMonth}
-                        onChange={handleCardDetailsChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
-                      >
-                        <option value="">Select Month</option>
-                        {months.map((month) => (
-                          <option key={month} value={month}>
-                            {month}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Expiry Year */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Expiry Year
-                      </label>
-                      <select
-                        name="expiryYear"
-                        value={cardDetails.expiryYear}
-                        onChange={handleCardDetailsChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
-                      >
-                        <option value="">Select Year</option>
-                        {years.map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* CVV */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        CVV
-                      </label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        value={cardDetails.cvv}
-                        onChange={handleCardDetailsChange}
-                        placeholder="123"
-                        maxLength="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
-                      />
-                    </div>
+                  {/* Payment Info */}
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 className="font-semibold text-blue-900 mb-2 flex items-center text-sm sm:text-base">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      Payment Process
+                    </h4>
+                    <ul className="text-xs sm:text-sm text-blue-800 space-y-1 ml-6 sm:ml-7">
+                      <li>• Your booking will be created with a reservation number</li>
+                      <li>• Razorpay payment popup will open automatically</li>
+                      <li>• Choose your payment method (UPI, Cards, NetBanking, etc.)</li>
+                      <li>• On successful payment, booking is instantly confirmed</li>
+                      <li>• You'll receive confirmation via email immediately</li>
+                    </ul>
                   </div>
-                </motion.div>
+                </div>
+              ) : (
+                <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-yellow-900 mb-2">
+                    Payment Gateway Not Configured
+                  </h3>
+                  <p className="text-xs sm:text-sm text-yellow-800">
+                    Online payment is currently unavailable. Please contact the resort directly to complete your booking.
+                  </p>
+                </div>
               )}
 
               {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-8 mt-8 border-t">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center pt-6 sm:pt-8 mt-6 sm:mt-8 border-t gap-3 sm:gap-0">
                 <button
                   onClick={() => navigate(-1)}
                   disabled={processing}
-                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm sm:text-base order-2 sm:order-1"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmitBooking}
-                  disabled={processing}
-                  className="px-8 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  disabled={processing || paymentGateways.length === 0}
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base order-1 sm:order-2"
                 >
                   {processing ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
                       <span>Processing...</span>
                     </>
                   ) : (
-                    <span>Confirm Booking</span>
+                    <span>Proceed to Payment</span>
                   )}
                 </button>
               </div>
@@ -730,32 +536,32 @@ const BookingPayment = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6 sticky top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">
+              <h3 className="text-lg sm:text-xl font-serif font-bold mb-3 sm:mb-4">
                 Final Summary
               </h3>
 
               {/* Room Details */}
-              <div className="mb-4 pb-4 border-b">
-                <h4 className="font-semibold">{room.Room_Name}</h4>
-                <p className="text-sm text-gray-600">
+              <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
+                <h4 className="font-semibold text-sm sm:text-base">{room.Room_Name}</h4>
+                <p className="text-xs sm:text-sm text-gray-600">
                   {bookingDetails.nights} nights
                 </p>
               </div>
 
               {/* Guest Info */}
-              <div className="mb-4 pb-4 border-b">
-                <p className="text-sm text-gray-600 mb-1">Guest:</p>
-                <p className="font-semibold text-sm">
+              <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
+                <p className="text-xs sm:text-sm text-gray-600 mb-1">Guest:</p>
+                <p className="font-semibold text-xs sm:text-sm">
                   {personalInfo.title} {personalInfo.firstName}{" "}
                   {personalInfo.lastName}
                 </p>
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-3 mb-4">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-gray-600">Room Rate</span>
                   <span className="font-semibold">
                     {room.currency_sign}
@@ -764,7 +570,7 @@ const BookingPayment = () => {
                 </div>
 
                 {bookingDetails.extrasCharge > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-600">Extra Services</span>
                     <span className="font-semibold">
                       {room.currency_sign}
@@ -775,22 +581,22 @@ const BookingPayment = () => {
               </div>
 
               {/* Total */}
-              <div className="pt-4 border-t">
-                <div className="flex justify-between items-center text-lg font-bold">
+              <div className="pt-3 sm:pt-4 border-t">
+                <div className="flex justify-between items-center text-base sm:text-lg font-bold">
                   <span>Total to Pay</span>
                   <span className="text-amber-600">
                     {room.currency_sign}
                     {totalAmount.toFixed(2)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Payment Mode: {selectedPaymentMode}
+                <p className="text-[10px] sm:text-xs text-gray-500 mt-2">
+                  Payment: Secure Online Payment
                 </p>
               </div>
 
               {/* Important Notes */}
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-xs text-gray-600">
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                <p className="text-[10px] sm:text-xs text-gray-600">
                   <strong>Note:</strong> Check-in time is after{" "}
                   {room.check_in_time || "2:00 PM"} and check-out time is before{" "}
                   {room.check_out_time || "12:00 PM"}.

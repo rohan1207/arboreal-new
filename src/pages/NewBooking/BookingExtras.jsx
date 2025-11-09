@@ -156,52 +156,58 @@ const BookingExtras = () => {
   const totalAmount = bookingDetails.totalPrice + totalExtrasCharge;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-8">
+    <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-6 sm:pb-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
+        <div className="mb-6 sm:mb-8 overflow-x-auto">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-4 min-w-max px-4">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500">
                 Select Date
               </span>
             </div>
-            <div className="w-16 h-0.5 bg-green-600"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-green-600"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 ✓
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500 hidden sm:inline">
                 Personal Info
               </span>
+              <span className="ml-1 text-xs font-medium text-gray-500 sm:hidden">
+                Info
+              </span>
             </div>
-            <div className="w-16 h-0.5 bg-amber-600"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-amber-600"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-900 hidden sm:inline">
                 Extras & Payment
+              </span>
+              <span className="ml-1 text-xs font-medium text-gray-900 sm:hidden">
+                Extras
               </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Extras Selection */}
           <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-lg p-8"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8"
             >
-              <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mb-2">
                 Enhance Your Stay
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
                 Add extra services to make your stay more comfortable (Optional)
               </p>
 
@@ -258,28 +264,28 @@ const BookingExtras = () => {
                         `}
                         onClick={() => handleExtraToggle(extra.ExtraChargeId)}
                       >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3">
+                        <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-0">
+                          <div className="flex-1 w-full">
+                            <div className="flex items-start space-x-2 sm:space-x-3">
                               <input
                                 type="checkbox"
                                 checked={!!isSelected}
                                 onChange={() => {}}
-                                className="w-5 h-5 text-amber-600 rounded focus:ring-amber-500"
+                                className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 rounded focus:ring-amber-500 mt-0.5"
                               />
-                              <div>
-                                <h3 className="font-semibold text-lg">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-base sm:text-lg">
                                   {extra.charge}
                                 </h3>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-xs sm:text-sm text-gray-600 mt-1">
                                   {extra.ShortCode}
                                 </p>
                                 {extra.description && (
-                                  <p className="text-sm text-gray-500 mt-2">
+                                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                                     {extra.description}
                                   </p>
                                 )}
-                                <div className="mt-2 text-sm text-gray-600">
+                                <div className="mt-2 text-xs sm:text-sm text-gray-600">
                                   <span className="font-medium">
                                     Charge Rule:
                                   </span>{" "}
@@ -289,12 +295,12 @@ const BookingExtras = () => {
                             </div>
                           </div>
 
-                          <div className="text-right">
-                            <p className="text-xl font-bold text-amber-600">
+                          <div className="text-left sm:text-right w-full sm:w-auto">
+                            <p className="text-lg sm:text-xl font-bold text-amber-600">
                               {room.currency_sign}
                               {extra.Rate}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
                               per{" "}
                               {extra.ChargeRule
                                 ? extra.ChargeRule.toLowerCase()
@@ -359,23 +365,23 @@ const BookingExtras = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-6 mt-6 border-t">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center pt-4 sm:pt-6 mt-4 sm:mt-6 border-t gap-3 sm:gap-0">
                 <button
                   onClick={() => navigate(-1)}
-                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base order-3 sm:order-1"
                 >
                   Back
                 </button>
-                <div className="space-x-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:space-x-4 order-1 sm:order-2">
                   <button
                     onClick={handleSkip}
-                    className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-5 sm:px-6 py-2.5 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                   >
                     Skip
                   </button>
                   <button
                     onClick={handleContinue}
-                    className="px-8 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-semibold"
+                    className="px-6 sm:px-8 py-2.5 sm:py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-semibold text-sm sm:text-base"
                   >
                     Continue to Payment
                   </button>
@@ -389,23 +395,23 @@ const BookingExtras = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:sticky lg:top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">
+              <h3 className="text-lg sm:text-xl font-serif font-bold mb-3 sm:mb-4">
                 Booking Summary
               </h3>
 
               {/* Room Details */}
-              <div className="mb-4 pb-4 border-b">
-                <h4 className="font-semibold">{room.Room_Name}</h4>
-                <p className="text-sm text-gray-600">
+              <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
+                <h4 className="font-semibold text-sm sm:text-base">{room.Room_Name}</h4>
+                <p className="text-xs sm:text-sm text-gray-600">
                   {bookingDetails.nights} nights
                 </p>
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-3 mb-4">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-gray-600">Room Rate</span>
                   <span className="font-semibold">
                     {room.currency_sign}
@@ -414,7 +420,7 @@ const BookingExtras = () => {
                 </div>
 
                 {Object.keys(selectedExtras).length > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-600">Extra Services</span>
                     <span className="font-semibold">
                       {calculating ? (
@@ -429,11 +435,11 @@ const BookingExtras = () => {
 
               {/* Selected Extras List */}
               {Object.keys(selectedExtras).length > 0 && (
-                <div className="mb-4 pb-4 border-t pt-4">
-                  <p className="text-sm font-semibold text-gray-700 mb-2">
+                <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-t pt-3 sm:pt-4">
+                  <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                     Selected Extras:
                   </p>
-                  <ul className="space-y-2">
+                  <ul className="space-y-1.5 sm:space-y-2">
                     {Object.entries(selectedExtras).map(([extraId, data]) => {
                       const extra = extras.find(
                         (e) => e.ExtraChargeId === extraId
@@ -441,7 +447,7 @@ const BookingExtras = () => {
                       return (
                         <li
                           key={extraId}
-                          className="text-xs text-gray-600 flex justify-between"
+                          className="text-[10px] sm:text-xs text-gray-600 flex justify-between"
                         >
                           <span>{extra?.charge}</span>
                           <span>×{data.quantity}</span>
@@ -453,8 +459,8 @@ const BookingExtras = () => {
               )}
 
               {/* Total */}
-              <div className="pt-4 border-t">
-                <div className="flex justify-between items-center text-lg font-bold">
+              <div className="pt-3 sm:pt-4 border-t">
+                <div className="flex justify-between items-center text-base sm:text-lg font-bold">
                   <span>Total Amount</span>
                   <span className="text-amber-600">
                     {room.currency_sign}
@@ -464,13 +470,13 @@ const BookingExtras = () => {
               </div>
 
               {/* Guest Info */}
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-sm text-gray-600 mb-2">Guest Details:</p>
-                <p className="font-semibold text-sm">
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                <p className="text-xs sm:text-sm text-gray-600 mb-2">Guest Details:</p>
+                <p className="font-semibold text-xs sm:text-sm">
                   {personalInfo.title} {personalInfo.firstName}{" "}
                   {personalInfo.lastName}
                 </p>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-[10px] sm:text-xs text-gray-600 mt-1">
                   {personalInfo.email}
                 </p>
               </div>

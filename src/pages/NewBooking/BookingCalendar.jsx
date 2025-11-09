@@ -166,60 +166,66 @@ const BookingCalendar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-8">
+    <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-6 sm:pb-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
+        <div className="mb-6 sm:mb-8 overflow-x-auto">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-4 min-w-max px-4">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
                 1
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-900">
                 Select Date
               </span>
             </div>
-            <div className="w-16 h-0.5 bg-gray-300"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold text-sm sm:text-base">
                 2
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500 hidden sm:inline">
                 Personal Information
               </span>
+              <span className="ml-1 text-xs font-medium text-gray-500 sm:hidden">
+                Info
+              </span>
             </div>
-            <div className="w-16 h-0.5 bg-gray-300"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold text-sm sm:text-base">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-500">
+              <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium text-gray-500 hidden sm:inline">
                 Booking Confirmation
+              </span>
+              <span className="ml-1 text-xs font-medium text-gray-500 sm:hidden">
+                Confirm
               </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Calendar Section */}
           <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-lg p-6"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6"
             >
-              <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mb-4 sm:mb-6">
                 Select Your Date
               </h2>
 
               {/* Month Navigation */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <button
                   onClick={prevMonth}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -232,15 +238,15 @@ const BookingCalendar = () => {
                     />
                   </svg>
                 </button>
-                <h3 className="text-xl font-semibold">
+                <h3 className="text-lg sm:text-xl font-semibold">
                   {monthNames[month]} {year}
                 </h3>
                 <button
                   onClick={nextMonth}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -256,13 +262,13 @@ const BookingCalendar = () => {
               </div>
 
               {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-2">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2">
                 {/* Day headers */}
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                   (day) => (
                     <div
                       key={day}
-                      className="text-center text-sm font-semibold text-gray-600 py-2"
+                      className="text-center text-[10px] sm:text-sm font-semibold text-gray-600 py-1 sm:py-2"
                     >
                       {day}
                     </div>
@@ -297,7 +303,7 @@ const BookingCalendar = () => {
                       onClick={() => handleDateClick(day)}
                       disabled={!available}
                       className={`
-                        aspect-square rounded-lg p-2 flex flex-col items-center justify-center text-sm transition-all
+                        aspect-square rounded-lg p-1 sm:p-2 flex flex-col items-center justify-center text-xs sm:text-sm transition-all
                         ${
                           !available
                             ? "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -320,9 +326,9 @@ const BookingCalendar = () => {
                         }
                       `}
                     >
-                      <span className="font-semibold">{day}</span>
+                      <span className="font-semibold text-xs sm:text-sm">{day}</span>
                       {available && (
-                        <span className="text-xs mt-1">
+                        <span className="text-[8px] sm:text-xs mt-0.5 sm:mt-1">
                           {room.currency_sign}
                           {Math.round(price)}
                         </span>
@@ -333,8 +339,8 @@ const BookingCalendar = () => {
               </div>
 
               {/* Selection Instructions */}
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-900">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg">
+                <p className="text-xs sm:text-sm text-blue-900">
                   {!selectingCheckOut
                     ? "📅 Click on a date to select your check-in"
                     : "📅 Click on a date to select your check-out"}
@@ -348,9 +354,9 @@ const BookingCalendar = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-lg shadow-lg p-6 sticky top-8"
+              className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:sticky lg:top-8"
             >
-              <h3 className="text-xl font-serif font-bold mb-4">
+              <h3 className="text-lg sm:text-xl font-serif font-bold mb-3 sm:mb-4">
                 Booking Summary
               </h3>
 
@@ -359,39 +365,39 @@ const BookingCalendar = () => {
                 <img
                   src={room.room_main_image}
                   alt={room.Room_Name}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
+                  className="w-full h-40 sm:h-48 object-cover rounded-lg mb-3 sm:mb-4"
                 />
               )}
 
               {/* Room Details */}
-              <h4 className="font-semibold text-lg mb-2">{room.Room_Name}</h4>
-              <p className="text-gray-600 text-sm mb-4">{room.Roomtype_Name}</p>
+              <h4 className="font-semibold text-base sm:text-lg mb-2">{room.Room_Name}</h4>
+              <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">{room.Roomtype_Name}</p>
 
               {/* Date Selection */}
-              <div className="space-y-3 mb-4">
+              <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
                 <div className="flex items-center justify-between py-2 border-b">
-                  <span className="text-sm text-gray-600">Check-in</span>
-                  <span className="font-semibold">
+                  <span className="text-xs sm:text-sm text-gray-600">Check-in</span>
+                  <span className="font-semibold text-xs sm:text-sm">
                     {selectedCheckIn
                       ? selectedCheckIn.toLocaleDateString()
                       : "Select date"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b">
-                  <span className="text-sm text-gray-600">Check-out</span>
-                  <span className="font-semibold">
+                  <span className="text-xs sm:text-sm text-gray-600">Check-out</span>
+                  <span className="font-semibold text-xs sm:text-sm">
                     {selectedCheckOut
                       ? selectedCheckOut.toLocaleDateString()
                       : "Select date"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b">
-                  <span className="text-sm text-gray-600">Nights</span>
-                  <span className="font-semibold">{nights || 0}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Nights</span>
+                  <span className="font-semibold text-xs sm:text-sm">{nights || 0}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b">
-                  <span className="text-sm text-gray-600">Guests</span>
-                  <span className="font-semibold">
+                  <span className="text-xs sm:text-sm text-gray-600">Guests</span>
+                  <span className="font-semibold text-xs sm:text-sm">
                     {searchData.adults} Adults, {searchData.children || 0}{" "}
                     Children
                   </span>
@@ -400,17 +406,17 @@ const BookingCalendar = () => {
 
               {/* Price Summary */}
               {nights > 0 && (
-                <div className="border-t pt-4 mb-6">
+                <div className="border-t pt-3 sm:pt-4 mb-4 sm:mb-6">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">
+                    <span className="text-gray-600 text-xs sm:text-sm">
                       Room Rate ({nights} nights)
                     </span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-xs sm:text-sm">
                       {room.currency_sign}
                       {totalPrice.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-lg font-bold">
+                  <div className="flex justify-between items-center text-base sm:text-lg font-bold">
                     <span>Total</span>
                     <span className="text-amber-600">
                       {room.currency_sign}
@@ -425,7 +431,7 @@ const BookingCalendar = () => {
                 onClick={handleProceed}
                 disabled={!selectedCheckIn || !selectedCheckOut}
                 className={`
-                  w-full py-3 rounded-lg font-semibold transition-all
+                  w-full py-2.5 sm:py-3 rounded-lg font-semibold transition-all text-sm sm:text-base
                   ${
                     selectedCheckIn && selectedCheckOut
                       ? "bg-amber-600 text-white hover:bg-amber-700"

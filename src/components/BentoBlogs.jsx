@@ -82,15 +82,15 @@ const BentoBlogs = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 md:px-12 lg:px-20 bg-[#f5f3ed]">
+    <section className="py-12 sm:py-14 md:py-16 lg:py-24 px-4 sm:px-6 md:px-12 lg:px-20 bg-[#f5f3ed]">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-serif italic text-gray-600 text-lg md:text-xl mb-3"
+            className="font-serif italic text-gray-600 text-base sm:text-lg md:text-xl mb-2 sm:mb-3"
           >
             Stories & Insights
           </motion.p>
@@ -99,26 +99,28 @@ const BentoBlogs = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 font-normal"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 font-normal"
           >
             Discover Arboreal
           </motion.h2>
         </div>
 
-        {/* Bento Grid */}
+        {/* Bento Grid - Mobile: 2 columns, Desktop: Bento layout */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
         >
-          {/* First Row - 3 Small Cards */}
-          {blogs.slice(0, 3).map((blog) => (
+          {/* First Row - 3 Small Cards (Mobile: Show only first 4 blogs) */}
+          {blogs.slice(0, 3).map((blog, index) => (
             <motion.article
               key={blog.id}
               variants={itemVariants}
-              className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
+              className={`group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
+                index >= 2 ? 'hidden md:block' : ''
+              }`}
             >
               {/* Image */}
               <a href={blog.link} className="block relative overflow-hidden">
@@ -133,43 +135,48 @@ const BentoBlogs = () => {
               </a>
 
               {/* Content */}
-              <div className="p-6 md:p-8">
-                <span className="inline-block px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-4">
+              <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+                <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                   {blog.category}
                 </span>
-                <a href={blog.link} className="group/title inline-block mb-3">
-                  <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
+                <a href={blog.link} className="group/title inline-block mb-2 sm:mb-3">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                     {blog.title}
                   </h3>
                 </a>
-                <p className="text-gray-600 leading-relaxed font-light text-sm mb-5 line-clamp-3">
+                <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
                   {blog.description}
                 </p>
                 <a
                   href={blog.link}
-                  className="inline-flex items-center gap-2 text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
                 >
                   <span className="relative">
                     Discover more
                     <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
                     <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
                   </span>
-                  <svg 
-                    className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-300" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </a>
               </div>
             </motion.article>
-          ))} 
-          {/* Second Row - 1 Large Card + 1 Medium Card */}
+          ))}
+          {/* Second Row - 1 Large Card + 1 Medium Card (Hidden on mobile, shown on desktop) */}
           <motion.article
             variants={itemVariants}
-            className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
+            className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
             <a href={blogs[3].link} className="block relative overflow-hidden">
@@ -184,34 +191,39 @@ const BentoBlogs = () => {
             </a>
 
             {/* Content */}
-            <div className="p-6 md:p-8">
-              <span className="inline-block px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-4">
+            <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+              <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                 {blogs[3].category}
               </span>
-              <a href={blogs[3].link} className="group/title inline-block mb-3">
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
+              <a href={blogs[3].link} className="group/title inline-block mb-2 sm:mb-3">
+                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[3].title}
                 </h3>
               </a>
-              <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-5 max-w-3xl line-clamp-2">
+              <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-4 sm:mb-5 max-w-3xl line-clamp-2">
                 {blogs[3].description}
               </p>
               <a
                 href={blogs[3].link}
-                className="inline-flex items-center gap-2 text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
               >
                 <span className="relative">
                   Discover more
                   <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
                   <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
                 </span>
-                <svg 
-                  className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-300" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
             </div>
@@ -219,7 +231,7 @@ const BentoBlogs = () => {
 
           <motion.article
             variants={itemVariants}
-            className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
+            className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
             <a href={blogs[4].link} className="block relative overflow-hidden">
@@ -234,38 +246,67 @@ const BentoBlogs = () => {
             </a>
 
             {/* Content */}
-            <div className="p-6 md:p-8">
-              <span className="inline-block px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-4">
+            <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+              <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                 {blogs[4].category}
               </span>
-              <a href={blogs[4].link} className="group/title inline-block mb-3">
-                <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
+              <a href={blogs[4].link} className="group/title inline-block mb-2 sm:mb-3">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[4].title}
                 </h3>
               </a>
-              <p className="text-gray-600 leading-relaxed font-light text-sm mb-5 line-clamp-3">
+              <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
                 {blogs[4].description}
               </p>
               <a
                 href={blogs[4].link}
-                className="inline-flex items-center gap-2 text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
               >
                 <span className="relative">
                   Discover more
                   <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
                   <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
                 </span>
-                <svg 
-                  className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-300" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
             </div>
           </motion.article>
+        </motion.div>
+
+        {/* View More Button - Mobile Only */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="flex justify-center mt-8 md:hidden"
+        >
+          <a href="/blog">
+            <button className="group relative px-6 py-2.5 overflow-hidden rounded-full">
+              {/* Button Text */}
+              <span className="relative z-10 text-xs tracking-[0.15em] text-gray-900 font-light uppercase transition-colors duration-300 group-hover:text-white">
+                View More Stories
+              </span>
+
+              {/* Bottom Border */}
+              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
+
+              {/* Hover Background */}
+              <div className="absolute inset-0 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+            </button>
+          </a>
         </motion.div>
       </div>
     </section>

@@ -109,14 +109,14 @@ const Hero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
-          className="mt-auto mb-12 md:mb-16 lg:mb-20 max-w-6xl mx-auto w-full px-4"
+          className="mt-auto mb-8 sm:mb-12 md:mb-16 lg:mb-20 max-w-6xl mx-auto w-full px-2 sm:px-4"
         >
-          <div className="bg-white backdrop-blur-lg rounded-full shadow-2xl">
-            <div className="flex flex-col md:flex-row items-stretch divide-y md:divide-y-0 md:divide-x divide-white/10">
+          <div className="bg-white backdrop-blur-lg rounded-2xl md:rounded-full shadow-2xl">
+            <div className="flex flex-col md:flex-row items-stretch divide-y md:divide-y-0 md:divide-x divide-gray-200">
               {/* Name Field */}
-              <div className="flex-1 px-6 py-4 md:py-5 flex items-center gap-3 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 flex items-center gap-3 min-w-0">
                 <div className="flex-shrink-0">
-                  <FiUser className="text-[#2a2a2a] text-xl" />
+                  <FiUser className="text-[#2a2a2a] text-lg sm:text-xl" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <input
@@ -131,10 +131,10 @@ const Hero = () => {
               </div>
 
               {/* Phone Field */}
-              <div className="flex-1 px-6 py-4 md:py-5 flex items-center gap-3 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 flex items-center gap-3 min-w-0">
                 <div className="flex-shrink-0">
                   <svg
-                    className="w-5 h-5 text-[#2a2a2a]/70"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/70"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -160,10 +160,10 @@ const Hero = () => {
               </div>
 
               {/* Check In */}
-              <div className="flex-1 px-6 py-4 md:py-5 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
-                    <FiCalendar className="text-[#2a2a2a]/70 text-xl" />
+                    <FiCalendar className="text-[#2a2a2a]/70 text-lg sm:text-xl" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <input
@@ -180,10 +180,10 @@ const Hero = () => {
               </div>
 
               {/* Check Out */}
-              <div className="flex-1 px-6 py-4 md:py-5 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
-                    <FiCalendar className="text-[#2a2a2a]/70 text-xl" />
+                    <FiCalendar className="text-[#2a2a2a]/70 text-lg sm:text-xl" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <input
@@ -200,11 +200,11 @@ const Hero = () => {
               </div>
 
               {/* Room Dropdown */}
-              <div className="flex-1 px-6 py-4 md:py-5 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-[#2a2a2a]/70"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/70"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -245,11 +245,11 @@ const Hero = () => {
               </div>
 
               {/* Adult Dropdown */}
-              <div className="flex-1 px-6 py-4 md:py-5 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-[#2a2a2a]/70"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/70"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -290,11 +290,11 @@ const Hero = () => {
               </div>
 
               {/* Children Dropdown */}
-              <div className="flex-1 px-6 py-4 md:py-5 min-w-0">
+              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-5 h-5 text-[#2a2a2a]/70"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/70"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -335,16 +335,16 @@ const Hero = () => {
               </div>
 
               {/* Book Now Button */}
-              <div className="flex items-center justify-center px-6 py-4 md:py-3">
+              <div className="flex items-center justify-center px-4 sm:px-6 py-3 sm:py-4 md:py-3">
                 <motion.button
                   type="submit"
                   disabled={loading}
                   whileHover={{ scale: loading ? 1 : 1.05 }}
                   whileTap={{ scale: loading ? 1 : 0.95 }}
-                  className="px-8 py-3.5 bg-[#2a2a2a] text-white rounded-full font-medium text-sm tracking-wide transition-all duration-300 hover:shadow-xl whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed "
+                  className="w-full md:w-auto px-6 sm:px-8 py-3 sm:py-3.5 bg-[#2a2a2a] text-white rounded-full font-medium text-sm tracking-wide transition-all duration-300 hover:shadow-xl whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed "
                 >
                   {loading ? (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <svg
                         className="animate-spin h-4 w-4"
                         fill="none"

@@ -88,15 +88,15 @@ const RoomShowcase = () => {
   };
 
   return (
-    <section className="relative py-16 md:py-20 bg-[#f5f3ed] overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-4 md:px-8">
+    <section className="relative py-12 sm:py-14 md:py-16 lg:py-20 bg-[#f5f3ed] overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 px-4">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-serif italic text-gray-600 text-lg md:text-xl mb-3"
+            className="font-serif italic text-gray-600 text-base sm:text-lg md:text-xl mb-2 sm:mb-3"
           >
             Accommodations
           </motion.p>
@@ -105,7 +105,7 @@ const RoomShowcase = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 font-normal"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 font-normal"
           >
             Raising Comfort To The Highest Level
           </motion.h2>
@@ -118,20 +118,20 @@ const RoomShowcase = () => {
             onClick={goToPrevious}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
+            className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
             aria-label="Previous room"
           >
-            <FiChevronLeft className="text-xl md:text-2xl text-gray-800" />
+            <FiChevronLeft className="text-lg sm:text-xl md:text-2xl text-gray-800" />
           </motion.button>
 
           <motion.button
             onClick={goToNext}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
+            className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300"
             aria-label="Next room"
           >
-            <FiChevronRight className="text-xl md:text-2xl text-gray-800" />
+            <FiChevronRight className="text-lg sm:text-xl md:text-2xl text-gray-800" />
           </motion.button>
 
           {/* Carousel Container */}
@@ -148,12 +148,12 @@ const RoomShowcase = () => {
                   x: { type: "spring", stiffness: 250, damping: 35 },
                   opacity: { duration: 0.3 },
                 }}
-                className="flex items-center justify-center gap-2 md:gap-4 px-12 md:px-20"
+                className="flex items-center justify-center gap-1 sm:gap-2 md:gap-4 px-8 sm:px-10 md:px-12 lg:px-20"
               >
                 {/* Left Image - Narrow */}
                 <a
                   href={currentRoom.link}
-                  className="relative w-[20%] md:w-[22%] h-[280px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
+                  className="relative w-[20%] md:w-[22%] h-[200px] sm:h-[240px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
                 >
                   <img
                     src={currentRoom.images[0]}
@@ -166,7 +166,7 @@ const RoomShowcase = () => {
                 {/* Center Image - Large */}
                 <a
                   href={currentRoom.link}
-                  className="relative w-[50%] md:w-[48%] h-[350px] md:h-[480px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm shadow-xl"
+                  className="relative w-[50%] md:w-[48%] h-[250px] sm:h-[300px] md:h-[480px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm shadow-xl"
                 >
                   <img
                     src={currentRoom.images[1]}
@@ -179,7 +179,7 @@ const RoomShowcase = () => {
                 {/* Right Image - Narrow */}
                 <a
                   href={currentRoom.link}
-                  className="relative w-[20%] md:w-[22%] h-[280px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
+                  className="relative w-[20%] md:w-[22%] h-[200px] sm:h-[240px] md:h-[380px] overflow-hidden group cursor-pointer flex-shrink-0 rounded-sm"
                 >
                   <img
                     src={currentRoom.images[2]}
@@ -198,16 +198,16 @@ const RoomShowcase = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-center mt-6 md:mt-8"
+            className="text-center mt-4 sm:mt-5 md:mt-6 lg:mt-8 px-4"
           >
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900">
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900">
               {currentRoom.title}
             </h3>
           </motion.div>
         </div>
 
         {/* Pagination Dots */}
-        <div className="flex justify-center items-center gap-2 mt-8">
+        <div className="flex justify-center items-center gap-2 mt-6 sm:mt-7 md:mt-8">
           {rooms.map((_, index) => (
             <button
               key={index}
@@ -215,10 +215,10 @@ const RoomShowcase = () => {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);
               }}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? "w-8 bg-gray-800"
-                  : "w-2 bg-gray-400 hover:bg-gray-600"
+                  ? "w-6 sm:w-8 bg-gray-800"
+                  : "w-1.5 sm:w-2 bg-gray-400 hover:bg-gray-600"
               }`}
               aria-label={`Go to room ${index + 1}`}
             />

@@ -12,7 +12,7 @@ const LocationMap = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 md:px-12 lg:px-20 bg-[#f5f3ed]">
+    <section className="py-12 sm:py-14 md:py-16 lg:py-24 px-4 sm:px-6 md:px-12 lg:px-20 bg-[#f5f3ed]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -20,12 +20,12 @@ const LocationMap = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 md:mb-12"
+          className="text-center mb-6 sm:mb-8 md:mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 mb-3 sm:mb-4 px-4">
             {locationDetails.title}
           </h2>
-          <p className="text-sm md:text-base text-gray-600 font-light tracking-wide">
+          <p className="text-sm md:text-base text-gray-600 font-light tracking-wide px-4">
             {locationDetails.address}
           </p>
         </motion.div>
@@ -38,8 +38,8 @@ const LocationMap = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative w-full bg-white shadow-lg overflow-hidden rounded-lg"
         >
-          {/* Map Embed - Reduced height for single viewport */}
-          <div className="relative w-full h-[400px] md:h-[450px]">
+          {/* Map Embed - Responsive height */}
+          <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px]">
             <iframe
               src={locationDetails.embedUrl}
               className="absolute inset-0 w-full h-full"
@@ -58,17 +58,17 @@ const LocationMap = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex justify-center mt-8 md:mt-12"
+          className="flex justify-center mt-6 sm:mt-8 md:mt-12"
         >
           <a
             href={locationDetails.mapLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative px-8 py-4 overflow-hidden bg-gray-900 text-white hover:bg-gray-800 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl"
+            className="group relative px-6 sm:px-8 py-3 sm:py-4 overflow-hidden bg-gray-900 text-white hover:bg-gray-800 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl"
           >
-            <span className="relative z-10 text-sm tracking-[0.15em] uppercase font-light flex items-center gap-3">
+            <span className="relative z-10 text-xs sm:text-sm tracking-[0.15em] uppercase font-light flex items-center gap-2 sm:gap-3">
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -97,13 +97,13 @@ const LocationMap = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
+          className="mt-10 sm:mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center"
         >
           {/* Distance Info */}
           <div className="space-y-2">
-            <div className="w-12 h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-2 sm:mb-3">
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -116,17 +116,17 @@ const LocationMap = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-serif text-gray-900">From Mumbai</h3>
-            <p className="text-sm text-gray-600 font-light">
+            <h3 className="text-base sm:text-lg font-serif text-gray-900">From Mumbai</h3>
+            <p className="text-sm text-gray-600 font-light px-4">
               83 km via Mumbai-Pune Expressway
             </p>
           </div>
 
           {/* Airport Info */}
           <div className="space-y-2">
-            <div className="w-12 h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-2 sm:mb-3">
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -139,19 +139,19 @@ const LocationMap = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-serif text-gray-900">
+            <h3 className="text-base sm:text-lg font-serif text-gray-900">
               Nearest Airport
             </h3>
-            <p className="text-sm text-gray-600 font-light">
+            <p className="text-sm text-gray-600 font-light px-4">
               Pune Airport - 65 km away
             </p>
           </div>
 
           {/* Train Info */}
           <div className="space-y-2">
-            <div className="w-12 h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-gray-900 text-white rounded-full flex items-center justify-center mb-2 sm:mb-3">
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -164,10 +164,10 @@ const LocationMap = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-serif text-gray-900">
+            <h3 className="text-base sm:text-lg font-serif text-gray-900">
               Railway Station
             </h3>
-            <p className="text-sm text-gray-600 font-light">
+            <p className="text-sm text-gray-600 font-light px-4">
               Lonavala Station - 8 km away
             </p>
           </div>

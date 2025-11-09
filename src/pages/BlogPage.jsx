@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 const BlogPage = () => {
+  const [showAll, setShowAll] = useState(false);
+  
   const blogs = [
     {
       id: 1,
@@ -114,7 +116,7 @@ const BlogPage = () => {
     <div className="bg-[#f5f3ed]">
       {/* Hero Section */}
       <motion.section
-        className="relative h-[60vh] md:h-[70vh] bg-cover bg-center flex items-center justify-center text-white overflow-hidden"
+        className="relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] bg-cover bg-center flex items-center justify-center text-white overflow-hidden"
         style={{
           backgroundImage: "url('/slider1.jpg')",
         }}
@@ -123,9 +125,9 @@ const BlogPage = () => {
         transition={{ duration: 1 }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60"></div>
-        <div className="relative text-center px-6 max-w-4xl mx-auto">
+        <div className="relative text-center px-4 sm:px-6 max-w-4xl mx-auto">
           <motion.p
-            className="text-xs md:text-sm tracking-[0.3em] uppercase text-white/90 mb-4"
+            className="text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] md:tracking-[0.3em] uppercase text-white/90 mb-3 sm:mb-4"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -133,7 +135,7 @@ const BlogPage = () => {
             Stories & Insights
           </motion.p>
           <motion.h1
-            className="text-4xl md:text-6xl lg:text-7xl font-serif font-light mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-4 sm:mb-5 md:mb-6 px-2"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -141,7 +143,7 @@ const BlogPage = () => {
             The Arboreal Journal
           </motion.h1>
           <motion.p
-            className="text-sm md:text-lg font-light leading-relaxed max-w-2xl mx-auto"
+            className="text-xs sm:text-sm md:text-base lg:text-lg font-light leading-relaxed max-w-2xl mx-auto px-2"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -153,25 +155,32 @@ const BlogPage = () => {
       </motion.section>
 
       {/* Bento Grid Blog Section */}
-      <section className="py-16 md:py-24 px-6 md:px-12 lg:px-20">
+      <section className="py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
         <div className="max-w-7xl mx-auto">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8"
           >
-            {/* First Row - 3 Small Cards */}
-            {blogs.slice(0, 3).map((blog) => (
+            {/* Display first 4 blogs or all blogs based on showAll state */}
+            {(showAll ? blogs : blogs.slice(0, 4)).map((blog, index) => (
               <motion.article
                 key={blog.id}
                 variants={itemVariants}
-                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                className={`group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl ${
+                  // On larger screens, make blog 4 span 2 columns
+                  !showAll && index === 3 && 'md:col-span-2 lg:col-span-2'
+                }`}
               >
                 {/* Image */}
                 <div className="block relative overflow-hidden">
-                  <div className="aspect-[4/3] overflow-hidden">
+                  <div className={`overflow-hidden ${
+                    !showAll && index === 3 
+                      ? 'aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]' 
+                      : 'aspect-[4/3]'
+                  }`}>
                     <motion.img
                       src={blog.image}
                       alt={blog.title}
@@ -181,158 +190,41 @@ const BlogPage = () => {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
 
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
+                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+                    <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/90 backdrop-blur-sm text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
                       {blog.category}
                     </span>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 md:p-8">
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+                  <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500 mb-2 sm:mb-3">
                     <span>{blog.date}</span>
                     <span>•</span>
                     <span>{blog.readTime}</span>
                   </div>
-                  <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-3">
+                  <h3 className={`font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-2 sm:mb-3 ${
+                    !showAll && index === 3 
+                      ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl' 
+                      : 'text-lg sm:text-xl md:text-2xl'
+                  }`}>
                     {blog.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 line-clamp-3">
+                  <p className={`text-gray-600 leading-relaxed font-light mb-3 sm:mb-4 ${
+                    !showAll && index === 3 
+                      ? 'text-xs sm:text-sm md:text-base max-w-3xl line-clamp-2' 
+                      : 'text-xs sm:text-sm line-clamp-2'
+                  }`}>
                     {blog.description}
                   </p>
                   <button
                     onClick={(e) => e.preventDefault()}
-                    className="inline-flex items-center text-sm tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
+                    className="inline-flex items-center text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
                   >
                     <span className="relative z-10">Read More</span>
                     <svg
-                      className="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
-                    <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></div>
-                  </button>
-                </div>
-              </motion.article>
-            ))}
-
-            {/* Second Row - 1 Large Card (spans 2 columns) */}
-            <motion.article
-              variants={itemVariants}
-              className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
-            >
-              {/* Image */}
-              <div className="block relative overflow-hidden">
-                <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden">
-                  <motion.img
-                    src={blogs[3].image}
-                    alt={blogs[3].title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-
-                {/* Category Badge */}
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
-                    {blogs[3].category}
-                  </span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6 md:p-8">
-                <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                  <span>{blogs[3].date}</span>
-                  <span>•</span>
-                  <span>{blogs[3].readTime}</span>
-                </div>
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-3">
-                  {blogs[3].title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-4 max-w-3xl">
-                  {blogs[3].description}
-                </p>
-                <button
-                  onClick={(e) => e.preventDefault()}
-                  className="inline-flex items-center text-sm tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
-                >
-                  <span className="relative z-10">Read More</span>
-                  <svg
-                    className="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
-                  <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></div>
-                </button>
-              </div>
-            </motion.article>
-
-            {/* Third Row - Remaining 3 Cards */}
-            {blogs.slice(4, 7).map((blog) => (
-              <motion.article
-                key={blog.id}
-                variants={itemVariants}
-                className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl"
-              >
-                {/* Image */}
-                <div className="block relative overflow-hidden">
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <motion.img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
-                      {blog.category}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 md:p-8">
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                    <span>{blog.date}</span>
-                    <span>•</span>
-                    <span>{blog.readTime}</span>
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-3">
-                    {blog.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 line-clamp-3">
-                    {blog.description}
-                  </p>
-                  <button
-                    onClick={(e) => e.preventDefault()}
-                    className="inline-flex items-center text-sm tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
-                  >
-                    <span className="relative z-10">Read More</span>
-                    <svg
-                      className="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                      className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -351,11 +243,29 @@ const BlogPage = () => {
               </motion.article>
             ))}
           </motion.div>
+
+          {/* View More Button */}
+          {!showAll && blogs.length > 4 && (
+            <motion.div 
+              className="text-center mt-8 sm:mt-10 md:mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <button
+                onClick={() => setShowAll(true)}
+                className="px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-gray-900 text-white hover:bg-gray-800 rounded-full transition-all duration-300 font-light text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-105 transform"
+              >
+                View More Blogs
+              </button>
+            </motion.div>
+          )}
         </div>
       </section>
 
       {/* Newsletter CTA Section */}
-      <section className="py-16 md:py-20 px-6 bg-gray-900 text-white">
+      <section className="py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20 px-4 sm:px-6 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -363,22 +273,22 @@ const BlogPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-light mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-light mb-3 sm:mb-4 px-2">
               Subscribe to Our Journal
             </h2>
-            <p className="text-sm md:text-base text-gray-300 font-light mb-8 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base text-gray-300 font-light mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
               Receive the latest stories, travel tips, and exclusive offers
               directly to your inbox.
             </p>
-            <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+            <form className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xl mx-auto px-2">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-full text-white placeholder-gray-400 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300"
+                className="flex-1 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 bg-white/10 border border-white/20 rounded-full text-sm sm:text-base text-white placeholder-gray-400 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300"
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-sm uppercase tracking-wider whitespace-nowrap shadow-lg hover:shadow-xl"
+                className="px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-xs sm:text-sm uppercase tracking-wider whitespace-nowrap shadow-lg hover:shadow-xl"
               >
                 Subscribe
               </button>
