@@ -7,12 +7,18 @@ const BookingCalendar = () => {
   const location = useLocation();
   const { room, searchData } = location.state || {};
 
+  const normalize = (d) => {
+    if (!d) return null;
+    const dt = new Date(d);
+    return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  };
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedCheckIn, setSelectedCheckIn] = useState(
-    searchData?.checkIn ? new Date(searchData.checkIn) : null
+    searchData?.checkIn ? normalize(searchData.checkIn) : null
   );
   const [selectedCheckOut, setSelectedCheckOut] = useState(
-    searchData?.checkOut ? new Date(searchData.checkOut) : null
+    searchData?.checkOut ? normalize(searchData.checkOut) : null
   );
   const [selectingCheckOut, setSelectingCheckOut] = useState(false);
 
@@ -22,6 +28,15 @@ const BookingCalendar = () => {
       navigate("/availability");
     }
   }, [room, searchData, navigate]);
+
+  // Ensure the calendar initially shows the month of the preselected check-in
+  useEffect(() => {
+    if (selectedCheckIn) {
+      setCurrentMonth(
+        new Date(selectedCheckIn.getFullYear(), selectedCheckIn.getMonth(), 1)
+      );
+    }
+  }, [selectedCheckIn]);
 
   if (!room || !searchData) return null;
 
@@ -67,29 +82,20 @@ const BookingCalendar = () => {
     return date >= selectedCheckIn && date <= selectedCheckOut;
   };
 
-  // Handle date click
+  // Handle date click: lock to preselected range, redirect elsewhere
   const handleDateClick = (day) => {
     const clickedDate = new Date(year, month, day);
     clickedDate.setHours(0, 0, 0, 0);
 
     if (!isDateAvailable(clickedDate)) return;
 
-    if (!selectingCheckOut) {
-      // Selecting check-in date
-      setSelectedCheckIn(clickedDate);
-      setSelectedCheckOut(null);
-      setSelectingCheckOut(true);
-    } else {
-      // Selecting check-out date
-      if (clickedDate <= selectedCheckIn) {
-        // If clicked date is before or same as check-in, restart selection
-        setSelectedCheckIn(clickedDate);
-        setSelectedCheckOut(null);
-      } else {
-        setSelectedCheckOut(clickedDate);
-        setSelectingCheckOut(false);
-      }
+    // If the date is outside the originally selected range, go back to home to modify search
+    if (!isDateInRange(clickedDate)) {
+      navigate("/");
+      return;
     }
+    // Inside range: do nothing (keep preselected dates)
+    return;
   };
 
   // Calculate total nights and price
@@ -141,8 +147,6 @@ const BookingCalendar = () => {
     "December",
   ];
 
-  const formatYMD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-
   const handleProceed = () => {
     if (!selectedCheckIn || !selectedCheckOut) {
       alert("Please select check-in and check-out dates");
@@ -154,12 +158,12 @@ const BookingCalendar = () => {
         room,
         searchData: {
           ...searchData,
-          checkIn: formatYMD(selectedCheckIn),
-          checkOut: formatYMD(selectedCheckOut),
+          checkIn: selectedCheckIn.toISOString().split("T")[0],
+          checkOut: selectedCheckOut.toISOString().split("T")[0],
         },
         bookingDetails: {
-          checkIn: formatYMD(selectedCheckIn),
-          checkOut: formatYMD(selectedCheckOut),
+          checkIn: selectedCheckIn.toISOString().split("T")[0],
+          checkOut: selectedCheckOut.toISOString().split("T")[0],
           nights,
           totalPrice,
         },
@@ -217,7 +221,7 @@ const BookingCalendar = () => {
               className="bg-white rounded-lg shadow-lg p-4 sm:p-6"
             >
               <h2 className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mb-4 sm:mb-6">
-                Select Your Date
+                Dates Locked From Availability
               </h2>
 
               {/* Month Navigation */}
@@ -290,6 +294,7 @@ const BookingCalendar = () => {
                   const price = getPriceForDate(date);
                   const available = isDateAvailable(date);
                   const inRange = isDateInRange(date);
+                  const outsideRange = available && !inRange;
                   const isCheckIn =
                     selectedCheckIn &&
                     date.getTime() === selectedCheckIn.getTime();
@@ -300,12 +305,13 @@ const BookingCalendar = () => {
                   return (
                     <motion.button
                       key={day}
-                      whileHover={available ? { scale: 1.05 } : {}}
-                      whileTap={available ? { scale: 0.95 } : {}}
+                      whileHover={outsideRange ? { scale: 1.05 } : {}}
+                      whileTap={outsideRange ? { scale: 0.95 } : {}}
                       onClick={() => handleDateClick(day)}
                       disabled={!available}
+                      title={outsideRange ? "Check availability" : ""}
                       className={`
-                        aspect-square rounded-lg p-1 sm:p-2 flex flex-col items-center justify-center text-xs sm:text-sm transition-all
+                        group aspect-square rounded-lg p-1 sm:p-2 flex flex-col items-center justify-center text-xs sm:text-sm transition-all
                         ${
                           !available
                             ? "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -318,11 +324,11 @@ const BookingCalendar = () => {
                         }
                         ${
                           isCheckIn || isCheckOut
-                            ? "bg-amber-600 text-white font-bold"
+                            ? "bg-amber-600 text-white font-bold ring-2 ring-amber-700"
                             : ""
                         }
                         ${
-                          available && !inRange && !isCheckIn && !isCheckOut
+                          outsideRange
                             ? "hover:bg-gray-100 cursor-pointer"
                             : ""
                         }
@@ -335,6 +341,11 @@ const BookingCalendar = () => {
                           {Math.round(price)}
                         </span>
                       )}
+                      {outsideRange && (
+                        <span className="hidden sm:block text-[9px] mt-0.5 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                          Check availability
+                        </span>
+                      )}
                     </motion.button>
                   );
                 })}
@@ -343,9 +354,8 @@ const BookingCalendar = () => {
               {/* Selection Instructions */}
               <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg">
                 <p className="text-xs sm:text-sm text-blue-900">
-                  {!selectingCheckOut
-                    ? "📅 Click on a date to select your check-in"
-                    : "📅 Click on a date to select your check-out"}
+                  Your dates from the Availability search are preselected. Hover other dates to
+                  see “Check availability”. Clicking those will take you to the home page to modify your dates.
                 </p>
               </div>
             </motion.div>

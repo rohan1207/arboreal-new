@@ -49,13 +49,13 @@ const Footer = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
-            className="space-y-4 sm:space-y-5 md:space-y-6 text-center"
+            className="space-y-3 sm:space-y-4 text-center"
           >
             <Link to="/" className="inline-block group">
               <img
                 src="/blacklogo.png"
                 alt="Arboreal Resort"
-                className="h-[100px] sm:h-[120px] md:h-[140px] lg:h-[160px] w-auto drop-shadow-sm transition-all duration-500 group-hover:scale-105 mx-auto"
+                className="h-12 sm:h-14 md:h-16 lg:h-16 w-auto drop-shadow-sm transition-all duration-500 group-hover:scale-105 mx-auto"
               />
             </Link>
             <p className="text-gray-600 font-light text-xs sm:text-sm leading-relaxed max-w-xs mx-auto px-4">
@@ -65,44 +65,44 @@ const Footer = () => {
             </p>
 
             {/* Social Media */}
-            <div className="flex items-center gap-3 justify-center">
+            <div className="flex items-center gap-2.5 justify-center">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/people/The-Arboreal-Resort/100083284368649/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <FiFacebook className="w-4 h-4" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/arborealresort/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <FiInstagram className="w-4 h-4" />
               </a>
-              <a
+              {/* <a
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <FiTwitter className="w-4 h-4" />
-              </a>
+              </a> */}
               <a
-                href="https://youtube.com"
+                href="https://www.youtube.com/@thearborealresort"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-white hover:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <FiYoutube className="w-4 h-4" />
               </a>
             </div>
           </motion.div>
 
-          {/* Quick Links & Explore - 2 Column Layout */}
-          <div className="grid grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 max-w-md mx-auto">
+          {/* Links & Contact - Compact 3 Column Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 max-w-7xl mx-auto">
             {/* Quick Links */}
             <motion.div
               initial="hidden"
@@ -110,12 +110,12 @@ const Footer = () => {
               viewport={{ once: true }}
               variants={fadeInUp}
               transition={{ delay: 0.1 }}
-              className="space-y-4"
+              className="space-y-3"
             >
-              <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-center">
+              <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-left">
                 Quick Links
               </h3>
-              <ul className="space-y-2.5 text-center">
+              <ul className="space-y-2.5 text-left">
                 {quickLinks.map((link) => (
                   <li key={link.name}>
                     <Link
@@ -136,12 +136,12 @@ const Footer = () => {
               viewport={{ once: true }}
               variants={fadeInUp}
               transition={{ delay: 0.2 }}
-              className="space-y-4"
+              className="space-y-3"
             >
-              <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-center">
+              <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-left">
                 Explore
               </h3>
-              <ul className="space-y-2.5 text-center">
+              <ul className="space-y-2.5 text-left">
                 {exploreLinks.map((link) => (
                   <li key={link.name}>
                     <Link
@@ -154,72 +154,52 @@ const Footer = () => {
                 ))}
               </ul>
             </motion.div>
+
+            {/* Contact (Real details) */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
+              transition={{ delay: 0.25 }}
+              className="space-y-3"
+            >
+              <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-left">
+                Contact
+              </h3>
+              <div className="flex flex-col items-start text-left gap-3">
+                <a
+                  href="https://maps.app.goo.gl/2EL8NXUZgh4An2NL8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light"
+                >
+                  <FiMapPin className="w-4 h-4" />
+                  <span className="max-w-xs">
+                    The Arboreal, Pvt. Road, Gevhande Apati, Lonavala, Maharashtra 412108
+                  </span>
+                </a>
+                <div className="flex flex-col items-start gap-1">
+                  <a href="tel:+917775023535" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
+                    <FiPhone className="w-4 h-4" />
+                    +91 777 50 23535
+                  </a>
+                  <a href="tel:+919767855988" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
+                    <FiPhone className="w-4 h-4" />
+                    +91 976 78 55988
+                  </a>
+                </div>
+                <a href="mailto:reservations@thearborealresort.com" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
+                  <FiMail className="w-4 h-4" />
+                  reservations@thearborealresort.com
+                </a>
+                <p className="text-[10px] text-gray-500">24/7 Reception</p>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Contact Info */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            transition={{ delay: 0.3 }}
-            className="space-y-4 max-w-sm mx-auto"
-          >
-            <h3 className="text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gray-800 text-center">
-              Get In Touch
-            </h3>
-            <div className="space-y-3">
-              <div className="flex flex-col items-center gap-2 text-center">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <FiMapPin className="w-4 h-4 text-gray-600" />
-                </div>
-                <div>
-                  <p className="text-[10px] sm:text-xs text-gray-500 mb-1 uppercase tracking-wider font-medium">
-                    Address
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-700 font-light leading-relaxed">
-                    Arboreal Resort, Nature Valley,
-                    <br />
-                    Serenity Hills, 123456
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-2 text-center">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <FiPhone className="w-4 h-4 text-gray-600" />
-                </div>
-                <div>
-                  <p className="text-[10px] sm:text-xs text-gray-500 mb-1 uppercase tracking-wider font-medium">
-                    Call Us
-                  </p>
-                  <a
-                    href="tel:+919876543210"
-                    className="text-xs sm:text-sm text-gray-700 hover:text-gray-900 transition-colors duration-300 font-light"
-                  >
-                    +91 98765 43210
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-2 text-center">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <FiMail className="w-4 h-4 text-gray-600" />
-                </div>
-                <div>
-                  <p className="text-[10px] sm:text-xs text-gray-500 mb-1 uppercase tracking-wider font-medium">
-                    Email
-                  </p>
-                  <a
-                    href="mailto:info@arborealresort.com"
-                    className="text-xs sm:text-sm text-gray-700 hover:text-gray-900 transition-colors duration-300 font-light"
-                  >
-                    info@arborealresort.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          {/* Old Contact block hidden to avoid duplicate vertical space */}
+          <motion.div className="hidden"></motion.div>
         </div>
 
         {/* Bottom Bar */}

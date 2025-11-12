@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { FiCalendar, FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,19 @@ const Hero = () => {
     children: 0,
   });
   const [loading, setLoading] = useState(false);
+  const checkInRef = useRef(null);
+  const checkOutRef = useRef(null);
+
+  const openDate = (ref) => {
+    if (ref?.current) {
+      if (typeof ref.current.showPicker === "function") {
+        ref.current.showPicker();
+      } else {
+        ref.current.focus();
+        ref.current.click();
+      }
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -109,9 +122,9 @@ const Hero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
-          className="mt-auto mb-8 sm:mb-12 md:mb-16 lg:mb-20 max-w-6xl mx-auto w-full px-2 sm:px-4"
+          className="mt-auto mb-8 sm:mb-12 md:mb-16 lg:mb-20 max-w-7xl mx-auto w-full px-2 sm:px-4"
         >
-          <div className="bg-white backdrop-blur-lg rounded-2xl md:rounded-full shadow-2xl">
+          <div className="bg-white backdrop-blur-lg rounded-2xl md:rounded-full shadow-2xl overflow-visible">
             <div className="flex flex-col md:flex-row items-stretch divide-y md:divide-y-0 md:divide-x divide-gray-200">
               {/* Name Field */}
               <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 flex items-center gap-3 min-w-0">
@@ -160,40 +173,52 @@ const Hero = () => {
               </div>
 
               {/* Check In */}
-              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
+              <div
+                className="flex-1 px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-0 cursor-pointer"
+                onClick={() => openDate(checkInRef)}
+                role="button"
+                tabIndex={0}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0" onClick={() => openDate(checkInRef)}>
                     <FiCalendar className="text-[#2a2a2a]/70 text-lg sm:text-xl" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <input
+                      ref={checkInRef}
                       type="date"
                       name="checkIn"
                       value={formData.checkIn}
                       onChange={handleInputChange}
                       required
                       placeholder="Check In"
-                      className="w-full text-[#2a2a2a] text-sm focus:outline-none bg-transparent font-light cursor-pointer placeholder-[#2a2a2a]/50 [color-scheme:dark]"
+                      className="w-full text-[#2a2a2a] text-sm md:text-base focus:outline-none bg-transparent font-light cursor-pointer placeholder-[#2a2a2a]/50 [color-scheme:dark]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Check Out */}
-              <div className="flex-1 px-4 sm:px-6 py-3 sm:py-4 md:py-5 min-w-0">
+              <div
+                className="flex-1 px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-0 cursor-pointer"
+                onClick={() => openDate(checkOutRef)}
+                role="button"
+                tabIndex={0}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0" onClick={() => openDate(checkOutRef)}>
                     <FiCalendar className="text-[#2a2a2a]/70 text-lg sm:text-xl" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <input
+                      ref={checkOutRef}
                       type="date"
                       name="checkOut"
                       value={formData.checkOut}
                       onChange={handleInputChange}
                       required
                       placeholder="Check Out"
-                      className="w-full text-[#2a2a2a] text-sm focus:outline-none bg-transparent font-light cursor-pointer placeholder-[#2a2a2a]/50 [color-scheme:dark]"
+                      className="w-full text-[#2a2a2a] text-sm md:text-base focus:outline-none bg-transparent font-light cursor-pointer placeholder-[#2a2a2a]/50 [color-scheme:dark]"
                     />
                   </div>
                 </div>

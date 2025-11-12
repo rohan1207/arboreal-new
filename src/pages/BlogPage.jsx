@@ -1,94 +1,54 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import blogsData from "../Data/blogsdata.json";
 
 const BlogPage = () => {
   const [showAll, setShowAll] = useState(false);
-  
-  const blogs = [
-    {
-      id: 1,
-      category: "TRAVEL TIPS",
-      title: "Best Time to Visit Lonavala",
-      description:
-        "Discover the perfect season to experience the magic of Lonavala. From monsoon waterfalls to winter mist, learn when to plan your perfect getaway to The Arboreal Resort.",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      date: "October 15, 2024",
-      readTime: "5 min read",
-      link: "#",
-    },
-    {
-      id: 2,
-      category: "WELLNESS",
-      title: "Yoga & Meditation in Nature",
-      description:
-        "Experience tranquility like never before. Our wellness programs combine ancient practices with the serene beauty of our natural surroundings for ultimate relaxation.",
-      image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80",
-      date: "October 12, 2024",
-      readTime: "4 min read",
-      link: "#",
-    },
-    {
-      id: 3,
-      category: "DINING",
-      title: "Farm to Table Dining Experience",
-      description:
-        "Savor the freshest flavors from our organic gardens. Our chefs craft exquisite dishes using locally sourced ingredients, creating a true farm-to-table experience.",
-      image:
-        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
-      date: "October 8, 2024",
-      readTime: "6 min read",
-      link: "#",
-    },
-    {
-      id: 4,
-      category: "ADVENTURES",
-      title: "Exploring the Western Ghats",
-      description:
-        "Embark on unforgettable trails through the lush Western Ghats. From sunrise treks to hidden waterfalls, discover the natural wonders surrounding The Arboreal Resort. Our guided nature walks offer intimate encounters with local flora and fauna.",
-      image:
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
-      date: "October 5, 2024",
-      readTime: "8 min read",
-      link: "#",
-    },
-    {
-      id: 5,
-      category: "SUSTAINABILITY",
-      title: "Our Eco-Friendly Practices",
-      description:
-        "Learn about our commitment to sustainable luxury. From rainwater harvesting to solar energy, discover how we preserve nature while offering premium comfort.",
-      image:
-        "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
-      date: "September 28, 2024",
-      readTime: "7 min read",
-      link: "#",
-    },
-    {
-      id: 6,
-      category: "EXPERIENCES",
-      title: "Romantic Getaway Ideas",
-      description:
-        "Create unforgettable memories with your loved one. From candlelit dinners under the stars to couples' spa treatments, discover romantic experiences at our resort.",
-      image:
-        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
-      date: "September 22, 2024",
-      readTime: "5 min read",
-      link: "#",
-    },
-    {
-      id: 7,
-      category: "CELEBRATIONS",
-      title: "Planning Your Dream Destination Wedding",
-      description:
-        "Say 'I do' surrounded by nature's beauty. Our expert team helps you create the perfect celebration, from intimate ceremonies to grand celebrations in our stunning venues.",
-      image: "slider7.jpg",
-      date: "September 18, 2024",
-      readTime: "10 min read",
-      link: "#",
-    },
-  ];
+
+  const slugify = (s) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const excerpt = (text, n = 40) => {
+    const clean = (text || "").replace(/\n+/g, " ").trim();
+    const words = clean.split(/\s+/);
+    const cut = words.slice(0, n).join(" ");
+    return words.length > n ? `${cut}…` : cut;
+  };
+
+  const formatDate = (iso) => {
+    if (!iso) return "";
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return "";
+    }
+  };
+
+  const readingTime = (text) => {
+    const words = (text || "").trim().split(/\s+/).filter(Boolean).length;
+    const mins = Math.max(1, Math.ceil(words / 200));
+    return `${mins} min read`;
+  };
+
+  const blogs = (blogsData || []).map((b, i) => ({
+    id: i + 1,
+    category: (b.author || "Story").toUpperCase(),
+    title: b.title,
+    description: excerpt(b.content, 36),
+    image: b.coverImage,
+    date: formatDate(b.createdAt),
+    readTime: readingTime(b.content),
+    link: `/blog/${slugify(b.title)}`,
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -175,20 +135,21 @@ const BlogPage = () => {
                 }`}
               >
                 {/* Image */}
-                <div className="block relative overflow-hidden">
-                  <div className={`overflow-hidden ${
-                    !showAll && index === 3 
-                      ? 'aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]' 
-                      : 'aspect-[4/3]'
-                  }`}>
-                    <motion.img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-
+                <div className="relative">
+                  <Link to={blog.link} className="block overflow-hidden">
+                    <div className={`${
+                      !showAll && index === 3 
+                        ? 'aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]' 
+                        : 'aspect-[4/3]'
+                    } overflow-hidden`}>
+                      <motion.img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                  </Link>
                   {/* Category Badge */}
                   <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                     <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/90 backdrop-blur-sm text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
@@ -204,13 +165,15 @@ const BlogPage = () => {
                     <span>•</span>
                     <span>{blog.readTime}</span>
                   </div>
-                  <h3 className={`font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-2 sm:mb-3 ${
-                    !showAll && index === 3 
-                      ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl' 
-                      : 'text-lg sm:text-xl md:text-2xl'
-                  }`}>
-                    {blog.title}
-                  </h3>
+                  <Link to={blog.link} className="group/title inline-block">
+                    <h3 className={`font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-2 sm:mb-3 ${
+                      !showAll && index === 3 
+                        ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl' 
+                        : 'text-lg sm:text-xl md:text-2xl'
+                    }`}>
+                      {blog.title}
+                    </h3>
+                  </Link>
                   <p className={`text-gray-600 leading-relaxed font-light mb-3 sm:mb-4 ${
                     !showAll && index === 3 
                       ? 'text-xs sm:text-sm md:text-base max-w-3xl line-clamp-2' 
@@ -218,8 +181,8 @@ const BlogPage = () => {
                   }`}>
                     {blog.description}
                   </p>
-                  <button
-                    onClick={(e) => e.preventDefault()}
+                  <Link
+                    to={blog.link}
                     className="inline-flex items-center text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
                   >
                     <span className="relative z-10">Read More</span>
@@ -238,7 +201,7 @@ const BlogPage = () => {
                     </svg>
                     <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
                     <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></div>
-                  </button>
+                  </Link>
                 </div>
               </motion.article>
             ))}

@@ -12,6 +12,7 @@ import ContactUs from "./pages/ContactUs";
 import GalleryPage from "./pages/GalleryPage";
 import Availability from "./pages/Availability";
 import BlogPage from "./pages/BlogPage";
+import BlogDetail from "./pages/BlogDetail";
 import BookingForm from "./pages/BookingForm";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import ScrollToTop from "./components/ScrollToTop";
@@ -55,6 +56,7 @@ const App = () => {
           />
 
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>

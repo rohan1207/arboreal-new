@@ -1,63 +1,30 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import blogsData from "../Data/blogsdata.json";
 
 const BentoBlogs = () => {
-  const blogs = [
-    {
-      id: 1,
-      category: "ARBOREAL IDEAS",
-      title: "Extend Your Stay",
-      description:
-        "Unwind and relax with days of late nights at cozy, daily breakfast and warm airport transfers from Cam Ranh Airport.",
-      image:
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-      link: "#",
-      size: "small",
-    },
-    {
-      id: 2,
-      category: "DINING",
-      title: "Fragrant flavours",
-      description:
-        "Discover delicious menus & recipes celebrating the fragrant flavours of Vietnamese cuisine, making the most of seasonal market produce and the daily catch.",
-      image:
-        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
-      link: "#",
-      size: "small",
-    },
-    {
-      id: 3,
-      category: "EXPERIENCES",
-      title: "What's on at Arboreal",
-      description:
-        "Celebrate the year-round resort on Vietnam's favorite coastline with Arboreal's cast of programmes of ever-changing events and experiences.",
-      image:
-        "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80",
-      link: "#",
-      size: "small",
-    },
-    {
-      id: 4,
-      category: "EXPERIENCE",
-      title: "Wellness Pool Villa Experience",
-      description:
-        "Nestled amidst the hillsides lies the retreat designed for those who seek to dedicate their stay on wellness. Enjoy treatments, therapies and movement classes to recontexture privacy without leaving the waterside Lake Wellness Pool Villa or the secluded Forest Wellness Pool Villa.",
-      image:
-        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80",
-      link: "#",
-      size: "large",
-    },
-    {
-      id: 5,
-      category: "CELEBRATIONS",
-      title: "Host the perfect event",
-      description:
-        "Embraced by a seasonably beautiful wilderness as a canvas of idyllic calm, Arboreal offers a palette of settings both indoors and out for the most exclusive weddings and celebrations in Lonavala.",
-      image: "slider5.jpg",
-      link: "#",
-      size: "medium",
-    },
-  ];
+  const slugify = (s) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const excerpt = (text, n = 40) => {
+    const clean = (text || "").replace(/\n+/g, " ").trim();
+    const words = clean.split(/\s+/);
+    const cut = words.slice(0, n).join(" ");
+    return words.length > n ? `${cut}…` : cut;
+  };
+
+  const blogs = blogsData.map((b, i) => ({
+    id: i + 1,
+    category: (b.author || "Story").toUpperCase(),
+    title: b.title,
+    description: excerpt(b.content, 36),
+    image: b.coverImage,
+    link: `/blog/${slugify(b.title)}`,
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -123,7 +90,7 @@ const BentoBlogs = () => {
               }`}
             >
               {/* Image */}
-              <a href={blog.link} className="block relative overflow-hidden">
+              <Link to={blog.link} className="block relative overflow-hidden">
                 <div className="aspect-[4/3] overflow-hidden">
                   <motion.img
                     src={blog.image}
@@ -132,23 +99,23 @@ const BentoBlogs = () => {
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              </a>
+              </Link>
 
               {/* Content */}
               <div className="p-4 sm:p-5 md:p-6 lg:p-8">
                 <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                   {blog.category}
                 </span>
-                <a href={blog.link} className="group/title inline-block mb-2 sm:mb-3">
+                <Link to={blog.link} className="group/title inline-block mb-2 sm:mb-3">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                     {blog.title}
                   </h3>
-                </a>
+                </Link>
                 <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
                   {blog.description}
                 </p>
-                <a
-                  href={blog.link}
+                <Link
+                  to={blog.link}
                   className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
                 >
                   <span className="relative">
@@ -169,7 +136,7 @@ const BentoBlogs = () => {
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
             </motion.article>
           ))}
@@ -179,7 +146,7 @@ const BentoBlogs = () => {
             className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
-            <a href={blogs[3].link} className="block relative overflow-hidden">
+            <Link to={blogs[3].link} className="block relative overflow-hidden">
               <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden">
                 <motion.img
                   src={blogs[3].image}
@@ -188,23 +155,23 @@ const BentoBlogs = () => {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-            </a>
+            </Link>
 
             {/* Content */}
             <div className="p-4 sm:p-5 md:p-6 lg:p-8">
               <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                 {blogs[3].category}
               </span>
-              <a href={blogs[3].link} className="group/title inline-block mb-2 sm:mb-3">
+              <Link to={blogs[3].link} className="group/title inline-block mb-2 sm:mb-3">
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[3].title}
                 </h3>
-              </a>
+              </Link>
               <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-4 sm:mb-5 max-w-3xl line-clamp-2">
                 {blogs[3].description}
               </p>
-              <a
-                href={blogs[3].link}
+              <Link
+                to={blogs[3].link}
                 className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
               >
                 <span className="relative">
@@ -225,7 +192,7 @@ const BentoBlogs = () => {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </motion.article>
 
@@ -234,7 +201,7 @@ const BentoBlogs = () => {
             className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
-            <a href={blogs[4].link} className="block relative overflow-hidden">
+            <Link to={blogs[4].link} className="block relative overflow-hidden">
               <div className="aspect-[4/3] overflow-hidden">
                 <motion.img
                   src={blogs[4].image}
@@ -243,23 +210,23 @@ const BentoBlogs = () => {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-            </a>
+            </Link>
 
             {/* Content */}
             <div className="p-4 sm:p-5 md:p-6 lg:p-8">
               <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
                 {blogs[4].category}
               </span>
-              <a href={blogs[4].link} className="group/title inline-block mb-2 sm:mb-3">
+              <Link to={blogs[4].link} className="group/title inline-block mb-2 sm:mb-3">
                 <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
                   {blogs[4].title}
                 </h3>
-              </a>
+              </Link>
               <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
                 {blogs[4].description}
               </p>
-              <a
-                href={blogs[4].link}
+              <Link
+                to={blogs[4].link}
                 className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
               >
                 <span className="relative">
@@ -280,7 +247,7 @@ const BentoBlogs = () => {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </motion.article>
         </motion.div>

@@ -20,7 +20,7 @@ const RoomShowcase = () => {
     },
     {
       id: 2,
-      title: "Forest Bathtub Suite",
+      title: "Forest Bathtub Room",
       images: [
         "/Forest_Bathtub_01.jpg",
         "/Forest_Bathtub_02.jpg",
@@ -30,7 +30,7 @@ const RoomShowcase = () => {
     },
     {
       id: 3,
-      title: "Forest Private Pool",
+      title: "Forest Private Pool Room",
       images: [
         "/Forest_Private_Pool_1.jpg",
         "/Forest_Private_Pool_2.jpg",
@@ -40,7 +40,7 @@ const RoomShowcase = () => {
     },
     {
       id: 4,
-      title: "Luxury Sunroom Arboreal",
+      title: "Luxury Sunroom",
       images: [
         "/Luxury_Sunroom_Arboreal_01.jpg",
         "/Luxury_Sunroom_Arboreal_02.jpg",
