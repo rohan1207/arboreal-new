@@ -124,16 +124,20 @@ const BookingPayment = () => {
               }
             );
 
-            if (verifyResponse.data.success && verifyResponse.data.ezeeConfirmed) {
-              console.log("✅ Payment verified and booking confirmed in eZee!");
-              
-              // Navigate to success page
+            if (verifyResponse.data.success) {
+              const confirmed = !!verifyResponse.data.ezeeConfirmed;
+              console.log(
+                confirmed
+                  ? "✅ Payment verified and booking confirmed in eZee!"
+                  : "✅ Payment verified. eZee confirmation not returned; proceeding with success page."
+              );
+
               navigate("/booking-confirmation", {
                 state: {
                   reservationNo: reservationNo,
                   paymentMode: "Online - Razorpay",
                   paymentId: response.razorpay_payment_id,
-                  bookingConfirmed: true,
+                  bookingConfirmed: confirmed,
                   bookingDetails: {
                     room,
                     searchData,

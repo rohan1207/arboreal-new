@@ -65,30 +65,7 @@ const Availability = () => {
       if (response.data.success) {
         // Ezee API returns the room data directly as an array
         const roomData = response.data.data || [];
-        
-        // Filter out rooms with invalid ID configuration
-        // eZee InsertBooking API requires Rateplan_Id, Ratetype_Id, Roomtype_Id to be DIFFERENT
-        // Some rooms may have all three IDs identical which causes booking failures
-        const validRooms = roomData.filter(room => {
-          const hasDuplicateIds = 
-            room.roomrateunkid === room.ratetypeunkid && 
-            room.roomrateunkid === room.roomtypeunkid;
-          
-          if (hasDuplicateIds) {
-            console.warn(
-              `⚠️ Filtering out room "${room.Room_Name}" - has duplicate IDs:`,
-              `roomrateunkid=${room.roomrateunkid}, ratetypeunkid=${room.ratetypeunkid}, roomtypeunkid=${room.roomtypeunkid}`
-            );
-          }
-          
-          return !hasDuplicateIds;
-        });
-        
-        setRooms(validRooms);
-        
-        if (validRooms.length === 0 && roomData.length > 0) {
-          setError("No bookable rooms available. All rooms have invalid configurations. Please contact support.");
-        }
+        setRooms(roomData);
       } else {
         setError("No rooms available for the selected dates");
       }
