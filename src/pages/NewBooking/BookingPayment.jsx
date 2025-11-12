@@ -277,13 +277,19 @@ const BookingPayment = () => {
 
     // CRITICAL: Validate check-in date is not in the past or today
     // eZee API rejects bookings for today - must be tomorrow or later
-    const checkInDate = new Date(bookingDetails.checkIn);
+    const parseLocalYMD = (s) => {
+      const [y, m, d] = String(s).split("-").map(Number);
+      return new Date(y, (m || 1) - 1, d || 1, 0, 0, 0, 0);
+    };
+    const formatYMD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+    const checkInDate = parseLocalYMD(bookingDetails.checkIn);
     const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0); // Reset time to start of day
     
     if (checkInDate < tomorrow) {
-      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      const tomorrowStr = formatYMD(tomorrow);
       throw new Error(
         `Check-in date must be tomorrow or later. Please select ${tomorrowStr} or a future date. eZee API does not accept bookings for today or past dates.`
       );

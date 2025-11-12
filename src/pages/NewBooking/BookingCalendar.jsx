@@ -141,6 +141,8 @@ const BookingCalendar = () => {
     "December",
   ];
 
+  const formatYMD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
   const handleProceed = () => {
     if (!selectedCheckIn || !selectedCheckOut) {
       alert("Please select check-in and check-out dates");
@@ -152,12 +154,12 @@ const BookingCalendar = () => {
         room,
         searchData: {
           ...searchData,
-          checkIn: selectedCheckIn.toISOString().split("T")[0],
-          checkOut: selectedCheckOut.toISOString().split("T")[0],
+          checkIn: formatYMD(selectedCheckIn),
+          checkOut: formatYMD(selectedCheckOut),
         },
         bookingDetails: {
-          checkIn: selectedCheckIn.toISOString().split("T")[0],
-          checkOut: selectedCheckOut.toISOString().split("T")[0],
+          checkIn: formatYMD(selectedCheckIn),
+          checkOut: formatYMD(selectedCheckOut),
           nights,
           totalPrice,
         },
