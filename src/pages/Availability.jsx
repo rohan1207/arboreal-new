@@ -99,12 +99,12 @@ const Availability = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-amber-50/20 to-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-[#2a2a2a]/5 to-slate-100">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-20 h-20 border-4 border-amber-600/30 border-t-amber-600 rounded-full mx-auto mb-6"
+            className="w-20 h-20 border-4 border-[#2a2a2a]/30 border-t-[#2a2a2a]/95 rounded-full mx-auto mb-6"
           />
           <motion.p
             initial={{ opacity: 0 }}
@@ -120,11 +120,11 @@ const Availability = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-amber-50/20 to-slate-100 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-[#2a2a2a]/5 to-slate-100 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center border border-amber-100"
+          className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center border border-gray-200"
         >
           <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg
@@ -147,7 +147,7 @@ const Availability = () => {
           <p className="text-gray-600 mb-8 leading-relaxed">{error}</p>
           <button
             onClick={() => navigate("/")}
-            className="px-8 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-full font-medium hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+            className="px-8 py-3 bg-[#2a2a2a]/95 hover:bg-[#2a2a2a] text-white rounded-full font-medium hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
           >
             Return Home
           </button>
@@ -157,7 +157,7 @@ const Availability = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-slate-100 pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-8 sm:pb-10 md:pb-12 lg:pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-[#2a2a2a]/5 to-slate-100 pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-8 sm:pb-10 md:pb-12 lg:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elegant Header */}
         <motion.div
@@ -168,14 +168,24 @@ const Availability = () => {
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 mb-2 sm:mb-3 tracking-wide px-2">
             Your Perfect Retreat Awaits
           </h1>
-          <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto"></div>
+          <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-transparent via-[#2a2a2a]/95 to-transparent mx-auto"></div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 sm:mb-6 md:mb-8"
+        >
+          <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-full px-4 sm:px-6 py-2 text-[11px] sm:text-sm text-gray-700 shadow-sm text-center">
+            <span className="font-medium text-gray-900">All Stays Include</span>: Complimentary breakfast | Free WiFi | Access to pool & common areas | Parking included | Daily housekeeping | Air-conditioned rooms with private balcony/view | Tea & coffee setup
+          </div>
         </motion.div>
 
         {/* Search Summary Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-amber-100 p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 md:mb-10 lg:mb-12"
+          className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-gray-200 p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 md:mb-10 lg:mb-12"
         >
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
             <div className="flex-1">
@@ -183,10 +193,10 @@ const Availability = () => {
                 Your Selection
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/95"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -208,10 +218,10 @@ const Availability = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/95"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -233,10 +243,10 @@ const Availability = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/95"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -258,10 +268,10 @@ const Availability = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 bg-amber-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[#2a2a2a]/95"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -288,7 +298,7 @@ const Availability = () => {
             </div>
             <button
               onClick={() => navigate("/")}
-              className="w-full lg:w-auto px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-amber-600 text-amber-600 rounded-full hover:bg-amber-600 hover:text-white transition-all duration-300 font-medium text-sm sm:text-base"
+              className="w-full lg:w-auto px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-[#2a2a2a]/95 text-[#2a2a2a]/95 rounded-full hover:bg-[#2a2a2a]/95 hover:text-white transition-all duration-300 font-medium text-sm sm:text-base"
             >
               Modify Search
             </button>
@@ -300,11 +310,11 @@ const Availability = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-amber-100 p-16 text-center"
+            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 p-16 text-center"
           >
-            <div className="w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
-                className="w-12 h-12 text-amber-600"
+                className="w-12 h-12 text-[#2a2a2a]/95"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -334,7 +344,7 @@ const Availability = () => {
             >
               <p className="text-gray-600 text-sm sm:text-base md:text-lg px-4">
                 We found{" "}
-                <span className="font-semibold text-amber-600">
+                <span className="font-semibold text-[#2a2a2a]/95">
                   {rooms.length}
                 </span>{" "}
                 exquisite accommodation{rooms.length > 1 ? "s" : ""} for your
@@ -363,7 +373,7 @@ const Availability = () => {
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                           <svg
-                            className="w-16 h-16 text-gray-400"
+                            className="w-16 h-16 text-[#2a2a2a]/95"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -373,7 +383,7 @@ const Availability = () => {
                               strokeLinejoin="round"
                               strokeWidth="2"
                               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                            />
+                          />
                           </svg>
                         </div>
                       )}
@@ -400,7 +410,7 @@ const Availability = () => {
                       <div className="flex flex-col h-full">
                         {/* Room Title */}
                         <div className="mb-3 sm:mb-4">
-                          <h3 className="text-xl sm:text-2xl font-serif text-gray-900 mb-1.5 sm:mb-2">
+                          <h3 className="text-xl sm:text-2xl font-serif text-[#2a2a2a]/95 mb-1.5 sm:mb-2">
                             {room.Room_Name || room.Roomtype_Name}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-2">
@@ -505,7 +515,7 @@ const Availability = () => {
                                 },
                               })
                             }
-                            className="w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-gray-900 text-white text-xs sm:text-sm uppercase tracking-wider hover:bg-gray-800 transition-all duration-300 font-medium whitespace-nowrap"
+                            className="w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-[#2a2a2a]/95 hover:bg-[#2a2a2a] text-white text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 font-medium whitespace-nowrap rounded-full"
                           >
                             Book a room
                           </button>

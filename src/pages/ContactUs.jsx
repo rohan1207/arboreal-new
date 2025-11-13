@@ -35,8 +35,8 @@ const ContactUs = () => {
     {
       icon: <FiPhone className="w-6 h-6" />,
       title: "Call Us",
-      details: ["+91 777 50 23535", "+91 976 78 55988"],
-      link: "tel:+917775023535",
+      details: ["+918380035320"],
+      link: "tel:+918380035320",
     },
     {
       icon: <FiMail className="w-6 h-6" />,
@@ -126,7 +126,7 @@ const ContactUs = () => {
                 variants={fadeInUp}
                 className="bg-white p-5 sm:p-6 md:p-7 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group rounded-xl sm:rounded-2xl border border-gray-100"
               >
-                <div className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 bg-gradient-to-br from-gray-900 to-gray-700 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-5 md:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
+                <div className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 bg-[#2a2a2a]/95 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-5 md:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
                   {React.cloneElement(info.icon, {
                     className: "w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6",
                   })}
@@ -146,7 +146,7 @@ const ContactUs = () => {
                     href={info.link}
                     target={info.link.startsWith("http") ? "_blank" : "_self"}
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 sm:gap-2 mt-4 sm:mt-5 md:mt-6 text-[10px] sm:text-xs uppercase tracking-wider text-gray-900 hover:text-gray-600 transition-colors duration-300 font-medium group/link"
+                    className="inline-flex items-center gap-1.5 sm:gap-2 mt-4 sm:mt-5 md:mt-6 text-[10px] sm:text-xs uppercase tracking-wider text-[#2a2a2a]/95 hover:text-[#2a2a2a] transition-colors duration-300 font-medium group/link"
                   >
                     <span>
                       {info.title === "Visit Us"
@@ -217,7 +217,7 @@ const ContactUs = () => {
                   onChange={handleChange}
                   required
                   placeholder="John Doe"
-                  className="w-full px-4 sm:px-5 py-2.5 sm:py-3 md:py-3.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-xs sm:text-sm font-light bg-gray-50 focus:bg-white"
+                  className="w-full px-4 sm:px-5 py-2.5 sm:py-3 md:py-3.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#2a2a2a] focus:border-transparent transition-all duration-300 text-xs sm:text-sm font-light bg-gray-50 focus:bg-white"
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
@@ -290,13 +290,13 @@ const ContactUs = () => {
                   onChange={handleChange}
                   required
                   placeholder="Tell us more about your inquiry..."
-                  className="w-full px-4 sm:px-5 py-2.5 sm:py-3 md:py-3.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300 text-xs sm:text-sm font-light resize-none bg-gray-50 focus:bg-white"
+                  className="w-full px-4 sm:px-5 py-2.5 sm:py-3 md:py-3.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#2a2a2a] focus:border-transparent transition-all duration-300 text-xs sm:text-sm font-light resize-none bg-gray-50 focus:bg-white"
                 ></textarea>
               </div>
               <div>
                 <motion.button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white font-light py-3 sm:py-3.5 md:py-4 px-6 sm:px-7 md:px-8 rounded-lg sm:rounded-xl hover:from-gray-800 hover:to-gray-700 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-xl"
+                  className="w-full bg-[#2a2a2a]/95 hover:bg-[#2a2a2a] text-white font-light py-3 sm:py-3.5 md:py-4 px-6 sm:px-7 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -333,7 +333,7 @@ const ContactUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20 px-4 sm:px-6 bg-gray-900 text-white">
+      <section className="py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20 px-4 sm:px-6 bg-[#2a2a2a]/95 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

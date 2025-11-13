@@ -180,14 +180,11 @@ const Footer = () => {
                   </span>
                 </a>
                 <div className="flex flex-col items-start gap-1">
-                  <a href="tel:+917775023535" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
+                  <a href="tel:+918380035320" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
                     <FiPhone className="w-4 h-4" />
-                    +91 777 50 23535
+                    +918380035320
                   </a>
-                  <a href="tel:+919767855988" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
-                    <FiPhone className="w-4 h-4" />
-                    +91 976 78 55988
-                  </a>
+                 
                 </div>
                 <a href="mailto:reservations@thearborealresort.com" className="inline-flex items-start gap-2 text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-light">
                   <FiMail className="w-4 h-4" />

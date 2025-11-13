@@ -275,17 +275,20 @@ const BookingPayment = () => {
       throw new Error("Check-out date is required");
     }
 
-    // CRITICAL: Validate check-in date is not in the past or today
-    // eZee API rejects bookings for today - must be tomorrow or later
-    const checkInDate = new Date(bookingDetails.checkIn);
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0); // Reset time to start of day
+    // CRITICAL: Validate check-in date is not in the past
+    // eZee API rejects bookings for past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day
     
-    if (checkInDate < tomorrow) {
-      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    // Parse check-in date and reset time to start of day for accurate comparison
+    const checkInDate = new Date(bookingDetails.checkIn);
+    checkInDate.setHours(0, 0, 0, 0);
+    
+    // Only validate against past dates, allow today and future dates
+    if (checkInDate < today) {
+      const todayStr = today.toISOString().split('T')[0];
       throw new Error(
-        `Check-in date must be tomorrow or later. Please select ${tomorrowStr} or a future date. eZee API does not accept bookings for today or past dates.`
+        `Check-in date must be today (${todayStr}) or a future date. eZee API does not accept bookings for past dates.`
       );
     }
 

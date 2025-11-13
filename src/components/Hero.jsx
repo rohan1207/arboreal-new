@@ -174,7 +174,7 @@ const Hero = () => {
 
               {/* Check In */}
               <div
-                className="flex-1 px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-0 cursor-pointer"
+                className="flex-1 md:flex-[1.4] px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-[10rem] md:min-w-[12rem] lg:min-w-[14rem] cursor-pointer"
                 onClick={() => openDate(checkInRef)}
                 role="button"
                 tabIndex={0}
@@ -200,7 +200,7 @@ const Hero = () => {
 
               {/* Check Out */}
               <div
-                className="flex-1 px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-0 cursor-pointer"
+                className="flex-1 md:flex-[1.4] px-4 sm:px-5 py-3 sm:py-4 md:py-4 min-w-[10rem] md:min-w-[12rem] lg:min-w-[14rem] cursor-pointer"
                 onClick={() => openDate(checkOutRef)}
                 role="button"
                 tabIndex={0}
