@@ -78,7 +78,7 @@ const Hero = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="hhttps://res.cloudinary.com/dsrlnbc5k/video/upload/final_sasphm.mp4" type="video/mp4" />
+        <source src="./hero.mp4" type="video/mp4" />
         {/* Fallback image if video doesn't load */}
         Your browser does not support the video tag.
       </video>
