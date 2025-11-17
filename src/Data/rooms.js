@@ -12,12 +12,14 @@ import {
 export const ROOMS = [
   {
     id: 1,
+    baseName: "Classic Sunroom",
+    slug: "classic-sunroom",
     name: [
       "Limited Period - Classic Sunroom - CP",
       "Classic Sunroom - CP"
     ],
     description:
-      "Wake up to soft sunlight and serene forest views in this charming sunroom. Designed for comfort and calm, it offers a warm, intimate escape.",
+      "Bathed in soft daylight and surrounded by the whisper of trees, the Classic Sunroom is where nature and quiet refinement meet. Large glass walls frame the forest like a living painting, flooding the space with golden morning light. Handcrafted wooden furniture, warm earthy tones, and southern yellow pine flooring create an atmosphere that feels timeless — serene yet full of quiet vitality",
     stayIncludes: [
       "Daily Breakfast",
       "In-room refreshments",
@@ -52,12 +54,14 @@ export const ROOMS = [
   },
   {
     id: 2,
+    baseName: "Forest Bathtub Room",
+    slug: "forest-bathtub-room",
     name: [
       "Limited Period - Forest Bathtub - CP",
       "Forest Bathtub - CP"
     ],
     description:
-      "A beautifully crafted suite where nature meets indulgence. Enjoy tranquil green views and a private balcony bathtub for peaceful relaxation.",
+      "Hidden deep within the green expanse of The Arboreal Resort, the Forest Bathtub Room invites you to experience pure immersion in nature. Crafted entirely in warm pinewood and framed by sweeping glass windows, the room opens into dense foliage, blending the calm of natural light with the elegance of handcrafted interiors.",
     stayIncludes: [
       "Daily Breakfast",
       "In-room refreshments",
@@ -95,12 +99,14 @@ export const ROOMS = [
   },
   {
     id: 3,
+    baseName: "Luxury Sunroom",
+    slug: "luxury-sunroom",
     name: [
       "Limited Period - Luxury Sunroom - CP",
       "Luxury Sunroom - CP"
     ],
     description:
-      "Experience refined comfort with warm sunlight, elegant interiors, and breathtaking mountain–forest views from your private balcony.",
+      "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and lake views.",
     stayIncludes: [
       "Daily Breakfast",
       "In-room refreshments",
@@ -139,12 +145,14 @@ export const ROOMS = [
   },
   {
     id: 4,
+    baseName: "Forest Private Pool Room",
+    slug: "forest-private-pool-room",
     name: [
       "Limited Period - Forest Private Pool - CP",
       "Forest Private Pool - CP"
     ],
     description:
-      "A premium escape featuring your own private pool facing untouched forest views. Designed for ultimate privacy, comfort, and luxury.",
+      "The Forest Room – Private Pool offers a sublime blend of privacy, nature, and luxury. Featuring a king-size bed, modern comforts, and a private pool on the balcony — perfect for two adults (plus one child).",
     stayIncludes: [
       "Daily Breakfast",
       "In-room refreshments",
@@ -185,12 +193,20 @@ export const ROOMS = [
 // Helper function to find room data by name
 export const findRoomByName = (roomName) => {
   if (!roomName) return null;
-  
+
+  const query = roomName.toLowerCase();
+
   return ROOMS.find((room) => {
-    return room.name.some((name) => 
-      roomName.toLowerCase().includes(name.toLowerCase()) ||
-      name.toLowerCase().includes(roomName.toLowerCase())
-    );
+    const candidates = [
+      ...(room.name || []),
+      room.baseName,
+      room.slug,
+    ].filter(Boolean);
+
+    return candidates.some((candidate) => {
+      const value = candidate.toLowerCase();
+      return query.includes(value) || value.includes(query);
+    });
   });
 };
 

@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { FiCalendar, FiUser, FiVolumeX, FiVolume2 } from "react-icons/fi";
+import { FiCalendar, FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { FiVolumeX, FiVolume2 } from "react-icons/fi";
 const Hero = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ const Hero = () => {
   const checkInRef = useRef(null);
   const checkOutRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
+  
 
   const openDate = (ref) => {
     if (ref?.current) {
@@ -70,26 +72,27 @@ const Hero = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Audio Toggle */}
-      <button
-        onClick={() => setIsMuted((prev) => !prev)}
-        className="absolute bottom-5 right-6 z-20 bg-black/50 text-white rounded-full p-3 backdrop-blur-sm transition hover:bg-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        aria-label={isMuted ? "Unmute background video" : "Mute background video"}
-      >
-        {isMuted ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
-      </button>
-
       {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        playsInline
-        muted={isMuted}
-        className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      
+
+
+<button
+  onClick={() => setIsMuted((prev) => !prev)}
+  className="absolute bottom-5 right-6 z-20 bg-black/50 text-white rounded-full p-3"
+  aria-label={isMuted ? "Unmute video" : "Mute video"}
+>
+  {isMuted ? <FiVolumeX /> : <FiVolume2 />}
+</button>
+
+<video
+  autoPlay
+  loop
+  playsInline
+  muted={isMuted}
+  className="absolute inset-0 w-full h-full object-cover"
+>
+  <source src="/hero2.mp4" type="video/mp4" />
+</video>
 
       {/* Gradient Overlay - lighter to show more of the video */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />

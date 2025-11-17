@@ -2,23 +2,51 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import roomsData from "../Data/roomsdata.json";
-import { BsPerson, BsPersonFill } from "react-icons/bs";
-import { IoBedOutline } from "react-icons/io5";
-import { BiExpand } from "react-icons/bi";
+import { 
+  FiCoffee,
+  FiCalendar,
+  FiSun,
+  FiWind,
+  FiDroplet,
+  FiStar,
+  FiFeather,
+  FiGift
+} from "react-icons/fi";
+import { 
+  MdOutlineFastfood,
+  MdOutlineDirectionsCar,
+  MdOutlinePark,
+  MdOutlineBathtub,
+  MdOutlineShower,
+  MdOutlinePool,
+  MdOutlineCheckroom,
+  MdOutlineCountertops
+} from "react-icons/md";
+
+
 
 const Rooms = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [originalRoomTab, setOriginalRoomTab] = useState(null); // Track the room from Availability
+  const [originalRoomTab, setOriginalRoomTab] = useState(null);
 
-  // Get data passed from Availability page
-  const { room: backendRoom, searchData } = location.state || {};
+  const {
+    room: backendRoom,
+    searchData,
+    selectedRoomName,
+    selectedRoomSlug,
+  } = location.state || {};
 
   const rooms = roomsData.ResortRooms;
 
-  // Parse image arrays properly (handle comma-separated strings)
+  const slugify = (value = "") =>
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
   const parseImages = (imageData) => {
     if (Array.isArray(imageData)) {
       return imageData.flatMap((img) =>
@@ -28,10 +56,31 @@ const Rooms = () => {
     return [];
   };
 
+  // Icon mapping function
+  const getAmenityIcon = (amenity) => {
+    const amenityLower = amenity.toLowerCase();
+    
+    if (amenityLower.includes("breakfast")) return <MdOutlineFastfood className="w-5 h-5" />;
+    if (amenityLower.includes("refreshment") || amenityLower.includes("coffee")) return <FiCoffee className="w-5 h-5" />;
+    if (amenityLower.includes("transfer") || amenityLower.includes("car")) return <MdOutlineDirectionsCar className="w-5 h-5" />;
+    if (amenityLower.includes("forest") || amenityLower.includes("trail")) return <MdOutlinePark className="w-5 h-5" />;
+    if (amenityLower.includes("bathtub") || amenityLower.includes("bath")) return <MdOutlineBathtub className="w-5 h-5" />;
+    if (amenityLower.includes("pool") || amenityLower.includes("swim")) return <MdOutlinePool className="w-5 h-5" />;
+    if (amenityLower.includes("shower")) return <MdOutlineShower className="w-5 h-5" />;
+    if (amenityLower.includes("air") || amenityLower.includes("conditioning")) return <FiWind className="w-5 h-5" />;
+    if (amenityLower.includes("amenities") || amenityLower.includes("premium")) return <FiStar className="w-5 h-5" />;
+    if (amenityLower.includes("towel") || amenityLower.includes("robe")) return <MdOutlineCheckroom className="w-5 h-5" />;
+    if (amenityLower.includes("mirror") || amenityLower.includes("vanity")) return <MdOutlineCountertops className="w-5 h-5" />;
+    if (amenityLower.includes("hot") || amenityLower.includes("water")) return <FiDroplet className="w-5 h-5" />;
+    if (amenityLower.includes("view") || amenityLower.includes("outdoor")) return <FiSun className="w-5 h-5" />;
+    if (amenityLower.includes("hair") || amenityLower.includes("dryer")) return <FiFeather className="w-5 h-5" />;
+    
+    return <FiGift className="w-5 h-5" />;
+  };
+
   const currentRoom = rooms[activeTab];
   const images = parseImages(currentRoom.image);
 
-  // Map backend room name to static room tab
   useEffect(() => {
     if (backendRoom && backendRoom.Room_Name) {
       const roomName = backendRoom.Room_Name.toLowerCase();
@@ -40,12 +89,30 @@ const Rooms = () => {
       );
       if (tabIndex !== -1) {
         setActiveTab(tabIndex);
-        setOriginalRoomTab(tabIndex); // Save the original room tab index
+        setOriginalRoomTab(tabIndex);
+      }
+      return;
+    }
+
+    const targetSlug =
+      selectedRoomSlug ||
+      (selectedRoomName ? slugify(selectedRoomName) : null);
+
+    if (targetSlug) {
+      const tabIndex = rooms.findIndex((r) => {
+        const roomSlug = r.slug || slugify(r.name);
+        if (roomSlug === targetSlug) return true;
+        if (selectedRoomName) {
+          return r.name.toLowerCase() === selectedRoomName.toLowerCase();
+        }
+        return false;
+      });
+      if (tabIndex !== -1) {
+        setActiveTab(tabIndex);
       }
     }
-  }, [backendRoom]);
+  }, [backendRoom, rooms, selectedRoomName, selectedRoomSlug]);
 
-  // Reset image index when tab changes
   useEffect(() => {
     setCurrentImageIndex(0);
   }, [activeTab]);
@@ -58,14 +125,12 @@ const Rooms = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
-  // Get price based on room type - use backend data if available
   const getRoomPrice = () => {
     if (backendRoom && backendRoom.room_rates_info) {
       return `${
         backendRoom.currency_sign
       }${backendRoom.room_rates_info.avg_per_night_after_discount?.toLocaleString()}`;
     }
-    // Fallback to static prices
     const roomName = currentRoom.name;
     if (roomName.includes("Luxury")) return "$35,4400";
     if (roomName.includes("Classic")) return "$544,850/-";
@@ -74,14 +139,11 @@ const Rooms = () => {
     return "$544,950/-";
   };
 
-  // Handle booking - redirect to booking page with backend data
   const handleBookNow = () => {
-    // Check if current tab is the original room from Availability
     const isOriginalRoom =
       originalRoomTab !== null && activeTab === originalRoomTab;
 
     if (backendRoom && searchData && isOriginalRoom) {
-      // User is on the correct room tab - book it
       navigate("/booking", {
         state: {
           room: backendRoom,
@@ -89,23 +151,20 @@ const Rooms = () => {
         },
       });
     } else if (backendRoom && searchData) {
-      // User is exploring other rooms but came from Availability - go back to Availability
       navigate("/booking", {
         state: {
           searchData: searchData,
         },
       });
     } else {
-      // User came directly - redirect to home to search first
       navigate("/booking", {
         state: {
-          suggestedRoom: currentRoom.name, // Suggest this room in search
+          suggestedRoom: currentRoom.name,
         },
       });
     }
   };
 
-  // Check if current tab is the available room from backend
   const isCurrentRoomAvailable = () => {
     return originalRoomTab !== null && activeTab === originalRoomTab;
   };
@@ -115,7 +174,6 @@ const Rooms = () => {
       {/* Header Section */}
       <div className="border-b">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
-          {/* Back button if came from Availability */}
           {backendRoom && searchData && (
             <button
               onClick={() => navigate(-1)}
@@ -157,16 +215,15 @@ const Rooms = () => {
               key={index}
               onClick={() => setActiveTab(index)}
               className={`
-                relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-2  flex-shrink-0
+                relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-2 flex-shrink-0
                 ${
                   activeTab === index
-                    ? "border-gray-800 text-gray-900 "
+                    ? "border-gray-800 text-gray-900"
                     : "border-transparent text-gray-600 hover:text-gray-900"
                 }
               `}
             >
               {room.name}
-              {/* Green dot indicator for available room */}
               {originalRoomTab === index && (
                 <span className="absolute top-0.5 sm:top-1 -right-0.5 sm:-right-1 flex h-2.5 w-2.5 sm:h-3 sm:w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -185,7 +242,6 @@ const Rooms = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className=""
           >
             {/* Availability Notice Banner */}
             {backendRoom && !isCurrentRoomAvailable() && (
@@ -306,46 +362,50 @@ const Rooms = () => {
                 {currentRoom.description}
               </p>
             </div>
-            <div className="bg-white shadow-sm rounded-lg">
-              {/* Room Details Grid */}
-              
 
-              {/* Amenities Section */}
-              <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-4 sm:py-6 md:py-8 border-b border-gray-200">
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3 sm:mb-4">
-                  Amenities:
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
-                  {currentRoom.room_exclusive_features.map((feature, index) => (
-                    <div key={index} className="flex items-start gap-2">
-                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
-                    </div>
-                  ))}
-                  {currentRoom.all_stays_include.map((item, index) => (
-                    <div
-                      key={`stay-${index}`}
-                      className="flex items-start gap-2"
-                    >
-                      <span className="text-gray-700 text-xs sm:text-sm">{item}</span>
-                    </div>
-                  ))}
-                  {currentRoom.bath_and_wellness &&
-                    currentRoom.bath_and_wellness.map((item, index) => (
-                      <div
-                        key={`bath-${index}`}
-                        className="flex items-start gap-2"
-                      >
-                        <span className="text-gray-700 text-xs sm:text-sm">{item}</span>
+            <div className="bg-white shadow-sm rounded-lg">
+              {/* Your Stays Include Section */}
+              {currentRoom.your_stays_include && currentRoom.your_stays_include.length > 0 && (
+                <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8 border-b border-gray-200">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6 text-center">
+                    Your Stay Includes
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {currentRoom.your_stays_include.map((item, index) => (
+                      <div key={index} className="flex flex-col items-center text-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                          {getAmenityIcon(item)}
+                        </div>
+                        <span className="text-xs text-gray-700 leading-tight">{item}</span>
                       </div>
                     ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Bath and Wellness Section */}
+              {currentRoom.bath_and_wellness && currentRoom.bath_and_wellness.length > 0 && (
+                <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8 border-b border-gray-200">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6 text-center">
+                    Bath & Wellness
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {currentRoom.bath_and_wellness.map((item, index) => (
+                      <div key={index} className="flex flex-col items-center text-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                          {getAmenityIcon(item)}
+                        </div>
+                        <span className="text-xs text-gray-700 leading-tight">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Pricing and Book Now Section */}
               <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-4 sm:py-6 md:py-8">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
                   <div className="text-center md:text-left">
-                    {/* Only show pricing if it's the available room from backend */}
                     {isCurrentRoomAvailable() &&
                       backendRoom &&
                       backendRoom.room_rates_info && (
@@ -361,7 +421,6 @@ const Rooms = () => {
                           </p>
                         </>
                       )}
-                    {/* Message for rooms being explored */}
                     {!isCurrentRoomAvailable() && backendRoom && (
                       <p className="text-xs sm:text-sm text-gray-600 italic">
                         Check availability for current pricing
@@ -385,8 +444,6 @@ const Rooms = () => {
             </div>
           </motion.div>
         </AnimatePresence>
-
-        
       </div>
     </div>
   );

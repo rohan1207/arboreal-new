@@ -76,6 +76,19 @@ const UnifiedBooking = () => {
     { icon: <FiAirplay />, name: "TV" },
   ];
 
+  const sanitizeRoomName = (value = "") =>
+    value
+      .replace(/limited period\s*-\s*/i, "")
+      .replace(/\s*-\s*(cp|map|ep)\s*$/i, "")
+      .replace(/\s*-\s*plan.*$/i, "")
+      .trim();
+
+  const slugifyRoomName = (value = "") =>
+    sanitizeRoomName(value)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
   // Calendar helpers
   const normalize = (d) => {
     if (!d) return null;
@@ -265,6 +278,17 @@ const UnifiedBooking = () => {
     });
 
     setCurrentStep(3); // Move to personal info
+  };
+
+  const handleRoomNameClick = (roomName, roomSlug) => {
+    if (!roomName) return;
+    const canonicalName = sanitizeRoomName(roomName);
+    navigate("/rooms", {
+      state: {
+        selectedRoomName: canonicalName,
+        selectedRoomSlug: roomSlug || slugifyRoomName(canonicalName),
+      },
+    });
   };
 
   // Step 3: Personal Info validation
@@ -1415,10 +1439,17 @@ const UnifiedBooking = () => {
                 </p>
                 <div className="space-y-4">
                   {availableRooms.map((room, index) => {
-                    const roomData = findRoomByName(room.Room_Name || room.Roomtype_Name);
+                    const displayName = room.Room_Name || room.Roomtype_Name;
+                    const roomData = findRoomByName(displayName);
                     const roomRates = calculateRoomRates(room);
                     const isRatesExpanded = expandedRates === room.roomrateunkid;
                     const isDetailsExpanded = expandedDetails === room.roomrateunkid;
+                    const canonicalName =
+                      roomData?.baseName ||
+                      sanitizeRoomName(displayName) ||
+                      displayName;
+                    const roomSlug =
+                      roomData?.slug || slugifyRoomName(canonicalName);
                     
                     return (
                       <div key={room.roomrateunkid || index}>
@@ -1459,7 +1490,15 @@ const UnifiedBooking = () => {
                             {/* Details */}
                             <div className="p-4 sm:p-6 lg:p-8">
                               <h3 className="text-xl sm:text-2xl font-serif text-black mb-3">
-                                {room.Room_Name || room.Roomtype_Name}
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleRoomNameClick(canonicalName, roomSlug)
+                                  }
+                                  className="text-left hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                >
+                                  {displayName}
+                                </button>
                               </h3>
                               <p className="text-sm text-gray-600 mb-6">
                                 {roomData?.description || room.Room_Description || "Escape to luxury and comfort."}

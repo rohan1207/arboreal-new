@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const RoomShowcase = () => {
   const [centerCardIndex, setCenterCardIndex] = useState(0);
@@ -10,6 +11,8 @@ const RoomShowcase = () => {
   {
     id: 1,
     title: "The Classic Sunroom",
+    slug: "classic-sunroom",
+    link: "/rooms/classic-sunroom",
     images: [
       "/Classic_Sunroom_1.jpg",
       "/Classic_Sunroom_2.jpg",
@@ -19,6 +22,7 @@ const RoomShowcase = () => {
   {
     id: 2,
     title: "Forest Bathtub Room",
+    slug: "forest-bathtub-room",
     images: [
       "/Forest_Bathtub_01.jpg",
       "/Forest_Bathtub_02.jpg",
@@ -28,6 +32,7 @@ const RoomShowcase = () => {
   {
     id: 3,
     title: "Forest Private Pool Room",
+    slug: "forest-private-pool-room",
     images: [
       "/Forest_Private_Pool_1.jpg",
       "/Forest_Private_Pool_2.jpg",
@@ -37,6 +42,7 @@ const RoomShowcase = () => {
   {
     id: 4,
     title: "Luxury Sunroom",
+    slug: "luxury-sunroom",
     images: [
       "/Luxury_Sunroom_Arboreal_01.jpg",
       "/Luxury_Sunroom_Arboreal_02.jpg",
@@ -44,8 +50,24 @@ const RoomShowcase = () => {
     ],
   },
 ];
+const navigate = useNavigate();
+const sanitizeRoomName = (name) => {
+  return name.toLowerCase().replace(/ /g, "-");
+};
+const slugifyRoomName = (name) => {
+  return name.toLowerCase().replace(/ /g, "-");
+};
 
-
+const handleRoomNameClick = (roomName, roomSlug) => {
+  if (!roomName) return;
+  const canonicalName = sanitizeRoomName(roomName);
+  navigate("/rooms", {
+    state: {
+      selectedRoomName: canonicalName,
+      selectedRoomSlug: roomSlug || slugifyRoomName(canonicalName),
+    },
+  });
+};
   // Auto-cycle through images for center card
   useEffect(() => {
     const timer = setInterval(() => {
@@ -158,7 +180,7 @@ const RoomShowcase = () => {
                         : 'w-[22%] sm:w-[20%] md:w-[18%] h-[220px] sm:h-[270px] md:h-[340px]'
                     }`}
                   >
-                    <a href={room.link} className="block w-full h-full">
+                    <a onClick={() => handleRoomNameClick(room.title, room.slug)} className="block w-full h-full">
                       <AnimatePresence mode="wait">
                         <motion.img
                           key={`${room.id}-${currentImageIndex}`}
@@ -184,6 +206,7 @@ const RoomShowcase = () => {
           </div>
 
           {/* Room Title Below Center Card */}
+          <a onClick={() => handleRoomNameClick(rooms[centerCardIndex].title, rooms[centerCardIndex].slug)}>
           <motion.div
             key={`title-${centerCardIndex}`}
             initial={{ opacity: 0, y: 10 }}
@@ -191,10 +214,11 @@ const RoomShowcase = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-center mt-4 sm:mt-5 md:mt-6 lg:mt-8 px-4"
           >
-            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900">
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 hover:cursor-pointer">
               {rooms[centerCardIndex].title}
             </h3>
           </motion.div>
+          </a>
         </div>
 
         {/* Pagination Dots */}
