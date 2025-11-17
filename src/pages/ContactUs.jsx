@@ -349,7 +349,7 @@ const ContactUs = () => {
               luxury amidst nature's tranquility.
             </p>
             <a
-              href="/availability"
+              href="/booking"
               className="inline-block px-8 sm:px-9 md:px-10 py-3 sm:py-3.5 md:py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               Check Availability

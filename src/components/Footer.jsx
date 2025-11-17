@@ -16,14 +16,14 @@ const Footer = () => {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Rooms", path: "/rooms" },
-    { name: "Services", path: "/services" },
+    
   ];
 
   const exploreLinks = [
-    { name: "Gallery", path: "/gallery" },
+    { name: "Blogs", path: "/blog" },
     { name: "Contact", path: "/contact" },
-    { name: "Availability", path: "/availability" },
-    { name: "Reservation", path: "/reservation" },
+    { name: "Availability", path: "/booking" },
+    
   ];
 
   const fadeInUp = {
@@ -212,7 +212,7 @@ const Footer = () => {
               © {new Date().getFullYear()} Arboreal Resort. All rights reserved.
               Crafted with love.
             </p>
-            <div className="flex items-center gap-4 sm:gap-6 text-xs flex-wrap justify-center">
+            {/* <div className="flex items-center gap-4 sm:gap-6 text-xs flex-wrap justify-center">
               <Link
                 to="/privacy-policy"
                 className="text-gray-500 hover:text-gray-900 transition-colors duration-300 font-light"
@@ -233,7 +233,7 @@ const Footer = () => {
               >
                 Sitemap
               </Link>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>

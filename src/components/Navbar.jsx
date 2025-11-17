@@ -273,7 +273,7 @@ const Navbar = () => {
               >
                 <div className="flex justify-center space-x-8">
                   <motion.a
-                    href="#"
+                    href="https://www.facebook.com/people/The-Arboreal-Resort/100083284368649/"
                     whileHover={{ scale: 1.1, y: -2 }}
                     className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
                   >
@@ -287,7 +287,7 @@ const Navbar = () => {
                     </svg>
                   </motion.a>
                   <motion.a
-                    href="#"
+                    href="https://www.instagram.com/arborealresort/"
                     whileHover={{ scale: 1.1, y: -2 }}
                     className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
                   >
