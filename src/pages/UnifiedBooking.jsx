@@ -369,20 +369,41 @@ const UnifiedBooking = () => {
       );
     }
 
-    // Get base rate - Use the ACTUAL SELLING PRICE from exclusive_tax
-    const firstDateExclusiveTax = Object.values(selectedRoom.room_rates_info?.exclusive_tax || {})[0];
-    const baseRate = String(
-      Math.round(parseFloat(firstDateExclusiveTax ?? "0"))
+    // Helper to build nightly rate strings (comma separated) as required by eZee for multiple nights
+    const buildNightlyRateString = (rateInfo) => {
+      const exclusiveRates = rateInfo?.exclusive_tax || {};
+      const fallbackRate =
+        Object.values(exclusiveRates)[0] ??
+        rateInfo?.rack_rate ??
+        0;
+
+      const nights = bookingDetails?.nights || calculateNights();
+      const checkIn = new Date(bookingDetails.checkIn);
+
+      const nightlyRates = [];
+      for (let i = 0; i < nights; i++) {
+        const date = new Date(checkIn);
+        date.setDate(checkIn.getDate() + i);
+        const dateKey = formatDateForAPI(date);
+        const nightlyRateValue =
+          exclusiveRates[dateKey] !== undefined
+            ? exclusiveRates[dateKey]
+            : fallbackRate;
+        nightlyRates.push(
+          String(Math.round(parseFloat(nightlyRateValue ?? 0)))
+        );
+      }
+
+      return nightlyRates.join(", ");
+    };
+
+    // Build nightly rate strings for base, extra adult, and extra child
+    const baseRate = buildNightlyRateString(selectedRoom.room_rates_info);
+    const extraAdultRate = buildNightlyRateString(
+      selectedRoom.extra_adult_rates_info
     );
-    
-    const firstDateExtraAdultTax = Object.values(selectedRoom.extra_adult_rates_info?.exclusive_tax || {})[0];
-    const extraAdultRate = String(
-      Math.round(parseFloat(firstDateExtraAdultTax ?? "0"))
-    );
-    
-    const firstDateExtraChildTax = Object.values(selectedRoom.extra_child_rates_info?.exclusive_tax || {})[0];
-    const extraChildRate = String(
-      Math.round(parseFloat(firstDateExtraChildTax ?? "0"))
+    const extraChildRate = buildNightlyRateString(
+      selectedRoom.extra_child_rates_info
     );
 
     const roomDetails = {
