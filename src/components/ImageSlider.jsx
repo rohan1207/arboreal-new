@@ -8,22 +8,31 @@ const ImageSlider = () => {
   const [viewportWidth, setViewportWidth] = useState(0);
 
   const images = [
-    { src: '/slider1.jpg', alt: 'Resort view 1' },
-    { src: '/slider2.png', alt: 'Resort view 2' },
-    { src: '/slider3.jpg', alt: 'Resort view 3' },
-    { src: '/slider4.png', alt: 'Resort view 4' },
-    { src: '/slider5.webp', alt: 'Resort view 5' },
-    { src: '/slider6.png', alt: 'Resort view 6' },
-    { src: '/slider7.png', alt: 'Resort view 7' },
-    { src: '/slider8.png', alt: 'Resort view 8' },
-    { src: '/slider9.png', alt: 'Resort view 9' },
-    { src: '/slider10.png', alt: 'Resort view 10' },
-    { src: '/slider11.jpg', alt: 'Resort view 11' },
-    { src: '/slider12.png', alt: 'Resort view 12' },
-    { src: '/slider13.png', alt: 'Resort view 13' },
-    { src: '/slider14.png', alt: 'Resort view 14' },
     
-    { src: '/slider16.png', alt: 'Resort view 16' }
+    { src: '/slider5.webp', alt: 'Resort view 5' },
+    { src: '/slider6.webp', alt: 'Resort view 6' },
+    { src: '/slider7.webp', alt: 'Resort view 7' },
+    { src: '/slider8.webp', alt: 'Resort view 8' },
+    { src: '/slider9.webp', alt: 'Resort view 9' },
+    { src: '/slider10.webp', alt: 'Resort view 10' },
+    { src: '/slider11.webp', alt: 'Resort view 11' },
+    { src: '/slider12.webp', alt: 'Resort view 12' },
+    { src: '/slider13.webp', alt: 'Resort view 13' },
+    { src: '/slider14.webp', alt: 'Resort view 14' },
+    { src: '/slider15.webp', alt: 'Resort view 15' },
+    { src: '/slider16.webp', alt: 'Resort view 16' },
+    { src: '/slider17.webp', alt: 'Resort view 17' },
+    { src: '/slider18.webp', alt: 'Resort view 18' },
+    { src: '/slider19.webp', alt: 'Resort view 19' },
+    { src: '/slider20.webp', alt: 'Resort view 20' },
+    { src: '/slider21.webp', alt: 'Resort view 21' },
+    { src: '/slider22.webp', alt: 'Resort view 22' },
+    { src: '/slider23.webp', alt: 'Resort view 23' },
+    { src: '/slider24.webp', alt: 'Resort view 24' },
+    { src: '/slider25.webp', alt: 'Resort view 25' },
+    { src: '/slider26.webp', alt: 'Resort view 26' },
+    
+
   ];
 
   // Calculate dimensions

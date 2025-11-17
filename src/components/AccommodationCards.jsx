@@ -6,7 +6,7 @@ const AccommodationCards = () => {
   const accommodations = [
     {
       id: 1,
-      image: "/slider1.jpg",
+      image: "/ac2.webp",
       category: "ACCOMMODATION",
       title: "The Tree-House Resort",
       description:
