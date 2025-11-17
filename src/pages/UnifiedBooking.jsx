@@ -13,7 +13,7 @@ import {
   FiAirplay,
   FiX,
 } from "react-icons/fi";
-import { ROOMS, findRoomByName } from "../Data/Rooms";
+import { ROOMS, findRoomByName } from "../Data/rooms";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
@@ -1480,7 +1480,7 @@ const UnifiedBooking = () => {
                                 {/* View Rates Button */}
                                 <button
                                   onClick={() => toggleRatesCard(room.roomrateunkid, `rates-${room.roomrateunkid}`)}
-                                  className="w-full sm:w-[180px] px-6 py-3 bg-black hover:bg-gray-800 text-white text-sm uppercase tracking-wider transition-all duration-300 font-medium rounded-full text-center"
+                                  className="w-full sm:w-[250px] px-6 py-3 bg-black hover:bg-gray-800 text-white text-sm uppercase tracking-wider transition-all duration-300 font-medium rounded-full text-center"
                                 >
                                   {isRatesExpanded ? "Hide rates" : "View Rates & Offers"}
                                 </button>
@@ -1509,7 +1509,7 @@ const UnifiedBooking = () => {
                               <div className="text-center sm:text-right">
                                 <button
                                   onClick={() => toggleDetailsCard(room.roomrateunkid, `details-${room.roomrateunkid}`)}
-                                  className="text-xs sm:text-sm text-gray-700 hover:text-black underline"
+                                  className=" text-xs sm:text-sm text-gray-700 hover:text-black underline"
                                 >
                                   {isDetailsExpanded ? "Additional Details ↑" : "Additional Details ↓"}
                                 </button>
@@ -1523,15 +1523,15 @@ const UnifiedBooking = () => {
                        {isRatesExpanded && (
   <motion.div
     id={`rates-${room.roomrateunkid}`}
-    initial={{ opacity: 0, height: 0 }}
-    animate={{ opacity: 1, height: "auto" }}
+    initial={{ opacity: 0, height: 0 } }
+    animate={{ opacity: 1, height: "auto" } }
     exit={{ opacity: 0, height: 0 }}
     className="bg-white border border-gray-200 rounded-b-lg overflow-hidden mt-6 sm:mt-8 rounded-md"
   >
     <div className="p-4 sm:p-6">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
+      <div className="flex flex-col  lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-6">
         {/* Stay Includes */}
-        <div className="w-full lg:max-w-md">
+        <div className="w-full lg:max-w-md ">
           <h4 className="text-base font-semibold mb-3">Standard Daily Rate</h4>
           <p className="text-sm font-medium text-gray-600 mb-2">The stay includes:</p>
           <ul className="space-y-2 text-sm text-gray-700">
