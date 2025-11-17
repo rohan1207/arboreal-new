@@ -125,11 +125,11 @@ const BlogPage = () => {
             className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8"
           >
             {/* Display first 4 blogs or all blogs based on showAll state */}
-            {(showAll ? blogs : blogs.slice(0, 4)).map((blog, index) => (
+            {(showAll ? blogs : blogs.slice(0, 5)).map((blog, index) => (
               <motion.article
                 key={blog.id}
                 variants={itemVariants}
-                className={`group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl ${
+                className={`group relative overflow-hidden bg-transperent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl ${
                   // On larger screens, make blog 4 span 2 columns
                   !showAll && index === 3 && 'md:col-span-2 lg:col-span-2'
                 }`}
@@ -152,7 +152,7 @@ const BlogPage = () => {
                   </Link>
                   {/* Category Badge */}
                   <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                    <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/90 backdrop-blur-sm text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
+                    <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-transperent/90 backdrop-blur-sm text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
                       {blog.category}
                     </span>
                   </div>
@@ -227,7 +227,7 @@ const BlogPage = () => {
         </div>
       </section>
 
-      {/* Newsletter CTA Section */}
+      {/* Newsletter CTA Section
       <section className="py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20 px-4 sm:px-6 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
@@ -247,18 +247,18 @@ const BlogPage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 bg-white/10 border border-white/20 rounded-full text-sm sm:text-base text-white placeholder-gray-400 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300"
+                className="flex-1 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 bg-transperent/10 border border-white/20 rounded-full text-sm sm:text-base text-white placeholder-gray-400 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300"
               />
               <button
                 type="submit"
-                className="px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 bg-white text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-xs sm:text-sm uppercase tracking-wider whitespace-nowrap shadow-lg hover:shadow-xl"
+                className="px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 bg-transperent text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-300 font-light text-xs sm:text-sm uppercase tracking-wider whitespace-nowrap shadow-lg hover:shadow-xl"
               >
                 Subscribe
               </button>
             </form>
           </motion.div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

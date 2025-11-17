@@ -86,21 +86,21 @@ const Navbar = () => {
               >
                 <motion.span
                   className={`w-6 h-0.5 rounded-full transition-all duration-700 ${
-                    isScrolled ? "bg-white" : "bg-white/90"
+                    isScrolled ? "bg-white" : "bg-black"
                   } group-hover:bg-gray-400`}
                   animate={isOpen ? { rotate: 45, y: 3 } : { rotate: 0, y: 0 }}
                   transition={{ duration: 0.3 }}
                 />
                 <motion.span
                   className={`w-6 h-0.5 rounded-full mt-1.5 transition-all duration-700 ${
-                    isScrolled ? "bg-white" : "bg-white/90"
+                    isScrolled ? "bg-white" : "bg-black"
                   } group-hover:bg-gray-400`}
                   animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
                   className={`w-6 h-0.5 rounded-full mt-1.5 transition-all duration-700 ${
-                    isScrolled ? "bg-white" : "bg-white/90"
+                    isScrolled ? "bg-white" : "bg-black"
                   } group-hover:bg-gray-400`}
                   animate={
                     isOpen ? { rotate: -45, y: -3 } : { rotate: 0, y: 0 }
@@ -112,8 +112,8 @@ const Navbar = () => {
               <button
                 onClick={() => setIsOpen(true)}
                 className={`hidden sm:block text-sm lg:text-base tracking-normal transition-all duration-700 ${
-                  isScrolled ? "text-white" : "text-white/95"
-                } hover:text-gray-300`}
+                  isScrolled ? "text-white" : "text-black"
+                } hover:text-gray-500`}
               >
                 Menu
               </button>
@@ -127,7 +127,7 @@ const Navbar = () => {
                   className="cursor-pointer"
                 >
                   <img
-                    src="/logo.png"
+                    src={isScrolled ? "/logo.png" : "/blacklogo.png"}
                     alt="Arboreal Resort"
                     className="h-16 lg:h-24 w-auto object-contain"
                   />
@@ -138,11 +138,11 @@ const Navbar = () => {
             {/* Right: Book Now Button */}
             <div className="flex items-center">
               <Link
-                to="/contact"
+                to="/booking"
                 className={`px-6 lg:px-8 py-2.5 lg:py-3 rounded-full text-sm lg:text-base font-medium transition-all duration-700 ${
                   isScrolled
-                    ? "bg-white text-gray-900 hover:bg-gray-100"
-                    : "bg-white/95 text-gray-900 hover:bg-white backdrop-blur-sm"
+                    ? "bg-white text-black hover:bg-gray-100"
+                    : "bg-black text-white hover:bg-gray-800"
                 } hover:shadow-xl transform hover:scale-105`}
               >
                 Reserve

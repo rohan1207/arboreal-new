@@ -16,6 +16,7 @@ import BlogDetail from "./pages/BlogDetail";
 import BookingForm from "./pages/BookingForm";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import ScrollToTop from "./components/ScrollToTop";
+import UnifiedBooking from "./pages/UnifiedBooking";
 
 // New Booking Flow Pages
 import BookingCalendar from "./pages/NewBooking/BookingCalendar";
@@ -39,6 +40,9 @@ const App = () => {
           <Route path="/services" element={<Home />} />
           <Route path="/availability" element={<Availability />} />
 
+          {/* Unified Booking Route */}
+          <Route path="/booking" element={<UnifiedBooking />} />
+
           {/* New Booking Flow Routes */}
           <Route path="/booking/calendar" element={<BookingCalendar />} />
           <Route
@@ -49,7 +53,7 @@ const App = () => {
           <Route path="/booking/payment" element={<BookingPayment />} />
 
           {/* Old booking routes (kept for backward compatibility) */}
-          <Route path="/booking" element={<BookingForm />} />
+          <Route path="/booking-old" element={<BookingForm />} />
           <Route
             path="/booking-confirmation"
             element={<BookingConfirmation />}

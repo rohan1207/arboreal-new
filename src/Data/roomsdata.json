@@ -4,11 +4,7 @@
       "name": "Classic Sunroom",
       "image": ["Classic_Sunroom_1.jpg, Classic_Sunroom_2.jpg, Classic_Sunroom_3.jpg, Classic_Sunroom_4.jpg, Classic_Sunroom_5.jpg, Classic_Sunroom_6.jpg"],
       "description": "Bathed in soft daylight and surrounded by the whisper of trees, the Classic Sunroom is where nature and quiet refinement meet. Large glass walls frame the forest like a living painting, flooding the space with golden morning light. Handcrafted wooden furniture, warm earthy tones, and southern yellow pine flooring create an atmosphere that feels timeless — serene yet full of quiet vitality.",
-      "details": {
-        "area": "30 square meters (322 square feet)",
-        "capacity": "Up to 2 guests",
-        "special": "Cozy reading corner and private sit-out"
-      },
+      
       "experience": "Invite slow mornings with coffee and birdsong, while evenings glow in amber hues as the sun slips beyond the mountain. Here, luxury is measured not in extravagance, but in stillness — a space that feels alive with light, scent, and silence.",
       "all_stays_include": [
         "Daily breakfast",
@@ -28,10 +24,7 @@
       "name": "Forest Bathtub Room",
       "image": ["Forest_Bathtub_01.jpg", "Forest_Bathtub_02.jpg", "Forest_Bathtub_03.jpg", "Forest_Bathtub_04.jpg", "Forest_Bathtub_05.jpg", "Forest_Bathtub_06.jpg", "Forest_Bathtub_07.jpg"],
       "description": "Hidden deep within the green expanse of The Arboreal Resort, the Forest Bathtub Room invites you to experience pure immersion in nature. Crafted entirely in warm pinewood and framed by sweeping glass windows, the room opens into dense foliage, blending the calm of natural light with the elegance of handcrafted interiors.",
-      "details": {
-        "area": "55 square meters (600 square feet)",
-        "capacity": "Ideal for 2 guests with additional 2"
-      },
+     
       "signature_feature": "Private outdoor bathtub tucked along the forest edge",
       "experience": "Bathe under drifting clouds, surrounded by birdsong and the scent of rain on leaves. Inside, rustic textures meet refined comfort with a canopy bed, vintage furnishings, and a softly lit lounge that feels both intimate and expansive.",
       "all_stays_include": [
@@ -57,10 +50,7 @@
       "name": "Luxury Sunroom",
       "image": ["Luxury_Sunroom_Arboreal_01.jpg", "Luxury_Sunroom_Arboreal_02.jpg", "Luxury_Sunroom_Arboreal_03.jpg", "Luxury_Sunroom_Arboreal_04.jpg", "Luxury_Sunroom_Arboreal_05.jpg", "Luxury_Sunroom_Arboreal_06.jpg", "Luxury_Sunroom_Arboreal_07.jpg", "Luxury_Sunroom_Arboreal_08.jpg"],
       "description": "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and lake views.",
-      "details": {
-        "area": "55 square meters (600 square feet)",
-        "capacity": "Ideal for 2 guests with additional 2"
-      },
+     
       "experience": "Step out onto your private balcony to breathe in earthy air as daylight dances upon the hillsides. Every detail is considered — from air conditioning and handcrafted furnishings to modern amenities — ensuring a deeply soothing stay.",
       "all_stays_include": [
         "Daily breakfast",
@@ -92,10 +82,7 @@
       "name": "Forest Private Pool Room",
       "image": ["Forest_Private_Pool_1.jpg", "Forest_Private_Pool_2.jpg", "Forest_Private_Pool_3.jpg", "Forest_Private_Pool_4.jpg", "Forest_Private_Pool_5.jpg", "Forest_Private_Pool_6.jpg, Forest_Private_Pool_7.jpg, Forest_Private_Pool_8.jpg"],
       "description": "The Forest Room – Private Pool offers a sublime blend of privacy, nature, and luxury. Featuring a king-size bed, modern comforts, and a private pool on the balcony — perfect for two adults (plus one child).",
-      "details": {
-        "area": "60 square meters (650 square feet)",
-        "capacity": "2 adults + 1 child"
-      },
+      
       "experience": "Awaken to forest views through wide glass openings and step out into your own balcony-pool sanctuary. Lounge by the water, swim beneath open sky, and listen to wind in the branches — an experience of calm, undisturbed.",
       "all_stays_include": [
         "Daily breakfast",

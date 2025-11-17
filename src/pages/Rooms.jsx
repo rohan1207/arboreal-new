@@ -82,7 +82,7 @@ const Rooms = () => {
 
     if (backendRoom && searchData && isOriginalRoom) {
       // User is on the correct room tab - book it
-      navigate("/booking/calendar", {
+      navigate("/booking", {
         state: {
           room: backendRoom,
           searchData: searchData,
@@ -90,14 +90,14 @@ const Rooms = () => {
       });
     } else if (backendRoom && searchData) {
       // User is exploring other rooms but came from Availability - go back to Availability
-      navigate("/availability", {
+      navigate("/booking", {
         state: {
           searchData: searchData,
         },
       });
     } else {
       // User came directly - redirect to home to search first
-      navigate("/", {
+      navigate("/booking", {
         state: {
           suggestedRoom: currentRoom.name, // Suggest this room in search
         },
@@ -157,11 +157,11 @@ const Rooms = () => {
               key={index}
               onClick={() => setActiveTab(index)}
               className={`
-                relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-4 rounded-full flex-shrink-0
+                relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-2  flex-shrink-0
                 ${
                   activeTab === index
-                    ? "border-gray-800 text-gray-900 bg-white"
-                    : "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    ? "border-gray-800 text-gray-900 "
+                    : "border-transparent text-gray-600 hover:text-gray-900"
                 }
               `}
             >
@@ -308,47 +308,7 @@ const Rooms = () => {
             </div>
             <div className="bg-white shadow-sm rounded-lg">
               {/* Room Details Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-4 sm:py-6 md:py-8 border-b border-gray-200">
-                {/* Adults */}
-                <div className="flex items-start gap-2 sm:gap-3">
-                  <BsPersonFill className="text-lg sm:text-xl md:text-2xl text-gray-700 mt-1" />
-                  <div>
-                    <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Adults:</p>
-                    <p className="text-sm font-medium text-gray-900">2</p>
-                  </div>
-                </div>
-
-                {/* Children */}
-                <div className="flex items-start gap-2 sm:gap-3">
-                  <BsPerson className="text-lg sm:text-xl md:text-2xl text-gray-700 mt-1" />
-                  <div>
-                    <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Children:</p>
-                    <p className="text-sm font-medium text-gray-900">1</p>
-                  </div>
-                </div>
-
-                {/* Bed Type */}
-                <div className="flex items-start gap-2 sm:gap-3">
-                  <IoBedOutline className="text-lg sm:text-xl md:text-2xl text-gray-700 mt-1" />
-                  <div>
-                    <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Bed Type:</p>
-                    <p className="text-sm font-medium text-gray-900">
-                      Double Bed
-                    </p>
-                  </div>
-                </div>
-
-                {/* Size */}
-                <div className="flex items-start gap-2 sm:gap-3">
-                  <BiExpand className="text-lg sm:text-xl md:text-2xl text-gray-700 mt-1" />
-                  <div>
-                    <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Size:</p>
-                    <p className="text-sm font-medium text-gray-900">
-                      {currentRoom.details.area.split("(")[0].trim()}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              
 
               {/* Amenities Section */}
               <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-4 sm:py-6 md:py-8 border-b border-gray-200">
@@ -426,12 +386,7 @@ const Rooms = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Add Another Room Button */}
-        <div className="mt-6 sm:mt-8 text-center sm:text-right px-2">
-          <button className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline transition-colors duration-300">
-            Add Another Room
-          </button>
-        </div>
+        
       </div>
     </div>
   );

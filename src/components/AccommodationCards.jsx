@@ -14,7 +14,7 @@ const AccommodationCards = () => {
     },
     {
       id: 2,
-      image: "/slider2.jpg",
+      image: "/ac.png",
       category: "ACCOMMODATION",
       title: "The Amazing Nature",
       description:

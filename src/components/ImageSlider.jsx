@@ -1,210 +1,161 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ImageSlider = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const containerRef = useRef(null);
+  const [totalWidth, setTotalWidth] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   const images = [
-    "/slider1.jpg",
-    "/slider2.jpg",
-    "/slider3.jpg",
-    "/slider4.jpg",
-    "/slider5.jpg",
-    "/slider6.jpg",
-    "/slider7.jpg",
+    { src: '/slider1.jpg', alt: 'Resort view 1' },
+    { src: '/slider2.png', alt: 'Resort view 2' },
+    { src: '/slider3.jpg', alt: 'Resort view 3' },
+    { src: '/slider4.png', alt: 'Resort view 4' },
+    { src: '/slider5.webp', alt: 'Resort view 5' },
+    { src: '/slider6.png', alt: 'Resort view 6' },
+    { src: '/slider7.png', alt: 'Resort view 7' },
+    { src: '/slider8.png', alt: 'Resort view 8' },
+    { src: '/slider9.png', alt: 'Resort view 9' },
+    { src: '/slider10.png', alt: 'Resort view 10' },
+    { src: '/slider11.jpg', alt: 'Resort view 11' },
+    { src: '/slider12.png', alt: 'Resort view 12' },
+    { src: '/slider13.png', alt: 'Resort view 13' },
+    { src: '/slider14.png', alt: 'Resort view 14' },
+    { src: '/slider15.png', alt: 'Resort view 15' },
+    { src: '/slider16.png', alt: 'Resort view 16' }
   ];
 
-  // Auto slide every 3 seconds
+  // Calculate dimensions
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setTotalWidth(containerRef.current.scrollWidth);
+        setViewportWidth(window.innerWidth);
+      }
+    };
 
-    return () => clearInterval(timer);
-  }, [images.length]);
-
-  // Get visible images (3 images on mobile: center + 1 on each side, 5 on desktop: center + 2 on each side)
-  const getVisibleImages = () => {
-    const visible = [];
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const range = isMobile ? 1 : 2; // Show 3 images on mobile, 5 on desktop
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
     
-    for (let i = -range; i <= range; i++) {
-      const index = (currentIndex + i + images.length) % images.length;
-      visible.push({
-        src: images[index],
-        position: i,
-        index: index,
+    // Recalculate after images load
+    const timer = setTimeout(updateDimensions, 500);
+
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // Auto-scroll with pause-drag effect
+  useEffect(() => {
+    if (totalWidth === 0 || viewportWidth === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentPosition(prev => {
+        const maxScroll = totalWidth - viewportWidth;
+        const scrollAmount = 400; // Move by 400px each time
+        const nextPosition = prev + scrollAmount;
+        
+        // Only loop back when we've actually reached the end
+        if (nextPosition >= maxScroll) {
+          return 0; // Loop back to start
+        }
+        return nextPosition;
       });
-    }
-    return visible;
+    }, 3000); // 3 second pause
+
+    return () => clearInterval(interval);
+  }, [totalWidth, viewportWidth]);
+
+  const handlePrevious = () => {
+    setCurrentPosition(prev => Math.max(0, prev - 400));
   };
 
-  const visibleImages = getVisibleImages();
+  const handleNext = () => {
+    const maxScroll = totalWidth - viewportWidth;
+    setCurrentPosition(prev => {
+      const nextPos = prev + 400;
+      return nextPos >= maxScroll ? maxScroll : nextPos;
+    });
+  };
 
   return (
-    <section className="relative min-h-screen bg-stone-100 overflow-hidden py-8 sm:py-12 md:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <p className="text-xs tracking-widest text-gray-500 uppercase mb-3 sm:mb-4">
-            Lonavala
-          </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-800 mb-4 sm:mb-5 md:mb-6 tracking-tight px-4">
-            The Arboreal Resort.
-          </h1>
-          <p className="text-sm md:text-base text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-4">
-            A perfect getaway destination in Lonavala for you and your loved
-            ones. Be one with nature and live your best life with us at the
-            Arboreal Resort in Lonavala. A beautiful tree house surrounded by
-            the vast and deep forest, along with the flowing serenity of
-            waterfalls, birds chirping and nature's sounds that gives a perfect
-            experience of a rainforest resort. A Morning at our resort is what
-            anyone should experience with a view from the balcony such as none
-            other, birds chirping, blowing wind, waving trees, that gives you an
-            amazing experience you should ever have.
-          </p>
-        </div>
+    <div className="relative w-full bg-[#f5f3ed] py-16">
+      {/* Text Content */}
+      <div className="max-w-4xl text-gray-700 mx-auto px-8 mb-12 text-center">
+        <h4>LONAVALA</h4>
+        <h2 className="text-2xl text-gray-700 mb-4">The Arboreal Resort</h2>
+        <p className="text-gray-700 leading-relaxed">
+          Nestled within the pristine Amanoi National Park and UNESCO Biosphere Reserve, Amanoi is a natural paradise overlooking Vinh Hy Bay. From its secluded location - a rich and diverse mosaic of ecosystems – the resort's clifftop restaurants and pool, lakeside Aman Spa and private golden sand beach, offer limitless opportunities for outdoor exploration, cultural immersion and serene time out.
+        </p>
+      </div>
 
-        {/* Carousel Container */}
-        <div className="relative h-[300px] sm:h-[350px] md:h-[500px] flex items-center justify-center mt-12 sm:mt-16 md:mt-20">
-          <div className="relative w-full h-full">
-            {visibleImages.map((image) => {
-              const position = image.position;
-              const isCentered = position === 0;
+      {/* Carousel Container */}
+      <div className="relative overflow-hidden">
+        {/* Left Arrow */}
+        <button
+          onClick={handlePrevious}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          aria-label="Previous images"
+        >
+          <ChevronLeft className="w-6 h-6 text-gray-800" />
+        </button>
 
-              // Calculate positioning and styling
-              const getTransform = () => {
-                if (position === 0) return "translate(-50%, -50%)";
-                if (position === -2) return "translate(-50%, -50%)";
-                if (position === -1) return "translate(-50%, -50%)";
-                if (position === 1) return "translate(-50%, -50%)";
-                if (position === 2) return "translate(-50%, -50%)";
-              };
+        {/* Right Arrow */}
+        <button
+          onClick={handleNext}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          aria-label="Next images"
+        >
+          <ChevronRight className="w-6 h-6 text-gray-800" />
+        </button>
 
-              const getLeft = () => {
-                // Mobile positioning (3 images)
-                if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                  if (position === 0) return "50%"; // Center
-                  if (position === -1) return "15%"; // Left
-                  if (position === 1) return "85%"; // Right
-                }
-                // Desktop positioning (5 images)
-                if (position === 0) return "50%"; // Center
-                if (position === -2) return "8%"; // Far left
-                if (position === -1) return "25%"; // Left
-                if (position === 1) return "75%"; // Right
-                if (position === 2) return "92%"; // Far right
-              };
-
-              const getScale = () => {
-                // Mobile scaling
-                if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                  if (position === 0) return "scale(1.1)";
-                  return "scale(0.65)";
-                }
-                // Desktop scaling
-                if (position === 0) return "scale(1.15)";
-                if (position === -1 || position === 1) return "scale(0.75)";
-                return "scale(0.55)";
-              };
-
-              const getOpacity = () => {
-                if (position === 0) return 1;
-                if (position === -1 || position === 1) return 1;
-                return 1;
-              };
-
-              const getZIndex = () => {
-                return 10 - Math.abs(position);
-              };
-
-              const getTop = () => {
-                if (position === 0) return "45%"; // Center elevated
-                return "50%"; // Others at middle
-              };
-
-              const getSize = () => {
-                // Mobile sizes
-                if (typeof window !== 'undefined' && window.innerWidth < 640) {
-                  return { width: "200px", height: "260px" };
-                }
-                if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                  return { width: "220px", height: "280px" };
-                }
-                // Desktop size
-                return { width: "280px", height: "360px" };
-              };
-
-              return (
-                <div
-                  key={`${image.index}-${position}`}
-                  className="absolute transition-all duration-700 ease-in-out cursor-pointer"
-                  style={{
-                    left: getLeft(),
-                    top: getTop(),
-                    transform: `${getTransform()} ${getScale()}`,
-                    opacity: getOpacity(),
-                    zIndex: getZIndex(),
-                    ...getSize(),
-                  }}
-                  onClick={() => {
-                    if (position !== 0) {
-                      setCurrentIndex(image.index);
+        {/* Images Wrapper */}
+        <div className="overflow-hidden">
+          <div
+            ref={containerRef}
+            className="flex gap-8 px-8 transition-transform duration-1000 ease-in-out"
+            style={{
+              transform: `translateX(-${currentPosition}px)`
+            }}
+          >
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0"
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="h-[500px] w-auto object-cover rounded-lg shadow-xl"
+                  onLoad={() => {
+                    // Recalculate dimensions when images load
+                    if (containerRef.current) {
+                      setTotalWidth(containerRef.current.scrollWidth);
                     }
                   }}
-                >
-                  <div
-                    className={`relative w-full h-full rounded-lg overflow-hidden transition-all duration-300 ${
-                      isCentered ? "shadow-2xl" : "shadow-md"
-                    }`}
-                  >
-                    {/* Image */}
-                    <img
-                      src={image.src}
-                      alt={`Resort view ${image.index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-
-                    {/* Subtle overlay on non-center images
-                    {!isCentered && (
-                      <div className="absolu" />
-                    )} */}
-                  </div>
-                </div>
-              );
-            })}
+                />
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Navigation Dots */}
-        <div className="flex justify-center items-center gap-2 mt-8 sm:mt-10 md:mt-12">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className="transition-all duration-300 focus:outline-none"
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              <div
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? "w-6 sm:w-8 bg-gray-700"
-                    : "w-1.5 bg-gray-300 hover:bg-gray-400"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-
-        {/* Counter */}
-        <div className="text-center mt-4 sm:mt-5 md:mt-6">
-          <p className="text-gray-400 font-light text-xs tracking-widest">
-            {String(currentIndex + 1).padStart(2, "0")} /{" "}
-            {String(images.length).padStart(2, "0")}
-          </p>
-        </div>
       </div>
-    </section>
+
+      {/* Progress Indicator */}
+      <div className="flex justify-center gap-2 mt-8">
+        {Array.from({ length: Math.ceil(images.length / 2) }).map((_, index) => (
+          <div
+            key={index}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              Math.floor(currentPosition / 400) === index
+                ? 'w-8 bg-gray-800'
+                : 'w-2 bg-gray-400'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 

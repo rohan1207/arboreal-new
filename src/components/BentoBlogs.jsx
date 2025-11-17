@@ -85,7 +85,7 @@ const BentoBlogs = () => {
             <motion.article
               key={blog.id}
               variants={itemVariants}
-              className={`group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
+              className={`group relative overflow-hidden bg-transparent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
                 index >= 2 ? 'hidden md:block' : ''
               }`}
             >
@@ -143,7 +143,7 @@ const BentoBlogs = () => {
           {/* Second Row - 1 Large Card + 1 Medium Card (Hidden on mobile, shown on desktop) */}
           <motion.article
             variants={itemVariants}
-            className="group relative overflow-hidden bg-white md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
+            className="group relative overflow-hidden bg-transparent md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
             <Link to={blogs[3].link} className="block relative overflow-hidden">
@@ -198,7 +198,7 @@ const BentoBlogs = () => {
 
           <motion.article
             variants={itemVariants}
-            className="group relative overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
+            className="group relative overflow-hidden bg-transparent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
           >
             {/* Image */}
             <Link to={blogs[4].link} className="block relative overflow-hidden">
