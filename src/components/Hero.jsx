@@ -74,11 +74,11 @@ const Hero = () => {
       <video
         autoPlay
         loop
-        muted
+        
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/herovideo.mp4" type="video/mp4" />
+        <source src="https://res.cloudinary.com/dsrlnbc5k/video/upload/v1763365824/final_sasphm.mp4" type="video/mp4" />
         {/* Fallback image if video doesn't load */}
         Your browser does not support the video tag.
       </video>

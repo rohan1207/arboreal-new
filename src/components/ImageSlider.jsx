@@ -22,7 +22,7 @@ const ImageSlider = () => {
     { src: '/slider12.png', alt: 'Resort view 12' },
     { src: '/slider13.png', alt: 'Resort view 13' },
     { src: '/slider14.png', alt: 'Resort view 14' },
-    { src: '/slider15.png', alt: 'Resort view 15' },
+    
     { src: '/slider16.png', alt: 'Resort view 16' }
   ];
 
