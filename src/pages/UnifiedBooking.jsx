@@ -13,7 +13,7 @@ import {
   FiAirplay,
   FiX,
 } from "react-icons/fi";
-import { ROOMS, findRoomByName } from "../data/rooms";
+import { ROOMS, findRoomByName } from "../Data/Rooms";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
