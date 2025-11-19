@@ -383,24 +383,51 @@ const Rooms = () => {
                 </div>
               )}
 
-              {/* Bath and Wellness Section */}
-              {currentRoom.bath_and_wellness && currentRoom.bath_and_wellness.length > 0 && (
+              {/* Room Amenities Section */}
+              {(currentRoom.amenities || currentRoom[' amenities']) && (currentRoom.amenities || currentRoom[' amenities']).length > 0 && (
                 <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8 border-b border-gray-200">
                   <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6 text-center">
-                    Bath & Wellness
+                    Room Amenities
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {currentRoom.bath_and_wellness.map((item, index) => (
+                    {(currentRoom.amenities || currentRoom[' amenities']).map((item, index) => (
                       <div key={index} className="flex flex-col items-center text-center gap-3">
                         <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
-                          {getAmenityIcon(item)}
+                          {getAmenityIcon(typeof item === 'string' ? item : item.label)}
                         </div>
-                        <span className="text-xs text-gray-700 leading-tight">{item}</span>
+                        <span className="text-xs text-gray-700 leading-tight">
+                          {typeof item === 'string' ? item : item.label}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
+
+              {/* Bath & Wellness Section */}
+              {(currentRoom.bath_and_wellness || currentRoom['bath_and_wellness']) &&
+                (currentRoom.bath_and_wellness || currentRoom['bath_and_wellness']).length > 0 && (
+                  <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8">
+                    <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6 text-center">
+                      Bath & Wellness
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      {(currentRoom.bath_and_wellness || currentRoom['bath_and_wellness']).map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center text-center gap-3"
+                        >
+                          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                            {getAmenityIcon(item)}
+                          </div>
+                          <span className="text-xs text-gray-700 leading-tight">
+                            {item}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
               {/* Pricing and Book Now Section */}
               <div className="px-4 sm:px-6 md:px-8 lg:px-16 py-4 sm:py-6 md:py-8">

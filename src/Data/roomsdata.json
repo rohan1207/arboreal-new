@@ -12,6 +12,14 @@
       "In-room refreshments",
       "A Forest Trail activity"
       ],
+      "amenities": [
+        { "label": "Forest View", "icon" : "FiEye" },
+        { "label": "Mini Bar", "icon" : "FiDroplet" },
+        { "label": "Wi-fi", "icon" : "FiWifi" },
+        { "label": "Room with Sofa", "icon" : "FiHome" },
+        { "label": "In room tea and coffee", "icon" : "FiCoffee" },
+        { "label": "Forest bathtub", "icon" : "FiWind" }
+      ],
      "bath_and_wellness":[]
     },
     {
@@ -28,6 +36,16 @@
         "Round-trip transfer from Lonavala station (3 nights+)",
         "Forest Trail activity"
       ],
+      " amenities": [
+      { "label": "Forest View", "icon" : "FiEye" },
+      { "label": "Mini Bar", "icon" : "FiDroplet" },
+      { "label": "Wi-fi", "icon" : "FiWifi" },
+      { "label": "Room with Sofa & Work Table", "icon" : "FiHome" },
+      { "label": "In room tea and coffee", "icon" : "FiCoffee" },
+      { "label": "Private balcony with Bathtub", "icon" : "FiGrid" },
+      { "label": "Four-Poster Bed", "icon" : "FiHome" },
+      { "label": "Ensuite bathroom with toiletries", "icon" : "FiMonitor" }
+    ],
       
       "bath_and_wellness": [
         "Outdoor private bathtub with forest view",
@@ -48,7 +66,17 @@
       "Round-trip transfer from Lonavala station (3 nights+)",
       "Forest Trail activity"
       ],
-      
+      " amenities": [
+      { "label": "Mountain with Forest View", "icon" : "FiEye" },
+      { "label": "Mini Bar", "icon" : "FiDroplet" },
+      { "label": "Wi-fi", "icon" : "FiWifi" },
+      { "label": "Room with Sofa & Work Table", "icon" : "FiHome" },
+      { "label": "In room tea and coffee", "icon" : "FiCoffee" },
+      { "label": "Private balcony", "icon" : "FiGrid" },
+      { "label": "Four-Poster Bed", "icon" : "FiHome" },
+      { "label": "Ensuite bathroom with toiletries", "icon" : "FiMonitor" },
+      { "label": "Double Sized Bathtub (2 ppl)", "icon" : "FiWind" }
+    ],
       "bath_and_wellness": [
         "Modern ensuite bathroom with walk-in shower",
         "Premium bath amenities and plush towels",
@@ -69,7 +97,16 @@
       "Round-trip transfer from Lonavala station (3 nights+)",
       "Forest Trail activity"
       ],
-      
+      " amenities": [
+        { "label": "Mountain with Forest View", "icon" : "FiEye" },
+        { "label": "Mini Bar", "icon" : "FiDroplet" },
+        { "label": "Wi-fi", "icon" : "FiWifi" },
+        { "label": "Room with Sofa", "icon" : "FiHome" },
+        { "label": "In room tea and coffee", "icon" : "FiCoffee" },
+        { "label": "Private balcony with Pool", "icon" : "FiGrid" },
+        { "label": "Four-Poster Bed", "icon" : "FiHome" },
+        { "label": "Ensuite bathroom with toiletries", "icon" : "FiMonitor" }
+      ],
       "bath_and_wellness": [
         "En-suite bathroom with shower",
         "Hot & cold-water supply",

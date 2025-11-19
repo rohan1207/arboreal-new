@@ -15,8 +15,8 @@ const RoomShowcase = () => {
     link: "/rooms/classic-sunroom",
     images: [
       "/Classic_Sunroom_1.jpg",
-      "/Classic_Sunroom_2.jpg",
-      "/Classic_Sunroom_3.jpg",
+      // "/Classic_Sunroom_2.jpg",
+      // "/Classic_Sunroom_3.jpg",
     ],
   },
   {
@@ -24,9 +24,9 @@ const RoomShowcase = () => {
     title: "Forest Bathtub Room",
     slug: "forest-bathtub-room",
     images: [
-      "/Forest_Bathtub_01.jpg",
-      "/Forest_Bathtub_02.jpg",
-      "/Forest_Bathtub_03.jpg",
+      "/Forest_Bathtub_07.jpg",
+      // "/Forest_Bathtub_02.jpg",
+      // "/Forest_Bathtub_03.jpg",
     ],
   },
   {
@@ -34,9 +34,9 @@ const RoomShowcase = () => {
     title: "Forest Private Pool Room",
     slug: "forest-private-pool-room",
     images: [
-      "/Forest_Private_Pool_1.jpg",
       "/Forest_Private_Pool_2.jpg",
-      "/Forest_Private_Pool_3.jpg",
+      // "/Forest_Private_Pool_2.jpg",
+      // "/Forest_Private_Pool_3.jpg",
     ],
   },
   {
@@ -45,8 +45,8 @@ const RoomShowcase = () => {
     slug: "luxury-sunroom",
     images: [
       "/Luxury_Sunroom_Arboreal_01.jpg",
-      "/Luxury_Sunroom_Arboreal_02.jpg",
-      "/Luxury_Sunroom_Arboreal_03.jpg",
+      // "/Luxury_Sunroom_Arboreal_02.jpg",
+      // "/Luxury_Sunroom_Arboreal_03.jpg",
     ],
   },
 ];
@@ -76,7 +76,7 @@ const handleRoomNameClick = (roomName, roomSlug) => {
         const currentImageIndex = newIndices[centerCardIndex];
         
         // If we've shown all 3 images for the center card
-        if (currentImageIndex >= 2) {
+        if (currentImageIndex >= 0) {
           // Reset this card's image index
           newIndices[centerCardIndex] = 0;
           // Move to next card

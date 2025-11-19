@@ -31,7 +31,7 @@ export const ROOMS = [
       { label: "Wi-fi", icon: FiWifi },
       { label: "Room with Sofa", icon: FiHome },
       { label: "In room tea and coffee", icon: FiCoffee },
-      { label: "Forest bathtub", icon: FiWind },
+   
     ],
     features: [
       {
@@ -209,6 +209,7 @@ export const findRoomByName = (roomName) => {
     });
   });
 };
+
 
 
 

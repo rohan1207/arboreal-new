@@ -8,7 +8,6 @@ const ImageSlider = () => {
   const [viewportWidth, setViewportWidth] = useState(0);
 
   const images = [
-    
     { src: '/slider5.webp', alt: 'Resort view 5' },
     { src: '/slider6.webp', alt: 'Resort view 6' },
     { src: '/slider7.webp', alt: 'Resort view 7' },
@@ -31,8 +30,6 @@ const ImageSlider = () => {
     { src: '/slider24.webp', alt: 'Resort view 24' },
     { src: '/slider25.webp', alt: 'Resort view 25' },
     { src: '/slider26.webp', alt: 'Resort view 26' },
-    
-
   ];
 
   // Calculate dimensions
@@ -95,8 +92,8 @@ const ImageSlider = () => {
       <div className="max-w-4xl text-gray-700 mx-auto px-8 mb-12 text-center">
         <h4>LONAVALA</h4>
         <h2 className="text-2xl text-gray-700 mb-4">The Arboreal Resort</h2>
-        <p className="text-gray-700 leading-relaxed">
-          Nestled within the pristine Amanoi National Park and UNESCO Biosphere Reserve, Amanoi is a natural paradise overlooking Vinh Hy Bay. From its secluded location - a rich and diverse mosaic of ecosystems – the resort's clifftop restaurants and pool, lakeside Aman Spa and private golden sand beach, offer limitless opportunities for outdoor exploration, cultural immersion and serene time out.
+        <p className="text-gray-700 leading-relaxed text-center">
+        Tucked away in the untouched forests of the Western Ghats, The Arboreal Resort is an eco-luxury retreat overlooking the serene Pawna Lake. From its elevated, treehouse-inspired setting, the resort offers sweeping valley views, handcrafted wooden interiors, and quiet spaces designed for calm and connection. With forest trails, hidden waterfalls and curated nature experiences, Arboreal invites you to slow down, immerse yourself in the wilderness, and rediscover the beauty of being close to nature.
         </p>
       </div>
 
@@ -124,29 +121,50 @@ const ImageSlider = () => {
         <div className="overflow-hidden">
           <div
             ref={containerRef}
-            className="flex gap-8 px-8 transition-transform duration-1000 ease-in-out"
+            className="flex items-center gap-8 px-8 transition-transform duration-1000 ease-in-out"
             style={{
               transform: `translateX(-${currentPosition}px)`
             }}
           >
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0"
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="h-[500px] w-auto object-cover rounded-lg shadow-xl"
-                  onLoad={() => {
-                    // Recalculate dimensions when images load
-                    if (containerRef.current) {
-                      setTotalWidth(containerRef.current.scrollWidth);
-                    }
-                  }}
-                />
-              </div>
-            ))}
+            {images.map((image, index) => {
+              // Alternate pattern: small, large, medium, tall
+              const sizePattern = index % 4;
+              let imageClass = '';
+              
+              switch(sizePattern) {
+                case 0: // Small horizontal
+                  imageClass = 'h-[300px] w-[400px]';
+                  break;
+                case 1: // Large horizontal
+                  imageClass = 'h-[500px] w-[650px]';
+                  break;
+                case 2: // Medium vertical
+                  imageClass = 'h-[550px] w-[350px]';
+                  break;
+                case 3: // Tall vertical
+                  imageClass = 'h-[600px] w-[400px]';
+                  break;
+              }
+              
+              return (
+                <div
+                  key={index}
+                  className="flex-shrink-0"
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className={`${imageClass} object-cover rounded-lg shadow-xl`}
+                    onLoad={() => {
+                      // Recalculate dimensions when images load
+                      if (containerRef.current) {
+                        setTotalWidth(containerRef.current.scrollWidth);
+                      }
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
