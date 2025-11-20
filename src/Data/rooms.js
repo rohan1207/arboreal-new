@@ -106,7 +106,7 @@ export const ROOMS = [
       "Luxury Sunroom - CP"
     ],
     description:
-      "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and lake views.",
+      "Perched among whispering trees and lush slopes, the Luxury Sunroom blends sweeping natural beauty with refined comfort. This elegant retreat features a plush king-size bed, soft ambient lighting, and floor-to-ceiling windows that frame panoramic mountain and forest views.",
     stayIncludes: [
       "Daily Breakfast",
       "In-room refreshments",

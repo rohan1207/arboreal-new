@@ -1681,6 +1681,16 @@ const UnifiedBooking = () => {
                         Cancellation between 15 days and the day before arrival (within 12:00pm local time) will incur 50% charge plus taxes. Cancellation within 24 hours before the arrival date (from 12:00pm local time), early departure, no show will incur 100% charge plus taxes.
                       </p>
                     </div>
+                    {/*Extra charges*/}
+                    {/* Extra Occupancy Policy */}
+<div>
+  <h4 className="font-semibold text-black mb-2">Extra occupancy policy</h4>
+  <p className="text-sm text-gray-700">
+    All rooms are configured for a maximum occupancy of 2 guests. For bookings made
+    for 3 guests, an extra mattress will be arranged and additional charges will apply.
+  </p>
+</div>
+
 
                     {/* Guarantee Policy */}
                     <div>
