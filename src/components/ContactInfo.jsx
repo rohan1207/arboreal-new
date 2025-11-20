@@ -39,7 +39,9 @@ export default function ContactInfo() {
               href="tel:+918380035320"
               className="hover:text-[#2a2a2a] transition-colors duration-200"
             >
-            +918380035320
+              +919545583535
+              <br />
+              +918380035320
             </a>
             <br />
           </p>

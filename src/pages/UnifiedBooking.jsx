@@ -1685,7 +1685,7 @@ const UnifiedBooking = () => {
                     {/* Extra Occupancy Policy */}
 <div>
   <h4 className="font-semibold text-black mb-2">Extra occupancy policy</h4>
-  <p className="text-sm text-gray-700">
+  <p className="text-sm text-gray-700">                                                                                        
     All rooms are configured for a maximum occupancy of 2 guests. For bookings made
     for 3 guests, an extra mattress will be arranged and additional charges will apply.
   </p>

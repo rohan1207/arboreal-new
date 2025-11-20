@@ -87,9 +87,9 @@ const ImageSlider = () => {
   };
 
   return (
-    <div className="relative w-full bg-[#f5f3ed] py-16">
+    <div className="relative w-full bg-[#f5f3ed] py-8 sm:py-12">
       {/* Text Content */}
-      <div className="max-w-4xl text-gray-700 mx-auto px-8 mb-12 text-center">
+      <div className="max-w-3xl text-gray-700 mx-auto px-4 sm:px-8 mb-8 sm:mb-12 text-center">
         <h4>LONAVALA</h4>
         <h2 className="text-2xl text-gray-700 mb-4">The Arboreal Resort</h2>
         <p className="text-gray-700 leading-relaxed text-center">
@@ -121,7 +121,7 @@ const ImageSlider = () => {
         <div className="overflow-hidden">
           <div
             ref={containerRef}
-            className="flex items-center gap-8 px-8 transition-transform duration-1000 ease-in-out"
+            className="flex items-center gap-4 sm:gap-6 px-4 sm:px-8 transition-transform duration-1000 ease-in-out"
             style={{
               transform: `translateX(-${currentPosition}px)`
             }}
@@ -133,16 +133,16 @@ const ImageSlider = () => {
               
               switch(sizePattern) {
                 case 0: // Small horizontal
-                  imageClass = 'h-[300px] w-[400px]';
+                  imageClass = 'h-[180px] sm:h-[220px] w-[240px] sm:w-[300px]';
                   break;
                 case 1: // Large horizontal
-                  imageClass = 'h-[500px] w-[650px]';
+                  imageClass = 'h-[250px] sm:h-[300px] w-[320px] sm:w-[400px]';
                   break;
                 case 2: // Medium vertical
-                  imageClass = 'h-[550px] w-[350px]';
+                  imageClass = 'h-[280px] sm:h-[330px] w-[200px] sm:w-[250px]';
                   break;
                 case 3: // Tall vertical
-                  imageClass = 'h-[600px] w-[400px]';
+                  imageClass = 'h-[320px] sm:h-[380px] w-[220px] sm:w-[280px]';
                   break;
               }
               

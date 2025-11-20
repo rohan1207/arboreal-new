@@ -78,7 +78,7 @@ const BlogPage = () => {
       <motion.section
         className="relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] bg-cover bg-center flex items-center justify-center text-white overflow-hidden"
         style={{
-          backgroundImage: "url('/slider1.jpg')",
+          backgroundImage: "url('/slider5.webp')",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -122,86 +122,72 @@ const BlogPage = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8"
+            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
           >
             {/* Display first 4 blogs or all blogs based on showAll state */}
             {(showAll ? blogs : blogs.slice(0, 5)).map((blog, index) => (
               <motion.article
                 key={blog.id}
                 variants={itemVariants}
-                className={`group relative overflow-hidden bg-transperent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl ${
-                  // On larger screens, make blog 4 span 2 columns
-                  !showAll && index === 3 && 'md:col-span-2 lg:col-span-2'
+                className={`group relative overflow-hidden bg-transparent hover:shadow-lg transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
+                  !showAll && index >= 2 ? 'hidden md:block' : ''
                 }`}
               >
                 {/* Image */}
-                <div className="relative">
-                  <Link to={blog.link} className="block overflow-hidden">
-                    <div className={`${
-                      !showAll && index === 3 
-                        ? 'aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]' 
-                        : 'aspect-[4/3]'
-                    } overflow-hidden`}>
-                      <motion.img
-                        src={blog.image}
-                        alt={blog.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                  </Link>
-                  {/* Category Badge */}
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                    <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-transperent/90 backdrop-blur-sm text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-medium uppercase rounded-full shadow-sm">
-                      {blog.category}
-                    </span>
+                <Link to={blog.link} className="block relative overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <motion.img
+                      src={blog.image}
+                      alt={blog.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
                   </div>
-                </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                </Link>
 
                 {/* Content */}
-                <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-                  <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500 mb-2 sm:mb-3">
-                    <span>{blog.date}</span>
-                    <span>•</span>
-                    <span>{blog.readTime}</span>
+                <div className="p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col h-[240px] sm:h-[260px] md:h-[280px]">
+                  <div>
+                    
+                    <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500 mb-2 sm:mb-3">
+                      <span>{blog.date}</span>
+                      <span>•</span>
+                      <span>{blog.readTime}</span>
+                    </div>
+                    <Link to={blog.link} className="group/title block mb-2 sm:mb-3">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight line-clamp-2">
+                        {blog.title}
+                      </h3>
+                    </Link>
+                    <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
+                      {blog.description}
+                    </p>
                   </div>
-                  <Link to={blog.link} className="group/title inline-block">
-                    <h3 className={`font-serif text-gray-900 group-hover:text-gray-600 transition-colors duration-300 leading-tight mb-2 sm:mb-3 ${
-                      !showAll && index === 3 
-                        ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl' 
-                        : 'text-lg sm:text-xl md:text-2xl'
-                    }`}>
-                      {blog.title}
-                    </h3>
-                  </Link>
-                  <p className={`text-gray-600 leading-relaxed font-light mb-3 sm:mb-4 ${
-                    !showAll && index === 3 
-                      ? 'text-xs sm:text-sm md:text-base max-w-3xl line-clamp-2' 
-                      : 'text-xs sm:text-sm line-clamp-2'
-                  }`}>
-                    {blog.description}
-                  </p>
-                  <Link
-                    to={blog.link}
-                    className="inline-flex items-center text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] text-gray-900 font-light uppercase group/link relative pb-1"
-                  >
-                    <span className="relative z-10">Read More</span>
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <div className="mt-auto ml-auto">
+                    <Link
+                      to={blog.link}
+                      className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></div>
-                    <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></div>
-                  </Link>
+                      <span className="relative">
+                        Discover more
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
+                        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
+                      </span>
+                      <svg
+                        className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
               </motion.article>
             ))}

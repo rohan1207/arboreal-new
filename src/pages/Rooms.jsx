@@ -4,13 +4,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import roomsData from "../Data/roomsdata.json";
 import { 
   FiCoffee,
-  FiCalendar,
   FiSun,
   FiWind,
   FiDroplet,
   FiStar,
   FiFeather,
-  FiGift
+  FiGift,
+  FiWifi,
+  FiHome,
+  FiGrid,
+  FiEye,
+  FiMonitor,
+  FiDroplet as FiWater
 } from "react-icons/fi";
 import { 
   MdOutlineFastfood,
@@ -20,7 +25,14 @@ import {
   MdOutlineShower,
   MdOutlinePool,
   MdOutlineCheckroom,
-  MdOutlineCountertops
+  MdOutlineCountertops,
+  MdOutlineKingBed,
+  MdOutlineCoffeeMaker,
+  MdOutlineLocalBar,
+  MdOutlineWaterDrop,
+  MdOutlineWifi,
+  MdOutlineTableBar,
+  MdOutlineBathtub as MdOutlineBathtubAlt
 } from "react-icons/md";
 
 
@@ -56,26 +68,45 @@ const Rooms = () => {
     return [];
   };
 
-  // Icon mapping function
+  // Icon mapping function with more specific mappings
   const getAmenityIcon = (amenity) => {
+    if (!amenity) return <FiGift className="w-5 h-5" />;
+    
     const amenityLower = amenity.toLowerCase();
     
-    if (amenityLower.includes("breakfast")) return <MdOutlineFastfood className="w-5 h-5" />;
-    if (amenityLower.includes("refreshment") || amenityLower.includes("coffee")) return <FiCoffee className="w-5 h-5" />;
-    if (amenityLower.includes("transfer") || amenityLower.includes("car")) return <MdOutlineDirectionsCar className="w-5 h-5" />;
-    if (amenityLower.includes("forest") || amenityLower.includes("trail")) return <MdOutlinePark className="w-5 h-5" />;
-    if (amenityLower.includes("bathtub") || amenityLower.includes("bath")) return <MdOutlineBathtub className="w-5 h-5" />;
-    if (amenityLower.includes("pool") || amenityLower.includes("swim")) return <MdOutlinePool className="w-5 h-5" />;
-    if (amenityLower.includes("shower")) return <MdOutlineShower className="w-5 h-5" />;
-    if (amenityLower.includes("air") || amenityLower.includes("conditioning")) return <FiWind className="w-5 h-5" />;
-    if (amenityLower.includes("amenities") || amenityLower.includes("premium")) return <FiStar className="w-5 h-5" />;
-    if (amenityLower.includes("towel") || amenityLower.includes("robe")) return <MdOutlineCheckroom className="w-5 h-5" />;
-    if (amenityLower.includes("mirror") || amenityLower.includes("vanity")) return <MdOutlineCountertops className="w-5 h-5" />;
-    if (amenityLower.includes("hot") || amenityLower.includes("water")) return <FiDroplet className="w-5 h-5" />;
-    if (amenityLower.includes("view") || amenityLower.includes("outdoor")) return <FiSun className="w-5 h-5" />;
-    if (amenityLower.includes("hair") || amenityLower.includes("dryer")) return <FiFeather className="w-5 h-5" />;
+    // Common amenities
+    if (amenityLower.includes('wifi') || amenityLower.includes('wi-fi')) return <MdOutlineWifi className="w-5 h-5" />;
+    if (amenityLower.includes('mini bar') || amenityLower.includes('minibar')) return <MdOutlineLocalBar className="w-5 h-5" />;
+    if (amenityLower.includes('coffee') || amenityLower.includes('tea')) return <MdOutlineCoffeeMaker className="w-5 h-5" />;
+    if (amenityLower.includes('sofa') || amenityLower.includes('sitting area')) return <MdOutlineKingBed className="w-5 h-5" />;
+    if (amenityLower.includes('work table') || amenityLower.includes('desk')) return <FiMonitor className="w-5 h-5" />;
     
-    return <FiGift className="w-5 h-5" />;
+    // Room features
+    if (amenityLower.includes('forest view') || amenityLower.includes('mountain view')) return <FiEye className="w-5 h-5" />;
+    if (amenityLower.includes('four-poster') || amenityLower.includes('bed')) return <MdOutlineKingBed className="w-5 h-5" />;
+    if (amenityLower.includes('balcony') || amenityLower.includes('terrace')) return <MdOutlineBathtubAlt className="w-5 h-5" />;
+    if (amenityLower.includes('room') || amenityLower.includes('suite')) return <FiHome className="w-5 h-5" />;
+    
+    // Bath and wellness
+    if (amenityLower.includes('bathtub') || amenityLower.includes('bath')) return <MdOutlineBathtubAlt className="w-5 h-5" />;
+    if (amenityLower.includes('shower')) return <MdOutlineShower className="w-5 h-5" />;
+    if (amenityLower.includes('toiletries') || amenityLower.includes('bathroom')) return <MdOutlineBathtub className="w-5 h-5" />;
+    if (amenityLower.includes('water') || amenityLower.includes('hot water')) return <MdOutlineWaterDrop className="w-5 h-5" />;
+    
+    // Other common terms
+    if (amenityLower.includes('breakfast')) return <MdOutlineFastfood className="w-5 h-5" />;
+    if (amenityLower.includes('transfer') || amenityLower.includes('car')) return <MdOutlineDirectionsCar className="w-5 h-5" />;
+    if (amenityLower.includes('forest') || amenityLower.includes('trail')) return <MdOutlinePark className="w-5 h-5" />;
+    if (amenityLower.includes('pool') || amenityLower.includes('swim')) return <MdOutlinePool className="w-5 h-5" />;
+    if (amenityLower.includes('air') || amenityLower.includes('conditioning') || amenityLower.includes('ac')) return <FiWind className="w-5 h-5" />;
+    if (amenityLower.includes('amenities') || amenityLower.includes('premium')) return <FiStar className="w-5 h-5" />;
+    if (amenityLower.includes('towel') || amenityLower.includes('robe')) return <MdOutlineCheckroom className="w-5 h-5" />;
+    if (amenityLower.includes('mirror') || amenityLower.includes('vanity')) return <MdOutlineCountertops className="w-5 h-5" />;
+    if (amenityLower.includes('view') || amenityLower.includes('outdoor')) return <FiSun className="w-5 h-5" />;
+    if (amenityLower.includes('hair') || amenityLower.includes('dryer')) return <FiFeather className="w-5 h-5" />;
+    
+    // Default icon if no match found
+    return <FiGrid className="w-5 h-5" />;
   };
 
   const currentRoom = rooms[activeTab];

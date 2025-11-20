@@ -17,8 +17,8 @@
         { "label": "Mini Bar", "icon" : "FiDroplet" },
         { "label": "Wi-fi", "icon" : "FiWifi" },
         { "label": "Room with Sofa", "icon" : "FiHome" },
-        { "label": "In room tea and coffee", "icon" : "FiCoffee" },
-        { "label": "Forest bathtub", "icon" : "FiWind" }
+        { "label": "In room tea and coffee", "icon" : "FiCoffee" }
+        
       ],
      "bath_and_wellness":[]
     },

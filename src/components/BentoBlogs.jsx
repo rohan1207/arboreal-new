@@ -85,7 +85,7 @@ const BentoBlogs = () => {
             <motion.article
               key={blog.id}
               variants={itemVariants}
-              className={`group relative overflow-hidden bg-transparent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
+              className={`group relative overflow-hidden bg-transparent  hover:shadow-lg transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl ${
                 index >= 2 ? 'hidden md:block' : ''
               }`}
             >
@@ -102,20 +102,85 @@ const BentoBlogs = () => {
               </Link>
 
               {/* Content */}
-              <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+              <div className="p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col h-[240px] sm:h-[260px] md:h-[280px]">
+                <div>
+                  <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
+                    {blog.category}
+                  </span>
+                  <Link to={blog.link} className="group/title block mb-2 sm:mb-3">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight line-clamp-2">
+                      {blog.title}
+                    </h3>
+                  </Link>
+                  <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
+                    {blog.description}
+                  </p>
+                </div>
+                <div className="mt-auto ml-auto">
+                  <Link
+                    to={blog.link}
+                    className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
+                  >
+                    <span className="relative">
+                      Discover more
+                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
+                      <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
+                    </span>
+                    <svg
+                      className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+          {/* Second Row - 1 Large Card + 1 Medium Card (Hidden on mobile, shown on desktop) */}
+          <motion.article
+            variants={itemVariants}
+            className="group relative overflow-hidden  md:col-span-2 hover:shadow-lg transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:flex flex-col h-full"
+          >
+            {/* Image */}
+            <div className="flex-1 overflow-hidden">
+              <Link to={blogs[3].link} className="block relative overflow-hidden h-full">
+                <div className="h-full w-full">
+                  <motion.img
+                    src={blogs[3].image}
+                    alt={blogs[3].title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              </Link>
+            </div>
+
+            {/* Content */}
+            <div className="p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col h-[240px] sm:h-[260px] md:h-[280px]">
+              <div>
                 <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
-                  {blog.category}
+                  {blogs[3].category}
                 </span>
-                <Link to={blog.link} className="group/title inline-block mb-2 sm:mb-3">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
-                    {blog.title}
+                <Link to={blogs[3].link} className="group/title block mb-2 sm:mb-3">
+                  <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight line-clamp-2">
+                    {blogs[3].title}
                   </h3>
                 </Link>
-                <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
-                  {blog.description}
+                <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-4 sm:mb-5 max-w-3xl line-clamp-2">
+                  {blogs[3].description}
                 </p>
+              </div>
+              <div className="mt-auto ml-auto">
                 <Link
-                  to={blog.link}
+                  to={blogs[3].link}
                   className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
                 >
                   <span className="relative">
@@ -138,116 +203,67 @@ const BentoBlogs = () => {
                   </svg>
                 </Link>
               </div>
-            </motion.article>
-          ))}
-          {/* Second Row - 1 Large Card + 1 Medium Card (Hidden on mobile, shown on desktop) */}
-          <motion.article
-            variants={itemVariants}
-            className="group relative overflow-hidden bg-transparent md:col-span-2 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
-          >
-            {/* Image */}
-            <Link to={blogs[3].link} className="block relative overflow-hidden">
-              <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden">
-                <motion.img
-                  src={blogs[3].image}
-                  alt={blogs[3].title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-            </Link>
-
-            {/* Content */}
-            <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-              <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
-                {blogs[3].category}
-              </span>
-              <Link to={blogs[3].link} className="group/title inline-block mb-2 sm:mb-3">
-                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
-                  {blogs[3].title}
-                </h3>
-              </Link>
-              <p className="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-4 sm:mb-5 max-w-3xl line-clamp-2">
-                {blogs[3].description}
-              </p>
-              <Link
-                to={blogs[3].link}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
-              >
-                <span className="relative">
-                  Discover more
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
-                </span>
-                <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </Link>
             </div>
           </motion.article>
 
           <motion.article
             variants={itemVariants}
-            className="group relative overflow-hidden bg-transparent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:block"
+            className="group relative overflow-hidden  hover:shadow-lg transition-all duration-300 rounded-lg sm:rounded-xl md:rounded-2xl hidden md:flex flex-col h-full"
           >
             {/* Image */}
-            <Link to={blogs[4].link} className="block relative overflow-hidden">
-              <div className="aspect-[4/3] overflow-hidden">
-                <motion.img
-                  src={blogs[4].image}
-                  alt={blogs[4].title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-            </Link>
+            <div className="flex-1 overflow-hidden">
+              <Link to={blogs[4].link} className="block relative overflow-hidden h-full">
+                <div className="h-full w-full">
+                  <motion.img
+                    src={blogs[4].image}
+                    alt={blogs[4].title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              </Link>
+            </div>
 
             {/* Content */}
-            <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-              <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
-                {blogs[4].category}
-              </span>
-              <Link to={blogs[4].link} className="group/title inline-block mb-2 sm:mb-3">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight">
-                  {blogs[4].title}
-                </h3>
-              </Link>
-              <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
-                {blogs[4].description}
-              </p>
-              <Link
-                to={blogs[4].link}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
-              >
-                <span className="relative">
-                  Discover more
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
+            <div className="p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col h-[240px] sm:h-[260px] md:h-[280px]">
+              <div>
+                <span className="inline-block px-2.5 sm:px-3 py-1 bg-gray-100 rounded-full text-xs tracking-[0.2em] text-gray-700 font-medium uppercase mb-3 sm:mb-4">
+                  {blogs[4].category}
                 </span>
-                <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <Link to={blogs[4].link} className="group/title block mb-2 sm:mb-3">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-gray-900 group-hover/title:text-gray-600 transition-colors duration-300 leading-tight line-clamp-2">
+                    {blogs[4].title}
+                  </h3>
+                </Link>
+                <p className="text-gray-600 leading-relaxed font-light text-sm mb-4 sm:mb-5 line-clamp-3">
+                  {blogs[4].description}
+                </p>
+              </div>
+              <div className="mt-auto ml-auto">
+                <Link
+                  to={blogs[4].link}
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm tracking-[0.15em] text-gray-900 font-medium uppercase group/link"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </Link>
+                  <span className="relative">
+                    Discover more
+                    <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900"></span>
+                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-600 group-hover/link:w-full transition-all duration-500"></span>
+                  </span>
+                  <svg
+                    className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+              </div>
             </div>
           </motion.article>
         </motion.div>
