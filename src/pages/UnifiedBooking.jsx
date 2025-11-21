@@ -219,29 +219,54 @@ const UnifiedBooking = () => {
         children: parseInt(children),
       });
 
-      if (response.data.success) {
-        const roomData = response.data.data || [];
-        setAvailableRooms(roomData);
-        setSearchData({
-          checkIn: checkInStr,
-          checkOut: checkOutStr,
-          rooms: parseInt(rooms),
-          adults: parseInt(adults),
-          children: parseInt(children),
-        });
-        setCurrentStep(2); // Move to room selection
-      } else {
+      // Check if there's an error in the response
+      if (response.data.Errors) {
+        throw new Error(response.data.Errors.ErrorMessage || 'Failed to fetch rooms. Please try again.');
+      }
+      
+      const roomData = Array.isArray(response.data.data) ? response.data.data : [];
+      setAvailableRooms(roomData);
+      setSearchData({
+        checkIn: checkInStr,
+        checkOut: checkOutStr,
+        rooms: parseInt(rooms),
+        adults: parseInt(adults),
+        children: parseInt(children),
+      });
+      
+      if (roomData.length === 0) {
         alert("No rooms available for the selected dates");
+      } else {
+        setCurrentStep(2); // Move to room selection only if we have rooms
       }
     } catch (err) {
-      console.error("Search error:", err);
-      alert(
-        err.response?.data?.message ||
-          "Failed to fetch available rooms. Please try again."
-      );
-    } finally {
-      setSearchLoading(false);
+  console.error("Search error:", err);
+  console.error("Search error details:", {
+    message: err.message,
+    response: err.response?.data,
+    status: err.response?.status,
+    statusText: err.response?.statusText,
+    config: {
+      url: err.config?.url,
+      method: err.config?.method,
+      data: err.config?.data
     }
+  });
+  
+  // Set availableRooms to empty array to prevent map error
+  setAvailableRooms([]);
+  
+  // Show detailed error in alert
+  const errorMessage = 
+    err.response?.data?.Errors?.ErrorMessage || 
+    err.response?.data?.message || 
+    (err.response?.data ? JSON.stringify(err.response.data) : err.message) ||
+    "Failed to fetch available rooms. Please try again.";
+  
+  alert(`Error: ${errorMessage}`);
+} finally {
+  setSearchLoading(false);
+}
   };
 
   // Step 2: Select Room
@@ -1290,6 +1315,24 @@ const UnifiedBooking = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="space-y-3 mb-4">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Full Name *"
+                        className="w-full bg-white border-2 border-gray-200 text-gray-900 rounded-lg px-3 py-2.5 text-sm font-medium appearance-none hover:border-gray-400 focus:outline-none focus:border-black"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        placeholder="Phone Number *"
+                        className="w-full bg-white border-2 border-gray-200 text-gray-900 rounded-lg px-3 py-2.5 text-sm font-medium appearance-none hover:border-gray-400 focus:outline-none focus:border-black"
+                        required
+                      />
+                    </div>
+                  </div>
 
                   {/* Guest/Room Selection Dropdowns */}
                   <div className="space-y-2.5 mb-4">

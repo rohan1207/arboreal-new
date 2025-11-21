@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const RoomShowcase = () => {
   const [centerCardIndex, setCenterCardIndex] = useState(0);
-  const [imageIndices, setImageIndices] = useState([0, 0, 0, 0]);
-  const [prevImageIndices, setPrevImageIndices] = useState([0, 0, 0, 0]);
 
   const rooms = [
     {
@@ -41,7 +38,6 @@ const RoomShowcase = () => {
   const slugifyRoomName = (name) => name.toLowerCase().replace(/ /g, "-");
 
   const handleRoomNameClick = (roomName, roomSlug) => {
-    if (!roomName) return;
     const canonical = sanitizeRoomName(roomName);
     navigate("/rooms", {
       state: {
@@ -51,27 +47,7 @@ const RoomShowcase = () => {
     });
   };
 
-  // Auto-slide
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setPrevImageIndices((prev) => {
-        const updated = [...prev];
-        updated[centerCardIndex] = imageIndices[centerCardIndex];
-        return updated;
-      });
-
-      setImageIndices((prev) => {
-        const updated = [...prev];
-        updated[centerCardIndex] = 0; 
-        return updated;
-      });
-
-      setCenterCardIndex((i) => (i + 1) % rooms.length);
-    }, 3000);
-
-    return () => clearInterval(timer);
-  }, [centerCardIndex, rooms.length, imageIndices]);
-
+  /* --------------------------- Calculate visible cards --------------------------- */
   const getVisibleCards = () => {
     const leftIndex = (centerCardIndex - 1 + rooms.length) % rooms.length;
     const rightIndex = (centerCardIndex + 1) % rooms.length;
@@ -107,87 +83,73 @@ const RoomShowcase = () => {
           </h2>
         </div>
 
-        {/* Carousel */}
-        <div className="relative">
+        {/* Arrows */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+        >
+          <FiChevronLeft className="text-xl sm:text-2xl text-gray-800" />
+        </button>
 
-          {/* Arrows */}
-          <button
-            onClick={goToPrevious}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
-          >
-            <FiChevronLeft className="text-xl sm:text-2xl text-gray-800" />
-          </button>
+        <button
+          onClick={goToNext}
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+        >
+          <FiChevronRight className="text-xl sm:text-2xl text-gray-800" />
+        </button>
 
-          <button
-            onClick={goToNext}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
-          >
-            <FiChevronRight className="text-xl sm:text-2xl text-gray-800" />
-          </button>
+        {/* Cards */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4 px-2 sm:px-20">
+          {visibleCards.map(({ room, position }) => {
+            const isCenter = position === "center";
+            const img = room.images[0];
 
-          {/* Cards Wrapper */}
-<div className="flex items-center justify-center gap-3 sm:gap-4 px-2 sm:px-20">
-  {visibleCards.map(({ room, position, index }) => {
-    const isCenter = position === "center";
-    const currentImage = room.images[imageIndices[index]];
-    const previousImage = room.images[prevImageIndices[index]];
+            return (
+              <div
+                key={room.id + position}
+                onClick={() => {
+                  if (!isCenter) {
+                    // Clicking left/right makes it center
+                    if (position === "left") goToPrevious();
+                    if (position === "right") goToNext();
+                  }
+                }}
+                className={`
+                  relative overflow-hidden rounded-sm cursor-pointer transition-all duration-500
 
-    return (
-      <div
-        key={room.id + position}
-        onClick={() => handleRoomNameClick(room.title, room.slug)}
-        className={`
-          relative overflow-hidden rounded-sm transition-all duration-500 cursor-pointer
+                  ${isCenter ? "sm:w-[60%] sm:h-[480px] scale-100" : "sm:w-[18%] sm:h-[340px] scale-90 opacity-70"}
 
-          /* DESKTOP (unchanged) */
-          ${isCenter ? "sm:w-[60%] sm:h-[480px]" : "sm:w-[18%] sm:h-[340px]"} 
+                  ${isCenter ? "w-[55%] h-[260px]" : "w-[22%] h-[200px]"}
+                `}
+              >
+                {/* Image */}
+                <img
+                  src={img}
+                  className="w-full h-full object-cover"
+                />
 
-          /* MOBILE (new logic so that 3 cards fit properly) */
-          ${isCenter ? "w-[55%] h-[260px]" : "w-[22%] h-[200px]"}
-        `}
-      >
-        {/* No-flash slide */}
-        <div className="w-full h-full relative overflow-hidden">
-          <img
-            src={previousImage}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ zIndex: 1 }}
-          />
-          <motion.img
-            src={currentImage}
-            initial={{ x: "100%" }}
-            animate={{ x: "0%" }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ zIndex: 2 }}
-          />
+                {/* Overlay for left/right */}
+                {!isCenter && (
+                  <div className="absolute inset-0 bg-gray-300/30"></div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Overlay */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-b 
-            ${isCenter ? "from-transparent to-black/10" : "from-black/10 to-black/20"}
-          `}
-        />
-      </div>
-    );
-  })}
-</div>
-
-          {/* Room Title */}
-          <div className="text-center mt-6 cursor-pointer">
-            <h3
-              className="text-2xl sm:text-3xl font-serif text-gray-900"
-              onClick={() =>
-                handleRoomNameClick(
-                  rooms[centerCardIndex].title,
-                  rooms[centerCardIndex].slug
-                )
-              }
-            >
-              {rooms[centerCardIndex].title}
-            </h3>
-          </div>
+        {/* Title */}
+        <div className="text-center mt-6 cursor-pointer">
+          <h3
+            className="text-2xl sm:text-3xl font-serif text-gray-900"
+            onClick={() =>
+              handleRoomNameClick(
+                rooms[centerCardIndex].title,
+                rooms[centerCardIndex].slug
+              )
+            }
+          >
+            {rooms[centerCardIndex].title}
+          </h3>
         </div>
 
         {/* Dots */}

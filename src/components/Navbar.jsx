@@ -139,7 +139,7 @@ const Navbar = () => {
             <div className="flex items-center">
               <Link
                 to="/booking"
-                className={`px-6 lg:px-8 py-2.5 lg:py-3 rounded-full text-sm lg:text-base font-medium transition-all duration-700 ${
+                className={`px-3 lg:px-8 py-2 lg:py-3 rounded-full text-xs lg:text-base font-medium transition-all duration-700 ${
                   isScrolled
                     ? "bg-white text-black hover:bg-gray-100"
                     : "bg-black text-white hover:bg-gray-800"
