@@ -76,6 +76,11 @@ const UnifiedBooking = () => {
     { icon: <FiAirplay />, name: "TV" },
   ];
 
+  // Pricing configuration (business rules)
+  const GST_RATE = 0.18; // 18% GST
+  const BASE_RATE_MARKUP_THRESHOLD = 7500; // If base rate is below this, apply markup
+  const BASE_RATE_MARKUP_RATE = 0.05; // 5% markup
+
   const sanitizeRoomName = (value = "") =>
     value
       .replace(/limited period\s*-\s*/i, "")
@@ -272,34 +277,16 @@ const UnifiedBooking = () => {
   // Step 2: Select Room
   const handleSelectRoom = (room) => {
     setSelectedRoom(room);
-    
-    // Calculate booking details
-    const checkIn = new Date(searchData.checkIn);
-    const checkOut = new Date(searchData.checkOut);
-    const timeDiff = checkOut.getTime() - checkIn.getTime();
-    const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-    let totalPrice = 0;
-    for (let i = 0; i < nights; i++) {
-      const date = new Date(checkIn);
-      date.setDate(checkIn.getDate() + i);
-      const dateString = `${date.getFullYear()}-${String(
-        date.getMonth() + 1
-      ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-
-      if (room.room_rates_info?.inclusive_tax_adjustment?.[dateString]) {
-        totalPrice += room.room_rates_info.inclusive_tax_adjustment[dateString];
-      } else {
-        totalPrice += room.room_rates_info?.avg_per_night_after_discount || 0;
-      }
-    }
+    const roomRates = calculateRoomRates(room);
+    const nights = roomRates?.nights || calculateNights();
 
     setBookingDetails({
       checkIn: searchData.checkIn,
       checkOut: searchData.checkOut,
       nights,
-      totalPrice,
-      extrasCharge: 0,
+      totalPrice: roomRates?.total || 0,
+      extrasCharge: roomRates?.extrasTotal || 0,
     });
 
     setCurrentStep(3); // Move to personal info
@@ -706,45 +693,116 @@ const UnifiedBooking = () => {
   // Helper to calculate room rates for a specific room
   const calculateRoomRates = (room) => {
     if (!room || !searchData) return null;
-    
+
     const checkIn = new Date(searchData.checkIn);
-    const checkOut = new Date(searchData.checkOut);
     const nights = calculateNights();
-    
-    let roomTotal = 0;
-    let taxes = 0;
+
+    const baseAdults = parseInt(room.base_adult_occupancy || "0", 10);
+    const baseChildren = parseInt(room.base_child_occupancy || "0", 10);
+    const requestedAdults = parseInt(searchData.adults || 0, 10);
+    const requestedChildren = parseInt(searchData.children || 0, 10);
+
+    const extraAdults = Math.max(0, requestedAdults - baseAdults);
+    const extraChildren = Math.max(0, requestedChildren - baseChildren);
+
+    let baseTotal = 0;
+    let extrasTotal = 0;
     const ratesPerNight = [];
-    
-    // Calculate rates for each night
+
     for (let i = 0; i < nights; i++) {
       const date = new Date(checkIn);
       date.setDate(checkIn.getDate() + i);
       const dateString = formatDateForAPI(date);
-      
-      let nightRate = 0;
-      if (room.room_rates_info?.inclusive_tax_adjustment?.[dateString]) {
-        nightRate = room.room_rates_info.inclusive_tax_adjustment[dateString];
-      } else {
-        nightRate = room.room_rates_info?.avg_per_night_after_discount || 0;
-      }
-      
-      roomTotal += nightRate;
+
+      // Base rate (exclusive of tax)
+      const exclusiveRates = room.room_rates_info?.exclusive_tax || {};
+      const fallbackBaseExclusive =
+        Object.values(exclusiveRates)[0] ??
+        room.room_rates_info?.rack_rate ??
+        room.room_rates_info?.avg_per_night_without_tax ??
+        0;
+
+      let baseExclusive =
+        exclusiveRates[dateString] !== undefined
+          ? parseFloat(exclusiveRates[dateString])
+          : parseFloat(fallbackBaseExclusive);
+      if (Number.isNaN(baseExclusive)) baseExclusive = 0;
+
+      // 5% markup if base rate is below threshold
+      const baseWithMarkup =
+        baseExclusive < BASE_RATE_MARKUP_THRESHOLD
+          ? baseExclusive * (1 + BASE_RATE_MARKUP_RATE)
+          : baseExclusive;
+
+      // 18% GST on (possibly marked-up) base
+      const baseGstAmount = baseWithMarkup * GST_RATE;
+      const baseTotalNight = baseWithMarkup + baseGstAmount;
+
+      // Extra adult rate (exclusive)
+      const extraAdultExclusiveRates =
+        room.extra_adult_rates_info?.exclusive_tax || {};
+      const fallbackExtraAdultExclusive =
+        Object.values(extraAdultExclusiveRates)[0] ??
+        room.extra_adult_rates_info?.rack_rate ??
+        0;
+
+      let extraAdultExclusive =
+        extraAdultExclusiveRates[dateString] !== undefined
+          ? parseFloat(extraAdultExclusiveRates[dateString])
+          : parseFloat(fallbackExtraAdultExclusive);
+      if (Number.isNaN(extraAdultExclusive)) extraAdultExclusive = 0;
+
+      const extraAdultWithGst =
+        extraAdultExclusive + extraAdultExclusive * GST_RATE;
+
+      // Extra child rate (exclusive)
+      const extraChildExclusiveRates =
+        room.extra_child_rates_info?.exclusive_tax || {};
+      const fallbackExtraChildExclusive =
+        Object.values(extraChildExclusiveRates)[0] ??
+        room.extra_child_rates_info?.rack_rate ??
+        0;
+
+      let extraChildExclusive =
+        extraChildExclusiveRates[dateString] !== undefined
+          ? parseFloat(extraChildExclusiveRates[dateString])
+          : parseFloat(fallbackExtraChildExclusive);
+      if (Number.isNaN(extraChildExclusive)) extraChildExclusive = 0;
+
+      const extraChildWithGst =
+        extraChildExclusive + extraChildExclusive * GST_RATE;
+
+      // Per-night extras based on search pax
+      const extraAdultTotalNight = extraAdults * extraAdultWithGst;
+      const extraChildTotalNight = extraChildren * extraChildWithGst;
+
+      const nightTotal =
+        baseTotalNight + extraAdultTotalNight + extraChildTotalNight;
+
+      baseTotal += baseTotalNight;
+      extrasTotal += extraAdultTotalNight + extraChildTotalNight;
+
       ratesPerNight.push({
         date: dateString,
-        rate: nightRate,
+        baseRate: Math.round(baseTotalNight),
+        extraAdults,
+        extraAdultTotal: Math.round(extraAdultTotalNight),
+        extraChildren,
+        extraChildTotal: Math.round(extraChildTotalNight),
+        total: Math.round(nightTotal),
       });
     }
-    
-    // Calculate taxes (assuming 10% for now, adjust based on your backend data)
-    taxes = Math.round(roomTotal * 0.1);
-    const total = roomTotal + taxes;
-    
+
+    const total = baseTotal + extrasTotal;
+
     return {
-      roomTotal,
-      taxes,
+      roomBaseTotal: baseTotal,
+      extrasTotal,
       total,
       ratesPerNight,
       nights,
+      extraAdults,
+      extraChildren,
     };
   };
 
@@ -1553,10 +1611,18 @@ const UnifiedBooking = () => {
                                   <p className="text-xs text-gray-500 mb-1">From</p>
                                   <p className="text-2xl sm:text-3xl font-serif text-black">
                                     {room.currency_sign}
-                                    {room.room_rates_info?.avg_per_night_after_discount?.toLocaleString() || "0"}
+                                    {roomRates
+                                      ? Math.round(
+                                          roomRates.total / (roomRates.nights || 1)
+                                        ).toLocaleString()
+                                      : (room.room_rates_info?.avg_per_night_after_discount ||
+                                          0
+                                        ).toLocaleString()}
                                     <span className="text-sm text-gray-600 font-normal"> / night</span>
                                   </p>
-                                  <p className="text-xs text-gray-500 mt-1">Including taxes & fees</p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Including GST & extra guest charges
+                                  </p>
                                 </div>
 
                                 {/* View Rates Button */}
@@ -2418,4 +2484,3 @@ const UnifiedBooking = () => {
 };
 
 export default UnifiedBooking;
-
