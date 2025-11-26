@@ -77,7 +77,7 @@ const UnifiedBooking = () => {
   ];
 
   // Pricing configuration (business rules)
-  const GST_RATE = 0.18; // 18% GST
+  const GST_RATE = 0.10; // 18% GST
   const BASE_RATE_MARKUP_THRESHOLD = 7500; // If base rate is below this, apply markup
   const BASE_RATE_MARKUP_RATE = 0.05; // 5% markup
 
