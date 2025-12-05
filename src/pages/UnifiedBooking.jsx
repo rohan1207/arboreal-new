@@ -77,7 +77,7 @@ const UnifiedBooking = () => {
   ];
 
   // Pricing configuration (business rules)
-  const GST_RATE = 0.10; // 18% GST
+  const GST_RATE = 0.18; // 18% GST
   const BASE_RATE_MARKUP_THRESHOLD = 7500; // If base rate is below this, apply markup
   const BASE_RATE_MARKUP_RATE = 0.05; // 5% markup
 
@@ -473,7 +473,7 @@ const UnifiedBooking = () => {
       },
       check_in_date: bookingDetails.checkIn,
       check_out_date: bookingDetails.checkOut,
-      Booking_Payment_Mode: "",
+      Booking_Payment_Mode: "3",
       Email_Address: personalInfo.email,
       Source_Id: "",
       MobileNo: "",
@@ -556,7 +556,8 @@ const UnifiedBooking = () => {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
-                reservationNo: reservationNo
+                reservationNo: reservationNo,
+                amount: totalAmount,
               }
             );
 
